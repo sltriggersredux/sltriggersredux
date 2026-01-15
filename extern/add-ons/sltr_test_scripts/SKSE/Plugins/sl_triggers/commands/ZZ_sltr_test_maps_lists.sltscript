@@ -1,0 +1,475 @@
+deb_msg "============================="
+deb_msg "    SLTR Test Maps & Lists"
+
+;;; maps
+
+inc $thread.testCount
+inc $thread.testCount
+
+set $mapval{key} "fourty"
+
+set $mval_01 $mapval{key}
+
+if $mval_01 &= "fourty"
+    inc $thread.passCount
+    inc $thread.passCount
+    deb_msg $"PASS: assign to map with key; mval_01({mval_01}); should be ""fourty"""
+    deb_msg $"PASS: set from map with key; mval_01({mval_01}); should be ""fourty"""
+else
+    deb_msg $"FAIL: assign to map with key; mval_01({mval_01}); should be ""fourty"""
+    deb_msg $"FAIL: set from map with key; mval_01({mval_01}); should be ""fourty"""
+endif
+
+inc $thread.testCount
+
+set $keyvar "key"
+
+set $mval_02 $mapval{$keyvar}
+
+if $mval_02 &= "fourty"
+    inc $thread.passCount
+    deb_msg $"PASS: assign to map with variable as key; mval_02({mval_02}); should be ""fourty"""
+else
+    deb_msg $"FAIL: assign to map with variable as key; mval_02({mval_02}); should be ""fourty"""
+endif
+
+set $keyvar "key2"
+
+set $mapval{$keyvar} "thirty"
+
+set $mval_03 $mapval{key}
+
+inc $thread.testCount
+if $mval_03 &= "fourty"
+    inc $thread.passCount
+    deb_msg $"PASS: assign to map, with second key present; mval_03({mval_03}); should be ""fourty"""
+else
+    deb_msg $"FAIL: assign to map, with second key present; mval_03({mval_03}); should be ""fourty"""
+endif
+
+set $mval_04 $mapval{$keyvar}
+
+inc $thread.testCount
+if $mval_04 &= "thirty"
+    inc $thread.passCount
+    deb_msg $"PASS: assign to map with variable as key, as second key; mval_04({mval_04}); should be ""thirty"""
+else
+    deb_msg $"FAIL: assign to map with variable as key, as second key; mval_04({mval_04}); should be ""thirty"""
+endif
+
+inc $thread.testCount
+set $mapval{test} = 10
+
+if $mapval{test} == 10
+    inc $thread.passCount
+    deb_msg $"PASS: map equality to positive int"
+else
+    deb_msg $"FAIL: map equality to positive int"
+endif
+
+inc $thread.testCount
+set $mapval{test} = -10
+
+if $mapval{test} == -10
+    inc $thread.passCount
+    deb_msg $"PASS: map equality to negative int"
+else
+    deb_msg $"FAIL: map equality to negative int"
+endif
+
+inc $thread.testCount
+set $mapval{test} = 0
+
+if $mapval{test} == 0
+    inc $thread.passCount
+    deb_msg $"PASS: map equality to zero int"
+else
+    deb_msg $"FAIL: map equality to zero int"
+endif
+
+inc $thread.testCount
+set $mapval{test} = 1
+
+if $mapval{test} != 0
+    inc $thread.passCount
+    deb_msg $"PASS: map inequality to zero int"
+else
+    deb_msg $"FAIL: map inequality to zero int"
+endif
+
+inc $thread.testCount
+set $mapval{test} = 10
+
+if $mapval{test} != -10
+    inc $thread.passCount
+    deb_msg $"PASS: map inequality to negative int"
+else
+    deb_msg $"FAIL: map inequality to negative int"
+endif
+
+inc $thread.testCount
+set $mapval{test} = -10
+
+if $mapval{test} != 10
+    inc $thread.passCount
+    deb_msg $"PASS: map inequality to positive int"
+else
+    deb_msg $"FAIL: map inequality to positive int"
+endif
+
+inc $thread.testCount
+set $mapval{test} = true
+
+if $mapval{test} != false
+    inc $thread.passCount
+    deb_msg $"PASS: map inequality to bool false"
+else
+    deb_msg $"FAIL: map inequality to bool false"
+endif
+
+inc $thread.testCount
+set $mapval{test} = false
+
+if $mapval{test} != true
+    inc $thread.passCount
+    deb_msg $"PASS: map inequality to bool true"
+else
+    deb_msg $"FAIL: map inequality to bool false"
+endif
+
+inc $thread.testCount
+set $mapval{test} = true
+
+if $mapval{test} == true
+    inc $thread.passCount
+    deb_msg $"PASS: map equality to bool true"
+else
+    deb_msg $"FAIL: map equality to bool true"
+endif
+
+inc $thread.testCount
+set $mapval{test} = false
+
+if $mapval{test} == false
+    inc $thread.passCount
+    deb_msg $"PASS: map equality to bool false"
+else
+    deb_msg $"FAIL: map equality to bool false"
+endif
+
+inc $thread.testCount
+set $mapval{test} = 123.456
+
+if $mapval{test} == 123.456
+    inc $thread.passCount
+    deb_msg $"PASS: map equality to float"
+else
+    deb_msg $"FAIL: map equality to float"
+endif
+
+inc $thread.testCount
+
+mapunset $mapval "test"
+
+if $mapval{test} &= ""
+    inc $thread.passCount
+    deb_msg $"PASS: mapunset"
+else
+    deb_msg $"FAIL: mapunset"
+endif
+
+
+set $mapval{test1} "testing-1"
+set $mapval{test2} "testing-2"
+
+mapcopy $global.mapval $mapval
+
+set $mapval{test1} "post-testing-x"
+set $global.mapval{test2} "post-testing-x"
+
+inc $thread.testCount
+
+if $global.mapval{test1} &= "testing-1"
+    inc $thread.passCount
+    deb_msg $"PASS: mapcopy, no forward propagation"
+else
+    deb_msg $"FAIL: mapcopy, no forward propagation"
+endif
+
+inc $thread.testCount
+if $mapval{test2} &= "testing-2"
+    inc $thread.passCount
+    deb_msg $"PASS: mapcopy, no backward propagation"
+else
+    deb_msg $"FAIL: mapcopy, no backward propagation"
+endif
+
+inc $thread.testCount
+if $mapval{test1} &= $global.mapval{test2}
+    inc $thread.passCount
+    deb_msg $"PASS: mapcopy, post-check"
+else
+    deb_msg $"FAIL: mapcopy, post-check"
+endif
+
+mapclear $mapval
+
+inc $thread.testCount
+inc $thread.testCount
+inc $thread.testCount
+inc $thread.testCount
+
+if $mapval{test1} &= ""
+    inc $thread.passCount
+    deb_msg $"PASS: mapclear, no remnant/1"
+else
+    deb_msg $"FAIL: mapclear, no remnant/1"
+endif
+
+if $mapval{test2} &= ""
+    inc $thread.passCount
+    deb_msg $"PASS: mapclear, no remnant/2"
+else
+    deb_msg $"FAIL: mapclear, no remnant/2"
+endif
+
+if $global.mapval{test1} &= "testing-1"
+    inc $thread.passCount
+    deb_msg $"PASS: mapclear, no forward propagation/1"
+else
+    deb_msg $"FAIL: mapclear, no forward propagation/1"
+endif
+
+if $global.mapval{test2} &= "post-testing-x"
+    inc $thread.passCount
+    deb_msg $"PASS: mapclear, no forward propagation/2"
+else
+    deb_msg $"FAIL: mapclear, no forward propagation/2"
+endif
+
+inc $thread.testCount
+maphaskey $mapval test1
+set $checkresult $$
+
+if $checkresult == false
+    inc $thread.passCount
+    deb_msg $"PASS: maphaskey, simple result, missing"
+else
+    deb_msg $"FAIL: maphaskey, simple result, missing"
+endif
+
+inc $thread.testCount
+set $checkresult resultfrom maphaskey $mapval test2
+
+if $checkresult == false
+    inc $thread.passCount
+    deb_msg $"PASS: maphaskey, resultfrom subcommand, missing"
+else
+    deb_msg $"FAIL: maphaskey, resultfrom subcommand, missing"
+endif
+
+inc $thread.testCount
+maphaskey $global.mapval test1
+set $checkresult $$
+
+if $checkresult
+    inc $thread.passCount
+    deb_msg $"PASS: maphaskey, simple result, present"
+else
+    deb_msg $"FAIL: maphaskey, simple result, present"
+endif
+
+inc $thread.testCount
+set $checkresult resultfrom maphaskey $global.mapval test2
+
+if $checkresult
+    inc $thread.passCount
+    deb_msg $"PASS: maphaskey, resultfrom subcommand, present"
+else
+    deb_msg $"FAIL: maphaskey, resultfrom subcommand, present"
+endif
+
+inc $thread.testCount
+inc $thread.testCount
+
+set $cutlery "fork"
+set $mapval{fork} "knife"
+set $mapval{spoon} "dull"
+set $othermap{knife} "finality"
+
+set $test5 $othermap{ $mapval{ $cutlery } }
+set $test6 $othermap{ $mapval{ fork } }
+
+if $test5 &= "finality"
+    inc $thread.passCount
+    deb_msg $"PASS: map key with whitespace"
+else
+    deb_msg $"FAIL: map key with whitespace"
+endif
+
+if $test6 &= "finality"
+    inc $thread.passCount
+    deb_msg $"PASS: map key literal with whitespace"
+else
+    deb_msg $"FAIL: map key literal with whitespace"
+endif
+
+;;; lists
+
+set $list[0] "test-0-test"
+set $list[1] "test-1-test"
+
+inc $thread.testCount
+if $list[0] &= "test-0-test"
+    inc $thread.passCount
+    deb_msg $"PASS: list assignment to new list, index 0 raw"
+else
+    deb_msg $"FAIL: list assignment to new list, index 0 raw"
+endif
+
+inc $thread.testCount
+if $list[1] &= "test-1-test"
+    inc $thread.passCount
+    deb_msg $"PASS: list assignment to new list, index 1 raw"
+else
+    deb_msg $"FAIL: list assignment to new list, index 1 raw"
+endif
+
+set $index 0
+inc $thread.testCount
+set $list[ $index ] = "test-0-test-0-test"
+if $list[ $index ] &= "test-0-test-0-test"
+    inc $thread.passCount
+    deb_msg $"PASS: list assignment to new list, index 0 via var"
+else
+    deb_msg $"FAIL: list assignment to new list, index 0 via var"
+endif
+
+inc $thread.testCount
+inc $index
+set $list[ $index ] = "test-1-test-1-test"
+if $list[ $index ] &= "test-1-test-1-test"
+    inc $thread.passCount
+    deb_msg $"PASS: list assignment to new list, index 1 via var"
+else
+    deb_msg $"FAIL: list assignment to new list, index 1 via var"
+endif
+
+inc $thread.testCount
+set $list[4] = "test-4-test"
+if $list[4] &= "test-4-test"
+    inc $thread.passCount
+    deb_msg $"PASS: list assignment with index gap (size 2, index 4)"
+else
+    deb_msg $"FAIL: list assignment with index gap (size 2, index 4)"
+endif
+
+inc $thread.testCount
+set $listsz resultfrom listcount $list
+if $listsz == 5
+    inc $thread.passCount
+    deb_msg $"PASS: list size; should be 5 ({listsz})"
+else
+    deb_msg $"FAIL: list size; should be 5 ({listsz})"
+endif
+
+inc $thread.testCount
+listadd $list "test-5-test"
+if $list[5] &= "test-5-test"
+    inc $thread.passCount
+    deb_msg $"PASS: list add"
+else
+    deb_msg $"FAIL: list add"
+endif
+
+inc $thread.testCount
+listclear $list
+if $list[5] &= ""
+    inc $thread.passCount
+    deb_msg $"PASS: list clear/1"
+else
+    deb_msg $"FAIL: list clear/1"
+endif
+
+inc $thread.testCount
+set $listsz resultfrom listcount $list
+if $listsz == 0
+    inc $thread.passCount
+    deb_msg $"PASS: list clear/2; size should be 0 ({listsz})"
+else
+    deb_msg $"FAIL: list clear/2; size should be 0 ({listsz})"
+endif
+
+inc $thread.testCount
+set $mapvalkeylist resultfrom mapkeys $mapval
+set $listsz resultfrom listcount $mapvalkeylist
+if $listsz == 2
+    inc $thread.passCount
+    deb_msg $"PASS: mapkeys; size should be 2 ({listsz})"
+else
+    deb_msg $"FAIL: mapkeys; size should be 2 ({listsz})"
+endif
+
+inc $thread.testCount
+set $listsz 0
+listcount $mapvalkeylist
+set $listsz $$
+if $listsz == 2
+    inc $thread.passCount
+    deb_msg $"PASS: mapkeys; size from $$; size should be 2 ({listsz})"
+else
+    deb_msg $"FAIL: mapkeys; size from $$; size should be 2 ({listsz})"
+endif
+
+inc $thread.testCount
+if $mapvalkeylist[0] &= "fork"
+    inc $thread.passCount
+    deb_msg $"PASS: mapkeys; fork at 0th index"
+else
+    deb_msg $"FAIL: mapkeys; fork at 0th index"
+endif
+
+inc $thread.testCount
+if $mapvalkeylist[1] &= "spoon"
+    inc $thread.passCount
+    deb_msg $"PASS: mapkeys; spoon at 0th index"
+else
+    deb_msg $"FAIL: mapkeys; spoon at 0th index"
+endif
+
+inc $thread.testCount
+int[] $intlist
+set $intlist[0] = "one"
+if $intlist[0] &= "one"
+    deb_msg $"FAIL: int[] and string to int coercion failure/1"
+else
+    inc $thread.passCount
+    deb_msg $"PASS: int[] and string to int coercion failure/1"
+endif
+
+inc $thread.testCount
+if $intlist[0] == 0
+    inc $thread.passCount
+    deb_msg $"PASS: int[] and string to int coercion failure/2"
+else
+    deb_msg $"FAIL: int[] and string to int coercion failure/2"
+endif
+
+listclear $intlist
+listadd $intlist 0 10 20 30
+inc $thread.testCount
+if $intlist[3] == 30
+    inc $thread.passCount
+    deb_msg $"PASS: listadd with multiple arguments"
+else
+    deb_msg $"FAIL: listadd with multiple arguments"
+endif
+
+set $intslice resultfrom listslice $intlist 2 1
+inc $thread.testCount
+if $intslice[0] == 10
+    inc $thread.passCount
+    deb_msg $"PASS: listslice"
+else
+    deb_msg $"FAIL: listslice"
+endif

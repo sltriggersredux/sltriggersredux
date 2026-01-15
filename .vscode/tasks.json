@@ -1,0 +1,168 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Clean Scripts",
+        "group": "build",
+        "type": "shell",
+        "command": "just cleanscripts"
+      },
+      {
+        "label": "Build Core",
+        "group":{
+          "kind": "build",
+          "isDefault": true
+        },
+        "type": "pyro",
+        "projectFile": "ppj-core.ppj",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": [
+          "$PapyrusCompiler"
+        ]
+      },
+      {
+        "label": "Build Adult General",
+        "group":{
+          "kind": "build",
+          "isDefault": true
+        },
+        "type": "pyro",
+        "projectFile": "ppj-adult-general.ppj",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": [
+          "$PapyrusCompiler"
+        ]
+      },
+      {
+        "label": "Build OStim",
+        "group":{
+          "kind": "build",
+          "isDefault": true
+        },
+        "type": "pyro",
+        "projectFile": "ppj-ostim.ppj",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": [
+          "$PapyrusCompiler"
+        ]
+      },
+      {
+        "label": "Build SexLab",
+        "group":{
+          "kind": "build",
+          "isDefault": true
+        },
+        "type": "pyro",
+        "projectFile": "ppj-sexlab.ppj",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": [
+          "$PapyrusCompiler"
+        ]
+      },
+      {
+        "label": "Build SexLab P+",
+        "group":{
+          "kind": "build",
+          "isDefault": true
+        },
+        "type": "pyro",
+        "projectFile": "ppj-sexlabplusplus.ppj",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": [
+          "$PapyrusCompiler"
+        ]
+      },
+      {
+        "label": "Build Plugin",
+        "group": "build",
+        "type": "shell",
+        "command": "just buildplugin"
+      },
+      {
+        "label": "Build All",
+        "group": "build",
+        "dependsOn": [
+          "Build Plugin",
+          "Build Core",
+          "Build Adult General",
+          "Build OStim",
+          "Build SexLab",
+          "Build SexLab P+"
+        ],
+        "dependsOrder": "sequence"
+      },
+      {
+        "label": "Prep SME",
+        "group": "build",
+        "type": "shell",
+        "command": "just populateSME"
+      },
+      {
+        "label": "Prep NEF",
+        "group": "build",
+        "type": "shell",
+        "command": "just populateNEF"
+      },
+      {
+        "label": "Package All",
+        "group": "build",
+        "type": "shell",
+        "command": "just packageall"
+      },
+      {
+        "label": "Package ModOnly",
+        "group": "build",
+        "type": "shell",
+        "command": "just packagemodonly"
+      },
+      {
+        "label": "Package Lang",
+        "group": "build",
+        "type": "shell",
+        "command": "just packagelang"
+      },
+      {
+        "label": "Package FOMOD",
+        "group": "build",
+        "type": "shell",
+        "command": "just packagefomod"
+      },
+      {
+        "label": "Generate Docs",
+        "group": "build",
+        "type": "shell",
+        "command": "just generatedocs"
+      },
+      {
+        "label": "Update Version",
+        "group": "build",
+        "type": "shell",
+        "command": "just update-version-safe"
+      }
+    ]
+  }

@@ -1,0 +1,3 @@
+av_restore $system.self Health 100
+av_restore $system.self Magicka 100
+av_restore $system.self Stamina 100

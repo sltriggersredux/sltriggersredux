@@ -1,0 +1,12 @@
+{
+	"stringList" : 
+	{
+        "comment": ["Add the 'DisplayName' of any containers you want to have considered as 'common'"],
+		"dt_common" : [ "Barrel", "Large Sack", "Sack", "Urn", "Burial Urn", "Honningbrew Mead Barrel", "Black-Briar Mead Barrel" ],
+
+		
+        "comment2": ["These are JsonUtil formID format entries for containers which will be dynamically added to the container blacklist at game start"],
+		"dt_blacklist" : [
+		]
+	}
+}

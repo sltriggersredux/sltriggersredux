@@ -1,0 +1,424 @@
+{
+    "comment_section" : [
+        ["# this is an attributes file for an SLT extension"],
+        ["# it will also contain this structure, letting SLT know what attributes to track"],
+        ["# this is a comment because it starts with an octothorpe(#)"],
+        ["# otherwise this file has to be proper json"],
+        ["# it is divided into a 'triggers' block and a 'settings' block"],
+        ["# the blocks are otherwise the same, following the same naming convention"]
+    ],
+    "trigger_attributes" : [
+        ["# this section is just a simple list of attributes"],
+        ["# one per row, yes"],
+        ["event",                   "triggerattribute_event"],
+        ["keymapping",              "triggerattribute_keymapping"],
+        ["modifierkeymapping",      "triggerattribute_modifierkeymapping"],
+        ["usedak",                  "triggerattribute_usedak"],
+        ["daytime",                 "triggerattribute_daytime"],
+        ["chance",                  "triggerattribute_chance"],
+        ["comconmat",               "triggerattribute_comconmat"],
+        ["deeplocation",            "triggerattribute_deeplocation"],
+        ["deeplocation_leaving",    "triggerattribute_deeplocation"],
+        ["deeplocation_entering",   "triggerattribute_deeplocation"],
+        ["container_corpse",        "triggerattribute_container_corpse"],
+        ["container_empty",         "triggerattribute_container_empty"],
+        ["lbl_location_leaving",    "triggerattribute_location_leaving"],
+        ["lbl_location_entering",   "triggerattribute_location_entering"],
+        ["cleared_leaving",         "triggerattribute_cleared"],
+        ["cleared_entering",        "triggerattribute_cleared"],
+        ["equipping",               "triggerattribute_equipping"],
+        ["is_armed",                "triggerattribute_is_armed"],
+        ["is_clothed",              "triggerattribute_is_clothed"],
+        ["is_weapon_drawn",         "triggerattribute_is_weapon_drawn"],
+        ["armor_slot",              "triggerattribute_armor_slot"],
+        ["equipped_item_type",      "triggerattribute_equipped_item_type"],
+        ["has_enchantments",        "triggerattribute_has_enchantments"],
+        ["item_is_unique",          "triggerattribute_item_is_unique"],
+        ["combat_state",            "triggerattribute_combat_state"],
+        ["player_attacking",        "triggerattribute_player_attacking"],
+        ["was_power_attack",        "triggerattribute_was_power_attack"],
+        ["was_sneak_attack",        "triggerattribute_was_sneak_attack"],
+        ["was_bash_attack",         "triggerattribute_was_bash_attack"],
+        ["was_blocked",             "triggerattribute_was_blocked"],
+        ["timer_delay",             "triggerattribute_timer_delay"],
+        ["vampirism",               "triggerattribute_vampirism"],
+        ["lycanthropy",             "triggerattribute_lycanthropy"],
+        ["swimming",                "triggerattribute_swimming"],
+        ["in_water",                "triggerattribute_in_water"],
+        ["is_player",               "triggerattribute_is_player"],
+        ["do_1",                    "triggerattribute_do_1"],
+        ["do_2",                    "triggerattribute_do_2"],
+        ["do_3",                    "triggerattribute_do_3"],
+        ["do_4",                    "triggerattribute_do_4"]
+    ],
+    "triggerattribute_event" : [
+        ["# here is where you define aspects of the attribute"],
+        ["type", "int"],
+        ["widget", "menu", "Event: ", "0", "- Select an Event -", "Key Mapping", "Top of the Hour", "New Session", "Player Cell Change (Frequent)", "Player Opened Container", "Player Location Change (Less Frequent)", "Player Equipment Change", "Player Combat State Changed", "Player Hit or Is Hit", "Timer Based", "Harvesting", "Fast Travel Arrival", "Vampirism Transitions", "Werewolf Transitions", "Vampire Feeding", "Player Swim Start/Stop", "Player Enter/Exit Water", "Soul Trapped"],
+        ["info", "Choose which type of event this trigger will use."]
+    ],
+    "triggerattribute_keymapping" : 
+    [
+        ["type", "int", "-1"],
+        ["#", "widget", "keymapping", "label", "default index" ],
+        ["widget", "keymapping", "Key: ", "-1"],
+        ["info", "Choose the key to map to the action."]
+    ],
+    "triggerattribute_location_leaving" :
+    [
+        ["type", "string", ""],
+        ["widget", "header"],
+        ["info", "Location Leaving: "]
+    ],
+    "triggerattribute_timer_delay" :
+    [
+        ["type", "float", "5.0"],
+        ["widget", "slider", "Timer Delay: ", "1.0", "60.0", "1.0", "{0}"],
+        ["info", "The timer delay between executions of the trigger in real minutes. 0 disables the filter."]
+    ],
+    "triggerattribute_location_entering" :
+    [
+        ["type", "string", ""],
+        ["widget", "header"],
+        ["info", "Location Entering: "]
+    ],
+    "triggerattribute_modifierkeymapping" : 
+    [
+        ["type", "int", "-1"],
+        ["widget", "keymapping", "Modifier Key: ", "-1"],
+        ["info", "(Optional) If specified, will be required to be pressed to trigger the action."]
+    ],
+    "triggerattribute_usedak" : [
+        ["type", "int"],
+        ["widget", "toggle", "Use DAK? ", "0"],
+        ["info", "(Optional) If enabled, will use the Dynamic Activation Key instead of the Modifier key (if selected)"]
+    ],
+    "triggerattribute_cleared" : [
+        ["type", "int"],
+        ["widget", "menu", "Cleared: ", "0", "Any", "Cleared", "Not Cleared"],
+        ["info", "Whether the location is considered Cleared or not."]
+    ],
+    "triggerattribute_equipping" : [
+        ["type", "int"],
+        ["widget", "menu", "Equipping/Unequipping: ", "0", "Any", "Equipping Item", "Unequipping Item"],
+        ["info", "Whether the equipment is being put on or taken off."]
+    ],
+    "triggerattribute_is_armed" : [
+        ["type", "int"],
+        ["widget", "menu", "Is Weapon/Spell Equipped? ", "0", "Any", "Equipped In Either Hand", "Not Equipped In Either Hand", "Not Equipped In Main/Right Hand"],
+        ["info", "Whether the player has a weapon or spell equipped."]
+    ],
+    "triggerattribute_is_clothed" : [
+        ["type", "int"],
+        ["widget", "menu", "Is Armor/Clothing Equipped? ", "0", "Any", "Equipped In Body Slot (32)", "Not Equipped In Body Slot (32)", "Not Equipped Or Devious Item Equipped In Body Slot (32)"],
+        ["info", "Whether the player has armor or clothing equipped in the Body slot (32)."]
+    ],
+    "triggerattribute_is_weapon_drawn": [
+        ["type", "int"],
+        ["widget", "menu", "Is Weapon/Spell Drawn? ", "0", "Any", "Weapon/Spell Is Drawn", "Weapon/Spell Is Not Drawn"],
+        ["info", "Whether the player has a weapon or spell drawn and ready for combat."]
+    ],
+    "triggerattribute_has_enchantments" : [
+        ["type", "int"],
+        ["widget", "menu", "Has Enchants: ", "0", "Any", "Must Have Enchantments", "Cannot Have Enchantments"],
+        ["info", "Whether the equipment can have enchantments or not."]
+    ],
+    "triggerattribute_item_is_unique" : [
+        ["type", "int"],
+        ["widget", "menu", "Unique/World Items: ", "0", "Any", "Standard Items Only", "Unique/World Items Only"],
+        ["info", "Whether the equipment is unique (specifically, do the equip/unequip events provide an ObjectReference or just the base Form?)."]
+    ],
+    "triggerattribute_equipped_item_type" : [
+        ["type", "int"],
+        ["widget", "menu", "Type of Item: ", "0", "Any", "Armor Item", "Weapon Item", "Spell Item", "Potion/Food Item", "Ammo Item"],
+        ["info", "The type of 'equipment' that was equipped/unequipped. Technically could include things like Potions, for example."]
+    ],
+    "triggerattribute_armor_slot" : [
+        ["type", "int"],
+        ["widget", "menu", "Armor Slot (implies Armor): ", "0", "Any", "Body/Head/Hands/Feet", "Ring/Amulet/Circlet", "30 - Head", "31 - Hair", "32 - Body", "33 - Hands", "34 - Forearms", "35 - Amulet", "36 - Ring", "37 - Feet", "38 - Calves", "39 - Shield", "40 - Tail", "41 - LongHair", "42 - Circlet", "43 - Ears", "44 - Unnamed", "45 - Unnamed", "46 - Unnamed", "47 - Unnamed", "48 - Unnamed", "49 - Unnamed", "50 - DecapitateHead", "51 - Decapitate", "52 - Unnamed", "53 - Unnamed", "54 - Unnamed", "55 - Unnamed", "56 - Unnamed", "57 - Unnamed", "58 - Unnamed", "59 - Unnamed", "60 - Unnamed", "61 - FX01"],
+        ["info", "The armor slot of the equipment (implies Armor was equipped; filter will fail otherwise)."]
+    ],
+    "triggerattribute_daytime" : [
+        ["type", "int"],
+        ["widget", "menu", "Daytime :", "0", "Any", "Day", "Night"],
+        ["info", "The time of day the cell change is taking place in."]
+    ],
+    "triggerattribute_chance" : [
+        ["type", "float", "100.0"],
+        ["widget", "slider", "Chance: ", "0.0", "100.0", "1.0", "{0}"],
+        ["info", "The chance the trigger will run when all prerequisites are met."]
+    ],
+    "triggerattribute_comconmat" : [
+        ["type", "int"],
+        ["widget", "menu", "Common Containers :", "0", "Any", "Ignore Common Containers", "Only Common Containers"],
+        ["info", "How to handle containers based on their status as 'common' i.e. 'Barrel', 'Sack' and such. Definable in 'sl-triggers/containers.json'."]
+    ],
+    "triggerattribute_deeplocation": [
+        ["type", "int"],
+        ["widget", "menu", "Location :", "0", "Any", "Inside", "Outside", "Safe (Home/Jail/Inn)", "City / Town", "Wilderness", "Dungeon", "Player Home", "Jail", "Dungeon", "Cave", "Dwelling", "City", "Town", "Habitation", "Draugr Crypt", "Dragon Priest Lair", "Bandit Camp", "Falmer Hive", "Vampire Lair", "Dwarven Automatons", "Military Fort", "Mine", "Inn", "Hold"],
+        ["info", "The location, indoors or outdoors, as well as Safe/City/Wilderness/Dungeon and others, the cell qualifies as."]
+    ],
+    "triggerattribute_container_corpse": [
+        ["type", "int"],
+        ["widget", "menu", "Corpses :", "0", "Any", "Ignore Corpses", "Only Corpses"],
+        ["info", "Whether the container is a corpse."]
+    ],
+    "triggerattribute_container_empty": [
+        ["type", "int"],
+        ["widget", "menu", "Empty Containers :", "0", "Any", "Ignore Empty Containers", "Only Empty Containers"],
+        ["info", "Whether the container has any contents."]
+    ],
+    "triggerattribute_combat_state" : [
+        ["type", "int"],
+        ["widget", "menu", "Combat State :", "0", "Any", "Entering Combat", "Leaving Combat"],
+        ["info", "Whether the player is entering or leaving combat."]
+    ],
+    "triggerattribute_player_attacking" : [
+        ["type", "int"],
+        ["widget", "menu", "Player Attacking :", "0", "Any", "Player Attacking", "Player Being Attacked"],
+        ["info", "Whether the player is the one attacking or being attacked."]
+    ],
+    "triggerattribute_was_power_attack" : [
+        ["type", "int"],
+        ["widget", "menu", "Power Attacking :", "0", "Any", "Is Power Attacking", "Is Not Power Attacking"],
+        ["info", "Whether the attack was a power attack."]
+    ],
+    "triggerattribute_was_sneak_attack" : [
+        ["type", "int"],
+        ["widget", "menu", "Sneak Attacking :", "0", "Any", "Is Sneak Attacking", "Is Not Sneak Attacking"],
+        ["info", "Whether the attack was a sneak attack."]
+    ],
+    "triggerattribute_was_bash_attack" : [
+        ["type", "int"],
+        ["widget", "menu", "Bash Attacking :", "0", "Any", "Is Bash Attacking", "Is Not Bash Attacking"],
+        ["info", "Whether the attack was a bash attack."]
+    ],
+    "triggerattribute_was_blocked" : [
+        ["type", "int"],
+        ["widget", "menu", "Attack Blocked :", "0", "Any", "Was Attack Blocked", "Was Attack Left Unblocked"],
+        ["info", "Whether the attack was blocked."]
+    ],
+    "triggerattribute_vampirism" : [
+        ["type", "int"],
+        ["widget", "menu", "Vampirism Transition: ", "0", "Any", "Cured", "Contracted", "Enter Vampire Lord Form", "Leave Vampire Lord Form"],
+        ["info", "Which phase of vampirism you wish to react to."]
+    ],
+    "triggerattribute_lycanthropy" : [
+        ["type", "int"],
+        ["widget", "menu", "Lycanthropy Transition: ", "0", "Any", "Cured", "Contracted", "Enter Werewolf Form", "Leave Werewolf Form"],
+        ["info", "Which phase of lycanthropy you wish to react to."]
+    ],
+    "triggerattribute_swimming" : [
+        ["type", "int"],
+        ["widget", "menu", "Swimming Start/Stop: ", "0", "Either", "Start", "Stop"],
+        ["info", "Trigger when the player's swimming state transitions: Start, Stop, or Either."]
+    ],
+    "triggerattribute_in_water" : [
+        ["type", "int"],
+        ["widget", "menu", "Entering/Leaving Water: ", "0", "Either", "Entering", "Leaving"],
+        ["info", "Trigger when the player is Entering Water, Leaving Water, or Either."]
+    ],
+    "triggerattribute_is_player" : [
+        ["type", "int"],
+        ["widget", "menu", "Is Player: ", "0", "Either", "Is Player", "Is Not Player"],
+        ["info", "Trigger when the soul collector Is the Player, Is Not the Player, or Either."]
+    ],
+    "triggerattribute_do_1" : [
+        ["type", "string"],
+        ["widget", "command", "Script 1: "],
+        ["info", "You can run 1 or more scripts associated with this trigger. This is the first."]
+    ],
+    "triggerattribute_do_2" : [
+        ["type", "string"],
+        ["widget", "command", "Script 2: "],
+        ["info", "You can run 1 or more scripts associated with this trigger. This is the second."]
+    ],
+    "triggerattribute_do_3" : [
+        ["type", "string"],
+        ["widget", "command", "Script 3: "],
+        ["info", "You can run 1 or more scripts associated with this trigger. This is the third."]
+    ],
+    "triggerattribute_do_4" : [
+        ["type", "string"],
+        ["widget", "command", "Script 4: "],
+        ["info", "You can run 1 or more scripts associated with this trigger. This is the fourth."]
+    ],
+    "trigger_layoutconditions" : [
+        ["# checked in sequence shown, first match determines layout selection"],
+		["event"],
+        ["1", "triggerlayout_keymapping"],
+        ["2", "triggerlayout_topofthehour"],
+        ["3", "triggerlayout_newsession"],
+        ["4", "triggerlayout_playercellchange"],
+        ["5", "triggerlayout_playercontaineractivate"],
+        ["6", "triggerlayout_locationchange"],
+        ["7", "triggerlayout_equipment_change"],
+        ["8", "triggerlayout_player_combat_status"],
+        ["9", "triggerlayout_player_on_hit"],
+        ["10", "triggerlayout_timer"],
+        ["11", "triggerlayout_harvested_plant"],
+        ["12", "triggerlayout_fast_travel"],
+        ["13", "triggerlayout_vampirism"],
+        ["14", "triggerlayout_lycanthropy"],
+        ["15", "triggerlayout_vampire_feeding"],
+        ["16", "triggerlayout_swimming"],
+        ["17", "triggerlayout_in_water"],
+        ["18", "triggerlayout_soul_trapped"]
+    ],
+    "triggerlayout_keymapping" : [
+        ["event", "chance"],
+        ["keymapping", "modifierkeymapping"],
+        ["usedak", "is_weapon_drawn"],
+        ["is_armed", "is_clothed"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_topofthehour" : [
+        ["event", "chance"],
+        ["is_armed", "is_clothed"],
+        ["is_weapon_drawn"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_newsession" : [
+        ["event", "chance"],
+        ["is_armed", "is_clothed"],
+        ["is_weapon_drawn"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_playercellchange" : [
+        ["event", "chance"],
+        ["daytime", "deeplocation"],
+        ["is_armed", "is_clothed"],
+        ["is_weapon_drawn"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_playercontaineractivate" : [
+        ["event", "chance"],
+        ["comconmat", "deeplocation"],
+        ["container_corpse", "container_empty"],
+        ["is_armed", "is_clothed"],
+        ["is_weapon_drawn"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_locationchange" : [
+        ["event", "chance"],
+        ["is_armed", "is_clothed"],
+        ["is_weapon_drawn", "daytime"],
+        ["lbl_location_leaving"],
+        ["deeplocation_leaving", "cleared_leaving"],
+        ["lbl_location_entering"],
+        ["deeplocation_entering", "cleared_entering"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_equipment_change" : [
+        ["event", "chance"],
+        ["equipping", "has_enchantments"],
+        ["equipped_item_type", "armor_slot"],
+        ["is_armed", "is_clothed"],
+        ["is_weapon_drawn", "item_is_unique"],
+        ["daytime"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_player_combat_status" : [
+        ["event", "chance"],
+        ["combat_state"],
+        ["is_armed", "is_clothed"],
+        ["is_weapon_drawn"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_player_on_hit" : [
+        ["event", "chance"],
+        ["player_attacking", "was_blocked"],
+        ["was_power_attack", "was_sneak_attack"],
+        ["was_bash_attack"],
+        ["is_armed", "is_clothed"],
+        ["is_weapon_drawn"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_timer" : [
+        ["event", "chance"],
+        ["timer_delay", "deeplocation"],
+        ["is_armed", "is_clothed"],
+        ["is_weapon_drawn"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_harvested_plant" : [
+        ["event", "chance"],
+        ["deeplocation", "daytime"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_fast_travel" : [
+        ["event", "chance"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_vampirism" : [
+        ["event", "chance"],
+        ["vampirism"],
+        ["deeplocation", "daytime"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_lycanthropy" : [
+        ["event", "chance"],
+        ["lycanthropy"],
+        ["deeplocation", "daytime"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_vampire_feeding" : [
+        ["event", "chance"],
+        ["deeplocation", "daytime"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_swimming" : [
+        ["event", "chance"],
+        ["swimming"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_in_water" : [
+        ["event", "chance"],
+        ["in_water"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout_soul_trapped" : [
+        ["event", "chance"],
+        ["is_player"],
+        ["deeplocation", "daytime"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout" : [
+        ["event"]
+    ]
+
+
+    ,
+
+
+
+    "settings_attributes" : [
+        ["cards_per_page",      "settingsattribute_cards_per_page"]
+    ],
+    "settingsattribute_cards_per_page" : [
+        ["type", "int"],
+        ["widget", "menu", "Triggers per Page :", "4", "1", "2", "3", "4", "5"],
+        ["info", "The number of triggers to display per page."]
+    ],
+	"settingslayout" : [
+		["cards_per_page"]
+	]
+}

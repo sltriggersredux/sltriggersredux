@@ -1,0 +1,641 @@
+scriptname sl_triggersCmdLibOStim
+
+import sl_triggersStatics
+
+sl_triggersExtensionOstim Function GetExtension() global
+    return GetForm_SLT_ExtensionOstim() as sl_triggersExtensionOstim
+EndFunction
+
+; sltname ostim_waitforend
+; sltgrup OStim
+; sltdesc Wait until specified actor is not in OStim scene
+; sltargs Form: actor: target Actor
+; sltsamp ostim_waitforend $self
+; sltrslt Wait until the scene ends
+function ostim_waitforend(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 2)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        
+        while OActor.IsInOStim(_targetActor) && CmdPrimary.InSameCell(_targetActor)
+            Utility.wait(4)
+        endWhile
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_getrndactor
+; sltgrup OStim
+; sltdesc Returns: Form: a random actor within specified range of self
+; sltargs float: range: (0 - all | >0 - range in Skyrim units)
+; sltargs int: option: (0 - all | 1 - not in OStim scene | 2 - must be in OStim scene) (optional: default 0 - all)
+; sltsamp ostim_getrndactor 500 2
+; sltsamp actor_isvalid $actor
+; sltsamp if $$ = false [end]
+; sltsamp msg_notify "Someone is nearby!"
+; sltsamp [end]
+function ostim_getrndactor(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+    Actor nextIterActor
+
+    if ParamLengthLT(CmdPrimary, param.Length, 4)
+        Actor[] inCell = MiscUtil.ScanCellNPCs(CmdPrimary.PlayerRef, CmdPrimary.ResolveFloat(param[1]))
+        if inCell.Length
+            int mode
+            if param.Length > 2
+                mode = CmdPrimary.ResolveInt(param[2])
+            endif
+        
+            Keyword ActorTypeNPC = GetForm_Skyrim_ActorTypeNPC() as Keyword
+            Cell    cc = CmdPrimary.PlayerRef.getParentCell()
+            bool isInOStimScene
+            bool xenabled = sltrex.IsEnabled
+        
+            int i = 0
+            int nuns = 0
+            while i < inCell.Length
+                Actor _targetActor = inCell[i]
+                isInOStimScene = OActor.IsInOStim(_targetActor)
+                if !_targetActor || _targetActor == CmdPrimary.PlayerRef || !_targetActor.isEnabled() || _targetActor.isDead() || _targetActor.isInCombat() || _targetActor.IsUnconscious() || (ActorTypeNPC && !_targetActor.HasKeyWord(ActorTypeNPC)) || !_targetActor.Is3DLoaded() || (cc && cc != _targetActor.getParentCell()) || (mode == 1 && xenabled && isInOStimScene) || (mode == 2 && xenabled && !isInOStimScene)
+                    inCell[i] = none
+                    nuns += 1
+                endif
+                i += 1
+            endwhile
+        
+            int remainder = inCell.Length - nuns
+            if remainder > 0
+                int _targetMetaIndex = Utility.RandomInt(0, remainder - 1)
+                int _metaIndex = -1
+
+                i = 0
+                while i < inCell.Length && _metaIndex < _targetMetaIndex
+                    if inCell[i]
+                        _metaIndex += 1
+                    endif
+                    if _metaIndex < _targetMetaIndex
+                        i += 1
+                    endif
+                endwhile
+
+                if _metaIndex == _targetMetaIndex
+                    nextIterActor = inCell[i]
+                endif
+            endif
+        endif
+    endif
+
+    CmdPrimary.MostRecentFormResult = nextIterActor
+    CmdPrimary.iterActor = nextIterActor
+
+    CmdPrimary.CompleteOperationOnActor()
+endfunction
+
+; sltname ostim_waitforkbd
+; sltgrup OStim
+; sltdesc Returns: int: the keycode pressed after waiting for user to press any of the specified keys or for the end of the OStim scene
+; sltdesc (See https://ck.uesp.net/wiki/Input_Script for the DXScanCodes)
+; sltdesc Usage 1: ostim_waitforkbd <dxscancode> [<dxscancode> ...]
+; sltargs int: dxscancode: <DXScanCode of key>
+; sltdesc Usage 2: ostim_waitforkbd $keylist ; where $keylist is a int[]
+; sltargs int[]: keylist: a list of dxscancode
+; sltrslt ; These do the same thing
+; sltsamp ostim_waitforkbd 74 78 181 55
+; sltsamp listadd $keystowaitfor 74 78 181 55
+; sltsamp ostim_waitforkbd $keystowaitfor
+; sltsamp if $$ = 74 MINUS
+; sltsamp ...
+; sltsamp if $$ < 0 END
+; sltrslt Wait for Num-, Num+, Num/, or Num*, or animation expired, and then do something based on the result.
+function ostim_waitforkbd(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+    int nextResult = -1
+
+	if ParamLengthGT(CmdPrimary, param.Length, 1)
+        int cnt = param.length
+        int idx
+        int startidx = 1
+        int scancode
+
+        if CmdTargetActor
+            bool playerInOStim =  OActor.IsInOStim(CmdPrimary.PlayerRef)
+            if (CmdTargetActor != CmdPrimary.PlayerRef) || (cnt <= 1) || !(sltrex.IsEnabled && playerInOStim)
+                nextResult = -1
+            else
+                CmdPrimary.UnregisterForAllKeys()
+
+                int[] resolvedListInt = CmdPrimary.ResolveListInt(param[1])
+                if (resolvedListInt)
+                    idx = resolvedListInt.Length
+                    while idx
+                        idx -= 1
+                        scancode = resolvedListInt[idx]
+                        if scancode > 0
+                            CmdPrimary.RegisterForKey(scanCode)
+                        endIf
+                    endWhile
+                else
+                    idx = startidx
+                    while idx < cnt
+                        scancode = CmdPrimary.ResolveInt(param[idx])
+                        if scancode > 0
+                            CmdPrimary.RegisterForKey(scanCode)
+                        endIf
+                        idx += 1
+                    endWhile
+                endif
+                
+                CmdPrimary.LastKey = 0
+                
+                while CmdPrimary && CmdPrimary.LastKey == 0 && (sltrex.IsEnabled && playerInOStim)
+                    Utility.Wait(0.5)
+                endWhile
+                
+                if CmdPrimary
+                    CmdPrimary.UnregisterForAllKeys()
+                    
+                    if sltrex.IsEnabled && !playerInOStim
+                        nextResult = -1
+                    else
+                        nextResult = CmdPrimary.LastKey
+                    endIf
+                endif
+            endIf
+        endif
+    endif
+
+    CmdPrimary.MostRecentIntResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_getexcitement
+; sltgrup OStim
+; sltdesc Returns: float: Returns current actor excitement
+; sltargs Form: actor: target Actor
+; sltsamp ostim_getexcitement $system.player
+function ostim_getexcitement(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+    float nextResult = 0
+
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 2)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor && OActor.IsInOStim(_targetActor)
+            nextResult = OActor.GetExcitement(_targetActor)
+        endIf
+    endif
+
+    CmdPrimary.MostRecentFloatResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_setexcitement
+; sltgrup OStim
+; sltdesc Sets current actor excitement
+; sltargs Form: actor: target Actor
+; sltargs float: value: new excitement value
+; sltsamp ostim_setexcitement $system.player 20.0
+function ostim_setexcitement(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 3)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor && OActor.IsInOStim(_targetActor)
+            OActor.SetExcitement(_targetActor, CmdPrimary.ResolveFloat(param[2]))
+        endIf
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_getexcitementmultiplier
+; sltgrup OStim
+; sltdesc Returns: float: Returns current actor excitementmultiplier
+; sltargs Form: actor: target Actor
+; sltsamp ostim_getexcitementmultiplier $system.player
+function ostim_getexcitementmultiplier(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+    float nextResult = 0
+
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 2)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor && OActor.IsInOStim(_targetActor)
+            nextResult = OActor.GetExcitementMultiplier(_targetActor)
+        endIf
+    endif
+
+    CmdPrimary.MostRecentFloatResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_setexcitementmultiplier
+; sltgrup OStim
+; sltdesc Sets current actor excitementmultiplier
+; sltargs Form: actor: target Actor
+; sltargs float: value: new excitementmultiplier value
+; sltsamp ostim_setexcitementmultiplier $system.player 20.0
+function ostim_setexcitementmultiplier(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 3)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor && OActor.IsInOStim(_targetActor)
+            OActor.SetExcitementMultiplier(_targetActor, CmdPrimary.ResolveFloat(param[2]))
+        endIf
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_modifyexcitement
+; sltgrup OStim
+; sltdesc Modifies current actor excitement by the given amount
+; sltargs Form: actor: target Actor
+; sltargs float: modvalue: excitement value to apply to excitement
+; sltargs bool: respectMultiplier: (optional; default:false) will the modvalue have the OStim ExcitementMultiplier applied
+; sltsamp ostim_modifyexcitement $system.player 20.0 true
+; sltsamp ; this call will have the multiplier applied
+function ostim_modifyexcitement(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+	if sltrex.IsEnabled && ParamLengthGT(CmdPrimary, param.Length, 2)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor && OActor.IsInOStim(_targetActor)
+            bool respectMultiplier = false
+            If (param.Length > 3)
+                respectMultiplier = CmdPrimary.ResolveBool(param[3])
+            EndIf
+            OActor.ModifyExcitement(_targetActor, CmdPrimary.ResolveFloat(param[2]), respectMultiplier)
+        endIf
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_isin
+; sltgrup OStim
+; sltdesc Returns: bool: true if the specified actor is in a OStim scene, false otherwise
+; sltargs Form: actor: target Actor
+; sltsamp ostim_isin $system.self
+function ostim_isin(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+    
+    bool nextResult = false
+
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 2)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor && CmdPrimary.InSameCell(_targetActor)
+            nextResult = OActor.IsInOStim(_targetActor)
+        endIf
+    endif
+
+    CmdPrimary.MostRecentBoolResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_findaction
+; sltgrup OStim
+; sltdesc Returns: int: the action index if the OStim scene metadata has the specified action, -1 otherwise
+; sltargs string: action: action name e.g. "vaginalsex", "analsex", "blowjob"
+; sltargs Form: actor: (optional; default: $system.self) target Actor
+; sltsamp ostim_findaction "blowjob" $system.self
+; sltsamp if $$ = true [doORALthing]
+function ostim_findaction(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+    
+    int nextResult = -1
+	
+	if sltrex.IsEnabled && ParamLengthLT(CmdPrimary, param.Length, 4)
+        Actor _targetActor = CmdTargetActor
+        if param.Length > 2
+            _targetActor = CmdPrimary.ResolveActor(param[2])
+        endif
+        int tid = OActor.GetSceneID(_targetActor)
+        If (tid > -1)
+            string sceneID = OThread.GetScene(tid)
+            nextResult = OMetadata.FindAction(sceneID, CmdPrimary.ResolveString(param[1]))
+        EndIf
+    endif
+    
+    CmdPrimary.MostRecentIntResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_hasaction
+; sltgrup OStim
+; sltdesc Returns: bool: true if the OStim scene metadata has the specified action, false otherwise
+; sltargs string: action: action name e.g. "vaginalsex", "analsex", "blowjob"
+; sltargs Form: actor: (optional; default: $system.self) target Actor
+; sltsamp ostim_hasaction "blowjob" $system.self
+; sltsamp if $$ = true [doORALthing]
+function ostim_hasaction(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+    
+    bool nextResult
+	
+	if sltrex.IsEnabled && ParamLengthLT(CmdPrimary, param.Length, 4)
+        Actor _targetActor = CmdTargetActor
+        if param.Length > 2
+            _targetActor = CmdPrimary.ResolveActor(param[2])
+        endif
+        int tid = OActor.GetSceneID(_targetActor)
+        If (tid > -1)
+            string sceneID = OThread.GetScene(tid)
+            nextResult = (OMetadata.FindAction(sceneID, CmdPrimary.ResolveString(param[1])) > -1)
+        EndIf
+    endif
+    
+    CmdPrimary.MostRecentBoolResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_stallclimax
+; sltgrup OStim
+; sltdesc Prevents this actor from climaxing, including the prevention of auto climax animations
+; sltdesc Does not prevent the climaxes of auto climax animations that already started
+; sltargs Form actor: target Actor
+; sltsamp ostim_stallclimax $system.player
+function ostim_stallclimax(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+	
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 2)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor
+            OActor.StallClimax(_targetActor)
+        endif
+	endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_permitclimax
+; sltgrup OStim
+; sltdesc Permits this actor to climax again (as in it undoes ostim_stallclimax)
+; sltargs Form actor: target Actor
+; sltsamp ostim_permitclimax $system.player
+function ostim_permitclimax(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+	
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 2)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor
+            OActor.PermitClimax(_targetActor)
+        endif
+	endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_isclimaxstalled
+; sltgrup OStim
+; sltdesc Returns: bool: whether the actor is prevented from climaxing
+; sltargs Form: actor: target Actor
+; sltsamp ostim_isclimaxstalled $system.player
+function ostim_isclimaxstalled(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+    bool nextResult
+	
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 2)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor
+            nextResult = OActor.IsClimaxStalled(_targetActor)
+        endif
+	endif
+
+    CmdPrimary.MostRecentBoolResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_getthreadid
+; sltgrup OStim
+; sltdesc Returns: int: the ThreadID for the OStim thread the target actor is in; -1 if not in a thread
+; sltargs Form: actor: target Actor
+; sltsamp ostim_getthreadid $system.self
+function ostim_getthreadid(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+    int nextResult
+	
+	if sltrex.IsEnabled && ParamLengthLT(CmdPrimary, param.Length, 3)
+        Actor _targetActor = CmdTargetActor
+        if param.Length > 1
+            _targetActor = CmdPrimary.ResolveActor(param[1])
+        endif
+        nextResult = OActor.GetSceneId(_targetActor)
+    endif
+
+    CmdPrimary.MostRecentIntResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_getsceneid
+; sltgrup OStim
+; sltdesc Returns: string: the SceneID the targetActor is in; "" if not in a scene
+; sltargs Form: actor: target Actor
+; sltsamp ostim_getsceneid $system.self
+; sltsamp msg_notify "SceneID: " $$
+function ostim_getsceneid(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+    string nextResult = ""
+	
+	if sltrex.IsEnabled && ParamLengthLT(CmdPrimary, param.Length, 3)
+        Actor _targetActor = CmdTargetActor
+        if param.Length > 1
+            _targetActor = CmdPrimary.ResolveActor(param[1])
+        endif
+        nextResult = OThread.GetScene(OActor.GetSceneId(_targetActor))
+    endif
+
+    CmdPrimary.MostRecentStringResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_animname
+; sltgrup OStim
+; sltdesc Returns: string: the current OStim animation name
+; sltargs Form: actor: target Actor
+; sltsamp ostim_animname $system.self
+; sltsamp msg_notify "Playing: " $$
+function ostim_animname(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+    string nextResult = ""
+	
+	if sltrex.IsEnabled && ParamLengthLT(CmdPrimary, param.Length, 3)
+        Actor _targetActor = CmdTargetActor
+        if param.Length > 1
+            _targetActor = CmdPrimary.ResolveActor(param[1])
+        endif
+        nextResult = OMetadata.GetName(OThread.GetScene(OActor.GetSceneId(_targetActor)))
+    endif
+
+    CmdPrimary.MostRecentStringResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_actorcount
+; sltgrup OStim
+; sltdesc Returns: int: the actorcount of the OStim scene the targetActor is in; 0 if not in a scene
+; sltargs Form: targetActor: the actor whose scene you want the actor count from
+; sltsamp ostim_actorcount $system.self
+function ostim_actorcount(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+
+    int nextResult
+	
+	if sltrex.IsEnabled && ParamLengthLT(CmdPrimary, param.Length, 3)
+        Actor _targetActor = CmdTargetActor
+        if param.Length > 1
+            _targetActor = CmdPrimary.ResolveActor(param[1])
+        endif
+        nextResult = OMetadata.GetActorCount(OThread.GetScene(OActor.GetSceneId(_targetActor)))
+    endif
+
+    CmdPrimary.MostRecentIntResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_isinslot
+; sltgrup OStim
+; sltdesc Returns: bool: true if the specified actor is in the specified OStim scene slot, false otherwise
+; sltargs Form: actor: target Actor
+; sltargs int: slotnumber: 1-based OStim actor position number
+; sltsamp ostim_isinslot $system.player 1
+function ostim_isinslot(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+    
+    bool nextResult = false
+	
+	if sltrex.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 3)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor
+            int tid = OActor.GetSceneID(_targetActor)
+
+            int actorpos = OThread.GetActorPosition(tid, _targetActor) + 1
+            nextResult = (actorPos == CmdPrimary.ResolveInt(param[2]))
+        endif
+	endif
+	
+	CmdPrimary.MostRecentBoolResult = nextResult
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_climax
+; sltgrup OStim
+; sltdesc Immediately forces the specified actor to have a OStim orgasm.
+; sltdesc May only work during OStim scenes
+; sltargs Form: actor: target Actor
+; sltargs bool: ignoreStall: (optional; default:false) should the ClimaxStalled setting be ignored
+; sltsamp ostim_climax $system.self
+; sltsamp ostim_climax $system.partner
+; sltrslt Simultaneous orgasms
+function ostim_climax(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+    
+    if sltrex.IsEnabled && ParamLengthGT(CmdPrimary, param.Length, 1)
+        Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+        if _targetActor
+            bool ignoreStall
+            If (param.Length > 2)
+                ignoreStall = CmdPrimary.ResolveBool(param[2])
+            EndIf
+            OActor.Climax(_targetActor, ignoreStall)
+        endif
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname ostim_quickstart
+; sltgrup OStim
+; sltdesc Returns: int: Starts an OStim scene and returns the ThreadId
+; sltargs Form[]: actors: list containing the Actors to be in the scene, limited to 5
+; sltargs string: animation: the animation to play (optional: default: "" which auto-selects)
+; sltargs Form: furniture: (ObjectReference) furniture to use (optional: default: none)
+; sltsamp ; start a solo session
+; sltsamp Form[] $actor_list
+; sltsamp set $actor_list[0] $system.self
+; sltsamp ostim_quickstart $actor_list
+function ostim_quickstart(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionOstim sltrex = GetExtension()
+    
+    if sltrex.IsEnabled && ParamLengthGT(CmdPrimary, param.Length, 1)
+        Actor[] actors = CmdPrimary.ResolveListActor(param[1])
+        if actors.Length > 0
+            string animation = ""
+            ObjectReference furn = none
+            if (param.Length > 2)
+                animation = CmdPrimary.ResolveString(param[2])
+                If (param.Length > 3)
+                    furn = CmdPrimary.ResolveObjRef(param[3])
+                EndIf
+            endif
+            OThread.QuickStart(actors, animation, furn)
+        else
+            CmdPrimary.SFW("ostim_quickstart: no actors available in actor_list")
+        endif
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction

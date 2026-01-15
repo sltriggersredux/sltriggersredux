@@ -1,0 +1,528 @@
+scriptname sl_triggersStatics
+
+Function SLTDebugMsg(string msg) global
+	sl_triggers_internal.LogDebug(msg)
+EndFunction
+
+Function SLTErrMsg(string msg) global
+	sl_triggers_internal.LogError("\n\n!!!!!!!!!!!!!!!!!\n\n\t\t\t\t" + msg + "\n\n!!!!!!!!!!!!!!!!!\n")
+EndFunction
+
+Function SLTInfoMsg(string msg) global
+	sl_triggers_internal.LogInfo(msg)
+EndFunction
+
+Function SLTWarnMsg(string msg) global
+	sl_triggers_internal.LogWarn(msg)
+EndFunction
+
+int Function GetModVersion() global
+	return 973
+EndFunction
+
+;;;;;;;
+; Registers a Quest for a mod event safely
+Function SafeRegisterForModEvent_Quest(Quest _theSelf, String _theEvent, String _theHandler) global
+	If _theSelf == None
+		Debug.Trace("SafeRegisterForModEvent_Quest: registrar is None!")
+		Return
+	EndIf
+	_theSelf.UnregisterForModEvent(_theEvent)
+	_theSelf.RegisterForModEvent(_theEvent, _theHandler)
+EndFunction
+
+; Registers an ObjectReference for a mod event safely
+Function SafeRegisterForModEvent_ObjectReference(ObjectReference _theSelf, String _theEvent, String _theHandler) global
+	If _theSelf == None
+		Debug.Trace("SafeRegisterForModEvent_ObjectReference: registrar is None!")
+		Return
+	EndIf
+	_theSelf.UnregisterForModEvent(_theEvent)
+	_theSelf.RegisterForModEvent(_theEvent, _theHandler)
+EndFunction
+
+; Registers an ActiveMagicEffect for a mod event safely
+Function SafeRegisterForModEvent_AME(ActiveMagicEffect _theSelf, String _theEvent, String _theHandler) global
+	If _theSelf == None
+		Debug.Trace("SafeRegisterForModEvent_AME: registrar is None!")
+		Return
+	EndIf
+	_theSelf.UnregisterForModEvent(_theEvent)
+	_theSelf.RegisterForModEvent(_theEvent, _theHandler)
+EndFunction
+
+;;;;;;;;;
+; ModEvent names
+
+; SLT listens for this event.
+; SendModEvent(EVENT_SLT_REQUEST_COMMAND(), "<command, required>")
+; Will run the specified command with the Player as the target.
+string Function EVENT_SLT_REQUEST_COMMAND() global
+	return "OnSLTRequestCommand"
+EndFunction
+
+string Function EVENT_SLT_REQUEST_LIST() global
+	return "OnSLTRequestList"
+EndFunction
+
+string Function EVENT_SLT_ON_NEW_SESSION() global
+	return "OnSLTNewSession"
+EndFunction
+
+;; Internal
+
+string Function EVENT_SLT_RESET() global
+	return "OnSLTReset"
+EndFunction
+
+; SLT sends this when settings have been updated
+string Function EVENT_SLT_SETTINGS_UPDATED() global
+	return "OnSLTSettingsUpdated"
+EndFunction
+
+string Function EVENT_SLT_DELAY_START_COMMAND() global
+	return "OnSLTDelayStartCommand"
+EndFunction
+
+string Function EVENT_SLTR_ON_PLAYER_CONTAINER_ACTIVATE() global
+	return "OnSLTRPlayerContainerActivate"
+EndFunction
+
+string Function EVENT_SLTR_ON_PLAYER_CELL_CHANGE() global
+	return "OnSLTRPlayerCellChange"
+EndFunction
+
+string Function EVENT_SLTR_ON_PLAYER_LOADING_SCREEN() global
+	return "OnSLTRPlayerLoadingScreen"
+EndFunction
+
+string Function EVENT_SLTR_ON_PLAYER_EQUIP() global
+	return "OnSLTRPlayerEquipEvent"
+EndFunction
+
+string Function EVENT_SLTR_ON_PLAYER_COMBAT_STATE_CHANGED() global
+	return "OnSLTRPlayerCombatStateChanged"
+EndFunction
+
+string Function EVENT_SLTR_ON_PLAYER_HIT() global
+	return "OnSLTRPlayerHit"
+EndFunction
+
+string Function EVENT_SLTR_ON_HARVESTING() global
+	return "OnSLTRHarvesting"
+EndFunction
+
+float Function SLT_LIST_REQUEST_SU_KEY_IS_GLOBAL() global
+	return 1.7
+EndFunction
+
+;;;;;;;
+; "Constants" - the "Aliens" guy
+string FUNCTION DELETED_ATTRIBUTE() global
+	return "trigger_deleted_by_user_via_mcm"
+EndFunction
+
+; StorageUtil keys related to SLTriggers Redux will all start with this prefix
+string Function DOMAIN_SLTR() global
+	return "SLTR:"
+EndFunction
+
+; StorageUtil key, stored on each target (Actor), with queued script requests
+; pipe delimited triplet of information for queueing script requests:
+; requestid|threadid|initialscriptname
+string Function DOMAIN_PENDING_SCRIPT_FOR_TARGET_LIST() global
+	return DOMAIN_SLTR() + "pending_script_for_target_list:"
+EndFunction
+
+; StorageUtil keys for extensions are prefixed with this, typically: DOMAIN_EXTENSION() + extensionKey
+; Storage location on a per extension implementation basis; could be on SLTRMain but also on SLTRCore quest
+string Function DOMAIN_EXTENSION() global
+	return DOMAIN_SLTR() + "extension:"
+EndFunction
+
+; StorageUtil keys for SLTR internal use are prefixed with this
+string Function DOMAIN_INTERNAL() global
+	return DOMAIN_SLTR() + "internal:"
+EndFunction
+
+; StorageUtil keys for frame specific data, stored on SLTRMain, are prefixed with this
+; frame:frameId:
+string Function DOMAIN_DATA_FRAME() global
+	return DOMAIN_SLTR() + "frame:"
+EndFunction
+
+; StorageUtil keys for thread specific data, stored on SLTRMain, are prefixed with this
+; thread:threadId:
+string Function DOMAIN_DATA_THREAD() global
+	return DOMAIN_SLTR() + "thread:"
+EndFunction
+
+; StorageUtil keys for target specific data, stored on SLTRMain (yes, on SLTRMain), are prefixed with this
+; target:modname:relativeFormId:
+string Function DOMAIN_DATA_TARGET() global
+	return DOMAIN_SLTR() + "target:"
+EndFunction
+
+; StorageUtil keys for request specific data, stored on SLTRMain, are prefixed with this
+; request:requestId:
+; This is typically (always?) going to be READONLY
+string Function DOMAIN_DATA_REQUEST() global
+	return DOMAIN_SLTR() + "request:"
+EndFunction
+
+; StorageUtil keys for global data, stored on SLTRMain, are prefixed with this
+; global:
+string Function DOMAIN_DATA_GLOBAL() global
+	return DOMAIN_SLTR() + "global:"
+EndFunction
+
+sl_TriggersMain Function GetSLTMain() global
+	Form mainForm = Game.GetFormFromFile(0x83F, "sl_triggers.esp")
+	if mainForm
+		sl_TriggersMain sltrMain = mainForm as sl_TriggersMain
+		if sltrMain
+			return sltrMain
+		else
+			SLTErrMsg("Statics.GetSLTMain: bizarre life; got a form but isn't an sl_TriggersMain?")
+		endif
+	else
+		SLTErrMsg("Statics.GetSLTMain: unable to retrieve FormID 0x83F from sl_triggers.esp")
+	endif
+	return none
+EndFunction
+
+Form Function GetForm_SLT_ExtensionCore() global
+	return Game.GetFormFromFile(0x83C, "sl_triggers.esp")
+EndFunction
+
+Form Function GetForm_SLT_ExtensionSexLab() global
+	return Game.GetFormFromFile(0x800, "sl_triggersSexLabExtension.esp")
+EndFunction
+
+Form Function GetForm_SLT_ExtensionOStim() global
+	return Game.GetFormFromFile(0x800, "sl_triggersOStimExtension.esp")
+EndFunction
+
+Form Function GetForm_Skyrim_ActorTypeNPC() global
+	return Game.GetFormFromFile(0x13794, "Skyrim.esm")
+EndFunction
+
+Form Function GetForm_Skyrim_ActorTypeUndead() global
+	return Game.GetFormFromFile(0x13796, "Skyrim.esm")
+EndFunction
+
+Form Function GetForm_DAK_Status() global
+	return Game.GetFormFromFile(0x801, "Dynamic Activation Key.esp")
+EndFunction
+
+Form Function GetForm_DAK_HotKey() global
+	return Game.GetFormFromFile(0x804, "Dynamic Activation Key.esp")
+EndFunction
+
+Form Function GetForm_SexLab_Framework() global
+	return Game.GetFormFromFile(0xD62, "SexLab.esm")
+EndFunction
+
+Form Function GetForm_SexLab_AnimatingFaction() global
+	return Game.GetFormFromFile(0xE50F, "SexLab.esm")
+EndFunction
+
+Form Function GetForm_DeviousDevices_zadLibs() global
+	return Game.GetFormFromFile(0xF624, "Devious Devices - Integration.esm")
+EndFunction
+
+Form Function GetForm_DeviousFollowers_dfQuest() global
+	return Game.GetFormFromFile(0xD62, "DeviousFollowers.esp")
+EndFunction
+
+Form Function GetForm_OStim_Integration_Main() global
+	return Game.GetFormFromFile(0x000801, "OStim.esp")
+EndFunction
+
+int Function GetRelativeFormID_DeviousFollowers_MCM() global
+	return 0xC545
+EndFunction
+
+string Function GetModFilename_DeviousFollowers_MCM() global
+	return "DeviousFollowers.esp"
+EndFunction
+
+Form Function GetForm_DeviousFollowers_MCM() global
+	return Game.GetFormFromFile(GetRelativeFormID_DeviousFollowers_MCM(), GetModFilename_DeviousFollowers_MCM())
+EndFunction
+
+
+;;;;;;;;
+; Global general values
+; SLT Global/General
+
+string Function SLTRExtensionListKey() global
+	return DOMAIN_INTERNAL() + "extensions:"
+EndFunction
+
+;/
+string Function CommandsFolder() global
+	return "../sl_triggers/commands/"
+EndFunction
+
+string Function FullCommandsFolder() global
+	return "data/SKSE/Plugins/sl_triggers/commands/"
+EndFunction
+/;
+
+string Function ExtensionTriggersFolder(string _extensionKey) global
+	return "../sl_triggers/extensions/" + _extensionKey + "/"
+EndFunction
+
+string Function FN_Settings() global
+	return "../sl_triggers/settings"
+EndFunction
+
+string Function FN_ContainerBlacklistJSON() global
+	return "../sl_triggers/containers.json"
+EndFunction
+
+string Function FN_X_Settings(string _x) global
+	if !_x
+		return FN_Settings()
+	endif
+	return "../sl_triggers/extensions/" + _x + "-settings"
+EndFunction
+
+string Function FN_X_Attributes(string _x) global
+	return "../sl_triggers/extensions/" + _x + "-attributes"
+EndFunction
+
+string Function FN_Trigger(string _x, string _t) global
+	; a hack
+	if !_t
+		return FN_X_Settings(_x)
+	endif
+	return "../sl_triggers/extensions/" + _x + "/" + _t
+EndFunction
+
+
+;;;;;;;;
+; Utility functions
+string Function debstrjoin(string[] strlist, string delim = "), (") global
+	return PapyrusUtil.StringJoin(strlist, delim)
+EndFunction
+
+string Function SU_StringListSet(Form anchor, string listKey, int index, string value) global
+	if index >= StorageUtil.StringListCount(anchor, listKey)
+		StorageUtil.StringListResize(anchor, listKey, index + 1)
+	endif
+	return StorageUtil.StringListSet(anchor, listKey, index, value)
+EndFunction
+
+bool Function GetFlag(bool bDbgOut, string filename, string flagname, bool defaultValue = false) global
+	if JsonUtil.HasIntValue(filename, flagname)
+		JsonUtil.UnsetIntValue(filename, flagname)
+		if bDbgOut
+			SLTInfoMsg("Main.GetFlag: filename(" + filename + ") flagname(" + flagname + "): deleting (int) value")
+		endif
+	endif
+
+	bool storedFlag = IsStringTruthy(JsonUtil.GetStringValue(filename, flagname, defaultValue))
+
+	if bDbgOut
+		SLTInfoMsg("Main.GetFlag: filename(" + filename + ") set (" + flagname + ") to and returning => (" + storedFlag + "); also forcing value back out to JSON")
+	endif
+
+	JsonUtil.SetStringValue(filename, flagname, storedFlag)
+	JsonUtil.Save(filename)
+	return storedFlag
+EndFunction
+
+bool Function UpdateFlag(bool bDbgOut, string filename, string flagname, bool newValue) global
+	if JsonUtil.HasIntValue(filename, flagname)
+		JsonUtil.UnsetIntValue(filename, flagname)
+		if bDbgOut
+			SLTInfoMsg("Main.UpdateFlag: filename(" + filename + ") flagname(" + flagname + "): deleting (int) value")
+		endif
+	endif
+
+	JsonUtil.SetStringValue(filename, flagname, newValue)
+	JsonUtil.Save(filename)
+	if bDbgOut
+		SLTInfoMsg("Main.UpdateFlag: filename(" + filename + ") set (" + flagname + ") to and returning => (" + newValue + "); also forcing value back out to JSON")
+	endif
+	return newValue
+EndFunction
+
+int Function GlobalHexToInt(string _value) global
+    int retVal
+    int idx
+    int iDigit
+    int pos
+    string sChar
+    string hexChars = "0123456789ABCDEF"
+    
+    idx = StringUtil.GetLength(_value) - 1
+    while idx >= 0
+        sChar = StringUtil.GetNthChar(_value, idx)
+        iDigit = StringUtil.Find(hexChars, sChar, 0)
+        if iDigit >= 0
+            iDigit = Math.LeftShift(iDigit, 4 * pos)
+            retVal = Math.LogicalOr(retVal, iDigit)
+            idx -= 1
+            pos += 1
+        else
+            idx = -1
+        endIf
+    endWhile
+    
+    return retVal
+EndFunction
+
+bool Function IsStringTruthy(string _value) global
+	return ((_value != "") && (_value != "false") && (_value != "0"))
+EndFunction
+
+Function PrintScriptsListToConsole(string[] commandsList) global
+	int i = 0
+	MiscUtil.PrintConsole("SLT Scripts List Start:")
+	while i < commandsList.Length
+		MiscUtil.PrintConsole(commandsList[i])
+		i += 1
+	endwhile
+	MiscUtil.PrintConsole("SLT Scripts List End:")
+EndFunction
+
+Function SquawkFunctionError(sl_triggersCmd _cmdPrimary, string msg) global
+	sl_triggers_internal.LogError("SLTR:(" + _cmdPrimary.currentScriptName + ")[" + _cmdPrimary.lineNum + "]: " + msg)
+EndFunction
+
+Function SquawkFunctionWarn(sl_triggersCmd _cmdPrimary, string msg) global
+	sl_triggers_internal.LogWarn("SLTR:(" + _cmdPrimary.currentScriptName + ")[" + _cmdPrimary.lineNum + "]: " + msg)
+EndFunction
+
+Function SquawkFunctionInfo(sl_triggersCmd _cmdPrimary, string msg) global
+	sl_triggers_internal.LogInfo("SLTR:(" + _cmdPrimary.currentScriptName + ")[" + _cmdPrimary.lineNum + "]: " + msg)
+EndFunction
+
+Function SquawkFunctionDebug(sl_triggersCmd _cmdPrimary, string msg) global
+	sl_triggers_internal.LogDebug("SLTR:(" + _cmdPrimary.currentScriptName + ")[" + _cmdPrimary.lineNum + "]: " + msg)
+EndFunction
+
+bool Function ParamLengthLT(sl_triggersCmd _cmdPrimary, int actualLength, int lessThanThis) global
+    if actualLength >= lessThanThis
+        SquawkFunctionError(_cmdPrimary, "too many parameters (needed " + (lessThanThis - 1) + " or fewer but was provided " + actualLength + ")")
+        return false
+    endif
+    return true
+EndFunction
+
+bool Function ParamLengthGT(sl_triggersCmd _cmdPrimary, int actualLength, int biggerThanThis) global
+    if actualLength <= biggerThanThis
+        SquawkFunctionError(_cmdPrimary, "insufficient parameters (needed at least " + (biggerThanThis + 1) + " but only provided " + actualLength + ")")
+        return false
+    endif
+    return true
+EndFunction
+
+bool Function ParamLengthEQ(sl_triggersCmd _cmdPrimary, int actualLength, int neededLength) global
+    if actualLength != neededLength
+        SquawkFunctionError(_cmdPrimary, "was provided incorrect number of parameters (was provided " + actualLength + " but needed " + neededLength + ")")
+        return false
+    endif
+    return true
+EndFunction
+
+Alias Function AliasFromAliasPortableString(string aliasPortableString) global
+	string[] aliasParts = PapyrusUtil.StringSplit(aliasPortableString, "^")
+	if aliasParts.Length == 2
+		Quest aliasOwningQuest = sl_triggers.GetForm(aliasParts[0]) as Quest
+		if aliasOwningQuest
+			; note: no error checking, defaults to 0, this is a bug as the error condition of a bad input will always attempt to return the nth alias
+			; note further: still considering shipping because this is intended to be opaque, generated when an alias is fetched, not as something someone generates to retrieve a specific alias
+			; noting still: just noting all of this because of the inevitable bug to save some research time
+			int aliasId = aliasParts[1] as int
+			Alias returnAlias = aliasOwningQuest.GetAlias(aliasId)
+			if (!returnAlias)
+				SLTErrMsg("AliasFromAliasPortableString: aliasPortableString(" + aliasPortableString + "); could not retrieve alias from quest(" + aliasOwningQuest + ") with id(" + aliasId + ")")
+			endif
+			return returnAlias
+		else
+			SLTErrMsg("AliasFromAliasPortableString: aliasPortableString(" + aliasPortableString + "); could not retrieve quest")
+		endif
+	else
+		SLTErrMsg("AliasFromAliasPortableString: aliasPortableString(" + aliasPortableString + "); could not split on ':' and retrieve exactly two parts")
+	endif
+	return none
+EndFunction
+
+string Function AliasPortableStringFromAlias(Alias theAlias) global
+	if theAlias
+		Quest theQuest = theAlias.GetOwningQuest()
+		if theQuest
+			return FormPortableStringFromForm(theQuest) + "^" + theAlias.GetID()
+		else
+			SLTErrMsg("AliasPortableStringFromAlias: theAlias(" + theAlias + ") had no owning quest")
+		endif
+	endif
+	return ""
+EndFunction
+
+Form Function FormFromFormPortableString(string formPortableString) global
+	return sl_triggers.GetForm(formPortableString)
+EndFunction
+
+string Function FormPortableStringFromForm(Form theForm) global
+	if theForm
+		int formID = theForm.GetFormID()
+		string modName
+		int modIndex = Math.RightShift(formID, 24)
+		int lightModIndex
+		int lightShift
+		if modIndex == 254
+			; 0xFEMMMFFF
+			lightShift = Math.RightShift(formID, 12)
+			lightModIndex = Math.LogicalAnd(lightShift, 0xFFF)
+			modName = Game.GetLightModName(lightModIndex)
+			formID = Math.LogicalAnd(formID, 0xFFF)
+		elseif modIndex == 255
+			return formID ; temporary Forms get absolute FormID treatment
+		else
+			; 0xMMFFFFFF
+			modName = Game.GetModName(modIndex)
+			formID = Math.LogicalAnd(formID, 0xFFFFFF)
+		endif
+		if modName
+			return modName + ":" + formID
+		else
+			SLTErrMsg("FormPortableStringFromForm: unable to get modName from theForm(" + theForm.GetName() + ")<" + theForm + "> formID(" + formID + ") modIndex(" + modIndex + ") light modIndex(" + lightModIndex + ") lightShift(" + lightShift + ")")
+		endif
+	endif
+	return ""
+EndFunction
+
+Actor[] Function FormArrayToActorArray(Form[] value) global
+	Actor[] result = PapyrusUtil.ActorArray(value.Length)
+	int i = value.Length
+	while i
+		i -= 1
+		result[i] = value[i] as Actor
+	endwhile
+	return result
+EndFunction
+
+Form[] Function ActorArrayToFormArray(Actor[] value) global
+	Form[] result = PapyrusUtil.FormArray(value.Length)
+	int i = value.Length
+	while i
+		i -= 1
+		result[i] = value[i]
+	endwhile
+	return result
+EndFunction
+
+Form[] Function FactionArrayToFormArray(Faction[] value) global
+	Form[] result = PapyrusUtil.FormArray(value.Length)
+	int i = value.Length
+	while i
+		i -= 1
+		result[i] = value[i]
+	endwhile
+	return result
+EndFunction

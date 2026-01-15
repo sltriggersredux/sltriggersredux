@@ -1,0 +1,117 @@
+deb_msg "============================="
+deb_msg "SLTR Regression Test Starting"
+
+set $thread.testCount = 0
+set $thread.passCount = 0
+set $thread.startTime = $system.realtime
+set $thread.requiredWaitTime = 0.0
+
+beginsub basic_gosub_test
+    if $basic_gosub_allowed != true
+        deb_msg "FAIL: beginsub should not be processed except when called via 'gosub'"
+    else
+        inc $thread.passCount
+        deb_msg "PASS: beginsub skipped"
+    endif
+    inc $thread.passCount
+endsub
+
+beginsub finish_regression_testing
+    set $elapsedTime $system.realtime - $thread.startTime
+    set $elapsedNoWaiting $elapsedTime - $thread.requiredWaitTime
+    deb_msg $"Tests attempted:     {thread.testCount}"
+    deb_msg $"PASS outcomes:       {thread.passCount}"
+    deb_msg $"Total elapsed time:  {elapsedTime}"
+    deb_msg $"Required wait times: {thread.requiredWaitTime}"
+    deb_msg $"Actual run time:     {elapsedTime}"
+    deb_msg "SLTR Regression Test Finished"
+    deb_msg "============================="
+    return
+endsub
+
+deb_msg "Note: The first handful of tests may terminate abruptly because we have not yet tested, and therefore cannot yet rely upon, the more complex constructs that would enable more elegant output."
+
+; Simple gosub
+set $testvar 12
+set $basic_gosub_allowed true
+
+inc $thread.testCount
+inc $thread.testCount
+gosub basic_gosub_test
+
+if $thread.testCount != $thread.passCount
+    deb_msg $"FAIL: simple gosub {thread.testCount}/{thread.passCount}"
+    return
+else
+    deb_msg "PASS: simple gosub {thread.testCount}/{thread.passCount}"
+endif
+
+; quick initialScriptName test
+inc $thread.testCount
+if $system.initialScriptName == $system.currentScriptName
+    inc $thread.passCount
+    deb_msg $"PASS: system.initialScriptName({system.initialScriptName}) == system.currentScriptName({system.currentScriptName})"
+else
+    deb_msg $"FAIL: system.initialScriptName({system.initialScriptName}) != system.currentScriptName({system.currentScriptName})"
+endif
+
+; gosub ahead of us
+inc $thread.testCount
+set $testvar 12
+gosub later_sub
+
+if $testvar == 2121
+    inc $thread.passCount
+    deb_msg "PASS: gosub lookahead"
+else
+    deb_msg "FAIL: gosub lookahead"
+    return
+endif
+
+inc $thread.testCount
+set $testvar 12
+
+beginsub later_sub
+    set $testvar 2121
+endsub
+
+if $testvar == 2121
+    deb_msg "FAIL: gosub skipping"
+else
+    inc $thread.passCount
+    deb_msg "PASS: gosub skipping"
+endif
+
+inc $thread.testCount
+call "ZZ_sltr_test_basic_call"
+if $thread.testCount != $thread.passCount
+    deb_msg $"FAIL: simple call test"
+    gosub finish_regression_testing
+else
+    deb_msg $"PASS: simple call test"
+endif
+
+call "ZZ_sltr_test_basics"
+
+call "ZZ_sltr_test_maps_lists"
+
+call "ZZ_sltr_test_while"
+
+call "ZZ_sltr_test_system_vars"
+
+call "ZZ_sltr_test_target_subscopes"
+
+call "ZZ_sltr_test_libs_1"
+
+call "ZZ_sltr_test_modevent"
+
+call "ZZ_sltr_test_jsonutil"
+
+call "ZZ_sltr_test_storageutil"
+
+call "ZZ_sltr_test_forms"
+
+call "ZZ_sltr_test_perf"
+
+; wrap things up
+gosub finish_regression_testing

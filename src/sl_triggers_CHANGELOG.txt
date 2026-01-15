@@ -1,0 +1,1275 @@
+0.973
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: global variables set to INT values were being set to type BOOL instead, normalizing values to 0 and 1
+    bugfix: fixed comment block typo of 'stlname' to 'sltname' for docgen; functions existed but were not displayed in the documentation e.g. sl_adjustenjoyment
+    enhancement: added OBody bindings
+        obody_assignpresetbyfile
+        obody_assignpresetbyname
+        obody_assignpresettoactor
+        obody_getpresetassignedtoactor
+        obody_markforreprocess
+        obody_reapplyactorobodymorphs
+        obody_resetactorobodymorphs
+    enhancement: sl_endthread <target actor> ; ends any running SexLab thread the target actor may be participating in
+    enhancement: added TNG bindings
+        tng_can_modify_actor
+        tng_get_actor_size
+        tng_set_actor_size
+
+0.972
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: OnSLTRPlayerHit: populating $request.core.player_on_hit.attacker and $request.core.player_on_hit.target with base Form instead of ObjectReference
+
+0.971
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: actor_isaffectedby was affected by a bug
+
+0.970
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    enhancement: sl-triggers.dll now logs when a requested formID is referencing a mod that is not found
+    enhancement: improved 'Function Library Development' documentation
+    enhancement: sl_triggers.AddKeywordToForm(Form, Keyword)
+    enhancement: sl_triggers.RemoveKeywordFromFrom(Form, Keyword)
+    enhancement: new SLTScript commands:
+        form_addkeyword $form $keyword
+        form_removekeyword $form $keyword
+        keyword_get $keyword_string
+
+0.966
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: sl-triggers.dll: increased water/swimming check delay from 100 to 500 ms to reduce system load
+    bugfix: dd_unlockall/dd_unlockslot: not working
+
+0.965
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: SexLab/SexLab P+/OStim: "Partner Relationship:" filter error; "Player" and "Not Player" fail in masturbation scenarios (where there is no partner)
+    enhancement: SexLab/SexLab P+: new commands:
+        sl_count_cum
+        sl_clear_cum
+        sl_add_cum
+    enhancement: SexLab/SexLab P+: new script:
+        SL Masturbate Self.sltscript
+    enhancement: OStim: new command:
+        ostim_quickstart
+    enhancement: OStim: new scripts:
+        OStim Disease.sltscript
+        OStim Heart beat(A).sltscript
+        OStim Masturbate Self.sltscript
+        OStim Sex is crime.sltscript
+        OStim Sex With Player.sltscript
+        OStim Time Control.sltscript
+        OStim Time Slow.sltscript
+        OStim Vision blurred.sltscript
+
+0.960
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    enhancement: new SexLab/SexLab P+ script for SexLab Survival: SLS Destroy Random License.sltscript: deletes 1 randomly selected SLS license from the player, if one is present
+    enhancement: new add-on: SLS Wet License Destruction
+        Requirement: SexLab Survival (SLS)
+        While in water, you have an increasing chance per second to lose a random SLS license due to water damage
+        Staying out of water dries you out over time
+        Lose a max of 3 licenses while soaked
+        Shallow water poses zero risk of destruction but accumulates wetness
+    bugfix: slt console command CTD when script list too large
+    bugfix: SexLab/SexLab P+/OStim: "Race:" and "Partner Race:" filters not treating Player as Humanoid
+
+0.952
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: form portability not possible for temporary (mod index 255/0xFF) Forms; fall back to absolute FormID
+
+0.951
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: av_getpercentage: function was improperly named, but properly documented; the name now reflects the documentation
+    bugfix: $$ was unavailable as a parameter for function calls
+        example: this should now work to remove all of a player's stamina
+            av_getmax $system.player Stamina
+            av_damage $system.player Stamina $$
+
+0.950
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    enhancement: new system variable: $system.forms.sltr_main - Form: the SLTR Main Quest; useful for functions requiring tracking Forms
+    enhancement: integration: SexLab:
+        6 new SLTScripts:
+            SL Aggressive Sex With Player - Anal/Oral/Vaginal
+            SL Sex With Player - Anal/Oral/Vaginal
+    enhancement: integration: SexLab Survival:
+        24 new functions
+            sls_block_license_purchase
+            sls_revoke_license
+            sls_send_to_kennel
+            sls_evict_from_home
+            sls_unevict_from_home
+            sls_increase_ground_time
+            sls_remove_magic_curse
+            sls_add_magic_curse
+            sls_swallow_cum
+            sls_get_creature_corruption
+            sls_is_enjoying_cum
+            sls_get_load_tier
+            sls_get_load_size
+            sls_get_load_size_actual
+            sls_get_load_fullness
+            sls_get_cum_stuffed_factor
+            sls_is_drugged
+            sls_is_high_on_skooma
+            sls_is_high_on_skooma_whore_drugs
+            sls_is_high_on_lactacid
+            sls_get_skooma_junkie_level
+            sls_do_female_pain_sound
+            sls_do_hit_sound
+            sls_do_trauma_hit_sound
+        19 new SLTScripts:
+            SLS Evict from Markarth/Riften/Solitude/Whiterun/Windhelm
+            SLS UnEvict from Markarth/Riften/Solitude/Whiterun/Windhelm
+            SLS Send to Kennel - Markarth/Riften/Solitude/Whiterun/Windhelm
+            SLS Magic Curse Add/Remove
+            SLS Revoke All/Random Licenses
+    enhancement: typeid: intrinsic command that returns an int representing the type of the variable
+        This can be used to determine if a value has ever been set before, including globals.
+        Because system variables are more akin to macros rather than actual variables, they also have no type ID. But you can
+        obtain it by setting a variable to the value of the system variable.
+        Possible values:
+        - 0 - Invalid (meaning that it has no data)
+        - 1 - string
+        - 2 - bool
+        - 3 - int
+        - 4 - float
+        - 5 - Form (or Form sub-type e.g. ObjectReference, Actor)
+        - 6 - Label - a goto target e.g. [label]
+        - 7 - Map
+        - 8 - Alias (or ReferenceAlias)
+        - 101 - string[] (i.e. string list)
+        - 102 - bool[]
+        - 103 - int[]
+        - 104 - float[]
+        - 105 - Form[]
+        - 106 - Label[]
+        - ; there is no list of maps
+        - 108 - Alias[]
+    enhancement: typename: intrinsic command that returns a string representing the type of the variable
+        Returns the name associated with the id from `typeid`.
+        Possible values:
+        - "Invalid"
+        - "string"
+        - "int"
+        - "float"
+        - "bool"
+        - "Form"
+        - "Label"
+        - "Map"
+        - "Alias"
+        - "string[]"
+        - "bool[]"
+        - "int[]"
+        - "float[]"
+        - "Form[]"
+        - "Label[]"
+        - "Alias[]"
+    bugfix: PetCollarGame: after sending the PetCollar event for removal, now sits in a 1 second wait loop until the player is no longer wearing the collar before removing it from inventory
+    enhancement: integration: PetCollar:
+        new SLTScripts:
+            PetCollar - Add
+            PetCollar - Add Keyless
+            PetCollar - Remove
+            PetCollar - Remove Keyless
+
+0.941
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: *_dofunction/*_doconsumer class functions not allowing for default parameters
+    bugfix: argument length related error messages are misleading
+    bugfix: actor_dofunction $$ GetEquippedWeapon not allowing for default parameter
+    bugfix: actor_dofunction $$ GetEquippedWeapon; none value is valid return value but behaves as if invalid
+
+0.940
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: LICENSE update; replaced unmodified copied template with correct names and license info for source code
+    change: Harvesting trigger now uses TESHarvestedEvent instead of a custom TESActivatedEvent; should improve performance, but some harvests are not detected by default (e.g. some bugs and fish)
+        - I might revert this
+    enhancement: new Core trigger: Player Swim Start/Stop
+    enhancement: new Core trigger: Player Enter/Exit Water
+    enhancement: new Core trigger: Soul Trap
+        request variables:
+            $request.core.soul_trapped.trapper : Form - (Added by SLTR Core) (for Soul Trapped) the trapper who trapped the target
+            $request.core.soul_trapped.target : Form - (Added by SLTR Core) (for Soul Trapped) the target that was trapped
+    enhancement: new function: actor_submerged_level - returns a float, from 0.0 to 1.0 inclusive; 0.0 is not in water, on land; 1.0 is fully submerged
+    enhancement: new events "OnSLTRPlayerSwimEvent(bool isSwimming)" and "OnSLTRPlayerWaterEvent(bool inWater)"
+    enhancement: new system variables: 
+        $system.player.is_swimming : bool - (Added by SLTR Core) true if player is swimming; false otherwise
+        $system.player.is_in_water : bool - (Added by SLTR Core) true if player is in water; false otherwise
+        $system.player.submerged_level : float - (Added by SLTR Core) current submerged level of player; 0.0 if not in water, 1.0 if fully submerged
+        $system.player.swimming_start_gametime : float - (Added by SLTR Core) gametime when player started current swim session; resets to 0.0 when not swimming
+        $system.player.in_water_start_gametime : float - (Added by SLTR Core) gametime when player started current in water session; resets to 0.0 when player leaves water
+        $system.player.swimming_session : int - (Added by SLTR Core) unique int ID to identify a period of unbroken time player spent swimming; 0 if not swimming
+        $system.player.in_water_session : int - (Added by SLTR Core) unique int ID to identify a period of unbroken time player spent in water; 0 if not in water
+        $system.player.swimming_duration : float - (Added by SLTR Core) gametime duration player has currently spent swimming; 0.0 if not currently swimming
+        $system.player.in_water_duration : float - (Added by SLTR Core) gametime duration player has currently spent in water; 0.0 if not currently in water
+        $system.player.swimming_last_start_gametime : float - (Added by SLTR Core) gametime when player started previous swim session
+        $system.player.in_water_last_start_gametime : float - (Added by SLTR Core) gametime when player started previous in water session
+        $system.player.swimming_last_duration : float - (Added by SLTR Core) gametime duration player was last swimming; might be very small for repeated re-entries of deep water
+        $system.player.in_water_last_duration : float - (Added by SLTR Core) gametime duration player was last in water; might be very small for repeated re-entries of shallow water
+
+0.930
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: Keymapping intermittent unresponsiveness
+    bugfix: OStim: Partner Sex: Female; fails due to logic error
+    enhancement: added weapon_dogetter/weapon_doconsumer to implement Weapon related functions
+    enhancement: added script: "Show Limited RaceMenu.sltscript" - shows the limited Race selection menu, which has race and sex options removed (like Vanity Mirror mod)
+    change: PetCollarGame: remove collar from player inventory with 1 sec delay after sending manipulate event to PetCollar mod to unequip
+    change: reduced log chatter for "ConsumptionLifestyle"
+    documentation: numerous documentation improvements and standardizations
+
+0.920
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: OStim threadID was not being handled correctly
+    bugfix: SexLab/OStim event "Partner" handling failed on some group corner cases
+        - old method: "Partner" was simply "next Actor in the scene, wrapping around to first slot"
+            - worked perfectly fine in 1-on-1 scenes
+            - So in a scene where positions happen to be MFMM
+                - "Partner: Female" would only work for M#1
+                - M#2 "partner" calculates to M#3 and for M#3 it's M#1 (it wraps around)
+        - new method: "Partner" filters are true if true for any partner (i.e. other than $system.self)
+            - So in a scene where positions happen to be MFMM
+                - "Partner: Female" would work for M#1-3, but fail for F (i.e. script would be run once for each M as $system.self)
+                    - From the perspective of each M, there is at least one F that is not themselves; F does not see another F.
+                - "Partner: Male" would work for all actors in the scene (i.e. script would be run once for each M and also for F)
+                    - From the perspective of each actor, there is at least one other M in the scene that is not themselves
+    bugfix: console command logic could fail utterly without any ConsoleUtil installed (even in fallback case)
+    bugfix: comparison logic was failing between primarily forms and direct numeric ID comparisons; comparison logic is more robust now
+    enhancement: new intrinsic function: listjoin
+        example: if you have Nether's Followers Framework and want to have a list containing yourself, and all of your followers:
+        Form[] $theCrew
+        set $theCrew $system.player
+        set $theFollowers resultfrom nff_getfollowers
+        listjoin $theCrew $theFollowers
+        ; $theCrew now contains the original list plus everything in the targeted list
+        listjoin $theCrew $groupOne $groupTwo
+        ; accepts multiple lists in one call
+        int[] $theNumbers
+        set $theNumber[0] 42
+        listjoin $theCrew $theNumbers
+        ; this will fail to do anything, and will log an error; appended list types must match the target list
+    enhancement: (SexLab/SexLab P+) expanded "Sex:" and "Partner Sex:" filters to include all supported sexes for their respective frameworks
+        SexLab: adds 'Creature, Male', 'Creature, Female'
+        SexLab P+: adds 'Futa', 'Creature, Male', 'Creature, Female'
+    enhancement: (OStim) added ostim-configuration.json; includes three string lists to configure the OStim actions corresponding to "Vaginal", "Oral", or "Anal" activity
+    enhancement: (OStim) new trigger: Scene Changed
+    enhancement: (SexLab/SexLab P+) new triggers: Stage Start, Stage End
+
+0.901
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: updated some OStim labeling to no longer say SexLab
+    bugfix: corrected handling of multiple cmdlibs in a single lib json
+    bugfix: adjusted timing of onnewsession
+    enhancement: added quest_doaction/quest_dogetter/quest_doconsumer/quest_dofunction to implement Quest related functions
+    enhancement: added armor_doaction/armor_dogetter/armor_doconsumer/armor_dofunction to implement Armor related functions
+    enhancement: added armor_getmaskforslot
+    enhancement: added globalvariable_doaction/globalvariable_dogetter/globalvariable_doconsumer/globalvariable_dofunction to implement GlobalVariable related functions
+    enhancement: added game_doaction/game_dogetter/game_doconsumer/game_dofunction to implement Game related functions
+    enhancement: added "GetNthReferenceAlias" implementation to objectreference_dofunction
+    change: sl_triggersCmd.ResolveActor no longer defaults to the Player if not specified or the Form cannot be found; defaults to none instead
+    change: Perk: sl_triggersContainerPerk: expanded the objects it works with; should work with all CONT (Container) types
+        containers.json: now has a list, "dt_blacklist", containing containers that will not trigger
+        note: this is retroactive in that containers that didn't previously trigger in your game might now
+    change: removed "Partner Humanoid", "Partner Creature", and "Partner Undead" from "Race:" now that "Partner Race:" is available
+        triggers with mod version < 901 will be auto-updated
+            if the trigger, with mod version < 901, doesn't already have a "Partner Race:" filter and the "Race:" is a "Partner *" value
+            then the "Race:" filter will be removed and an appropriate "Partner Race:" filter added
+    change: minor rearrangement of command libraries internally
+
+0.900
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    enhancement: SLIF function bindings
+        slif_get_version
+        slif_get_versionstring
+        slif_is_installed
+        slif_is_updating
+        slif_is_working
+        slif_is_inmaintenance
+        slif_inflate
+        slif_register_actor
+        slif_unregister_actor
+        slif_update_actor
+        slif_reset_actor
+        slif_hide_node
+        slif_show_node
+        slif_is_node_hidden
+        slif_get_gender
+        slif_set_default_values
+        slif_get_value
+        slif_get_minvalue
+        slif_get_maxvalue
+        slif_get_multvalue
+        slif_get_incrvalue
+    enhancement: NIO function bindings
+        nio_hasnodeoverride
+        nio_getnodeoverride_float
+        nio_getnodeoverride_int
+        nio_getnodeoverride_bool
+        nio_getnodeoverride_string
+        nio_getnodeoverride_textureset
+        nio_addnodeoverride_float
+        nio_addnodeoverride_int
+        nio_addnodeoverride_bool
+        nio_addnodeoverride_string
+        nio_addnodeoverride_textureset
+        nio_hasbodymorph
+        nio_setbodymorph
+        nio_getbodymorph
+        nio_clearbodymorph
+        nio_updatemodelweight
+        nio_get_morphnames
+        nio_get_morphkeys
+    bugfix: documentation cleanup for json related functions related to root point for file access
+    change: removed plugin .json file related code for sltscripts (cleanup)
+    change: documentation updates, various (cleanup)
+    change: updated SLTScripts to add more comments for ease of user modification
+
+0.137
+    Savegame compatibility: New save OR Cleaned save required (i.e. Remove old version -> Load -> Save -> Install new version -> Load)
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: SLTR Reset now clears all StorageUtil objects (thanks to @nopse0 for the fix)
+    bugfix: request value savefile memory leak; old request data was not being cleaned up when all threads completed
+    bugfix: several internal data type related bugs fixed
+    enhancement: new data type: Alias; peer to string, int, float, bool, Form, Label; with list support (i.e. Alias[])
+    enhancement: new SexLab API calls: sl_sexstart, sl_allow_actor, sl_find_available_partners, sl_forbid_actor, sl_get_skill(SexLab)/sl_get_statistic(SexLab P+), sl_getapi,
+        sl_getversion, sl_getversionstring, sl_is_forbidden, sl_is_valid_actor, sl_isactive, sl_isready, sl_validate_actor
+    enhancement: internal FormID storage should be load order change resistant (stores modname and relative formid instead of solely the FormID)
+    enhancement: new Nether's Follower Framework(NFF) integration/API call: nff_getfollowers: returns a Form[] containing the Actors that are noted as NFF followers
+    change: SLTScript: Contamination - Transformative Elixir.sltscript - altered transform distribution
+    change: SLTScript: CumControl.sltscript - altered chance from 50% to 30%
+
+0.136
+    Savegame compatibility: New save OR Cleaned save required (i.e. Remove old version -> Load -> Save -> Install new version -> Load)
+    
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+
+    change: updated to use FOMOD installer
+        There are now separate ESL flagged .esp files for Core, SexLab, and OStim extensions
+    change: renamed OStim, util_waitforkbd to ostim_waitforkbd to prevent collision with SexLab util_waitforkbd
+    bugfix: removed sla_get_actor_hours_since_last_sex; GetActorHoursSinceLastSex only exists for OSLAroused, not for SexLabAroused
+    bugfix: Added system.ostim.partner* to match existing SexLab based system.partner* variables; you can now actually access the ostim versions if you have both OStim and SexLab installed
+    bugfix: logic error that fully disabled cell change trigger
+    enhancement: Stabilized extension startup and registration
+
+135
+    Savegame compatibility: Should be savegame compatible
+    
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    
+    bugfix: request variables were not actually wired up and lacked any typing info; should be working now
+    bugfix: when triggers are created and the event type selected, the filters are not shown until reentering the MCM
+    change: added fourth script option on all events (because seeing an intentionally imbalanced set of MCM components was bothering me; yes that is the only reason)
+    enhancement: new Core event: Harvesting (Custom event: OnSLTRHarvesting(ObjectReference harvestSource) )
+    enhancement: new Core event: Fast Travel Arrival (OnPlayerFastTravelEnd)
+    enhancement: new Core event: Werewolf Change (OnLycanthropyStateChanged) (Any/Cured/Contracted/Werebeast Form)
+    enhancement: new Core event: Vampire Change (OnVampirismStateChanged) (Any/Cured/Contracted/Vampire Lord Form)
+    enhancement: new Core event: Vampire Feeding (OnVampireFeed)
+
+134
+    Savegame compatibility: Should be savegame compatible
+    
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    
+    bugfix: objectreference_doconsumer erroneously resolving as Actor instead of Form before casting to ObjectReference
+    bugfix: extension settings erroneously erroring
+    bugfix: addressed problem with exceeding the 128 option limit per page for SkyUI MCM
+    enhancement: added "cards per page" setting for extensions; default is 5
+    enhancement: listadd now accepts 1 or more values, not just 1
+        e.g. listadd $listval 1 2 3 4 5 ; this will add 5 values to the end of $listval; if $listval is empty, they will be in positions 0, 1, 2, 3, 4 respectively
+    enhancement: new intrinsic functions: listresize, listslice
+        listresize <list variable> <new size: int>
+        ; listresize $listvar 1
+        listslice <list variable> <slice length> <optional start index>
+        ; listslice $listvar 3 ; starts at index 0
+        ; set $sublist resultfrom listslice $listvar 3 2 ; $sublist starts at index 2
+    enhancement: added "form" variant support for the jsonutil function
+        Note: This should bring the coverage of JsonUtil functions very close to complete
+        this includes support in the following subfunctions:
+            set, get, unset, has, listadd, listget, listset, listremoveat, listinsertat, listclear, listcount, listcountvalue, listfind, listhas, listresize
+    enhancement: added jsonutil subfunctions for list support:
+        listslice, listcopy, listtoarray
+    enhancement: added "form" variant support for the storageutil function
+        Note: This should bring the coverage of StorageUtil functions very close to complete
+        this includes support in the following subfunctions:
+            set, get, pluck, unset, has, listadd, listget, listpluck, listset, listremoveat, listinsertat, listadjust, listclear, listpop, listshift,
+                listsort, listcount, listcountvalue, listfind, listhas, listresize
+    enhancement: added storageutil subfunctions for list support:
+        listslice, listcopy, listtoarray
+    enhancement: added actorbase_dogetter, actorbase_doconsumer, actorbase_dofunction
+        these, like the others for actor, objectreference, and form, are wrappers around CreationKit functions of the same names as the sub-functions
+        see the function documentation for more details
+
+133
+    Savegame compatibility: Should be savegame compatible
+    
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+
+    enhancement: loosened variable syntax requirements; within a map key block (i.e. inside the '{}'), you can have whitespace padding around the key value being used
+        ; previously, the whitespace around $key would have caused a parse failure:
+            $var{ $key }
+        NOTE: The parser will make a best effort but if you run into problems, report the error and, in the meantime, devolve to removing surrounding whitespace within map key blocks
+    enhancement: new data type, lists (see the wiki for full information)
+            ; allows for list indexed variable access
+            $listvar[0] = "foo"
+            ; along with list specific new functions
+            listcount $listvar ; returns count of elements
+            listclear $listvar ; removes all elements
+            listadd $listvar "foo" ; adds the value, coercing to the list data type
+        unlike other variable types, assigning to a list uses the list data type, not the source data type
+        you may also declare a list in advance, to force the data type before use
+            int[] $listvar
+            ; forces listvar to be an int[]
+    enhancement: new function, mapkeys
+        returns the list of keys for a map
+            set $mapvar{apple} "fruit"
+            set $mapvar{cherry} "fruit"
+            set $mapkeylist resultfrom mapkeys $mapvar
+            ; $mapkeylist contains "apple", and "cherry"
+    enhancement: util_waitforkbd, sl_waitforkbd, ostim_waitforkbd, deb_msg, msg_notify, msg_console, rnd_list modified to OPTIONALLY accept EITHER the original parameter set OR to accept a single list containing the necessary values
+        ; so you could either do the usual method
+        util_waitforkbd 70 71 72
+        ; or, if you needed to, use a list
+        int[] $keylist
+        listadd $keylist 70
+        listadd $keylist 71
+        listadd $keylist 72
+        util_waitforkbd $keylist
+        ; obviously in this example, the first method would be preferable, but if you need to build a list and then pass it in, this gives you that freedom
+
+132
+    Savegame compatibility: Should be savegame compatible
+
+    enhancement: new type, MAP
+        MAP type is a peer to BOOL, STRING, LABEL, INT, FLOAT, FORM
+        a map variable cannot be directly coerced to another type
+            set $mapvar{key} = true
+            ; this is not valid, you must use a map key
+            if $mapvar [somelabel]
+            ; this is valid and should work
+            if $mapvar{key} [somelabel]
+        map keys will be resolved
+            set $mapvar{key} = 12
+            set $test1 $mapvar{key}
+            set $keyvar "key"
+            set $test2 $mapvar{$keyvar}
+            if $test1 &= $test2
+                ; this code will be run
+            endif
+        NOTE: Note that for variable use within a map key, you MUST use the $-prefix; without the $-prefix, the key will be treated like a string literal
+        new intrinsic functions available for map manipulation:
+            mapunset <mapvar> <map key> - unsets the map key for the mapvar
+            mapclear <mapvar> - unsets all map keys for the mapvar
+            mapcopy <target mapvar> <source mapvar> - copies all key/value pairs from source to target
+            maphaskey <mapvar> <map key> - returns true if the map key exists in mapvar, false otherwise
+    change: string interpolation now accepts $-prefixed variables, including map syntax
+        DEPRECATED: non $-prefixed values inside a variable expansion bracket {} will still be treated like a variable
+            eventually you should update your scripts to add the $-prefix in your string interpolation
+    change: due to the change to string interpolation above, the escape sequence for closing brace '}' has been removed (i.e. you do not need to double brace to have string interpolation see your '}')
+        the escape sequence for open brace remains the same, i.e. '{{' (i.e. you still need to escape the open brace to actually include an open brace in your interpolated string, else it will consider it the beginning of a variable expansion section)
+    change: $core.toh_elapsed has been moved to $system.toh_elapsed (technicall a script breaking change, but raise your hand if you are using this... didn't think so :)
+    update: documented target-scope-extended variables
+    bugfix: error with global form assignment
+
+131
+    Savegame compatibility: Should be savegame compatible
+    
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+
+    enhancement: Added new filters for SexLab and OStim:
+        Partner Race
+            - Note that the "Race" filter already includes 'Partner' options, but makes it impossible to combine both (target race and partner race)
+                For now, I will continue to respect the 'partner' options under the "Race" filter but consider them deprecated, and to instead 
+                switch over to using "Partner Race" explicitly
+            - As an additional warning, keep in mind it is possible currently to create conflicting "Race"/"Partner Race" settings by selecting 
+                "Race:Partner..." and "Partner Race:..." such that they conflict and no triggers get through.
+                e.g. "Race -> Partner Humanoid" plus "Partner Race -> Creature" will cause the trigger to never fire because your partner cannot be both Humanoid and Creature
+                This will cease to be a problem once the deprecated options are removed.
+        Partner Role
+        Partner Gender
+    enhancement: new SLTScript function: actor_race_type
+        Uses the same logic applied for the "Race Type" filter:
+            0 - error occurred
+            1 - Player
+            2 - Humanoid - Actor.HasKeyword(ActorTypeNPC)
+            3 - Undead - Actor.HasKeyword(ActorTypeUndead)
+            4 - Creature - presumed, default if nothing else matches
+    enhancement: Improved MCM performance
+    bugfix: added SexLab actor_getgender override back
+    bugfix: replaced script execution implementation from stack to queue
+
+130
+    Savegame compatibility: Should be savegame compatible with v129
+    
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log (or whichever folder you have your SKSE logs directed to)
+
+    Script-breaking change:
+    change: renamed util_waitforkbd to sl_waitforkbd (for SexLab purposes); sl_waitforkbd differs from util_waitforkbd in that it will also end if the scene ends
+
+    Non-breaking changes:
+    bugfix: sl_getrndactor/util_getrndactor should now properly work with $$ return values instead of solely relying on the $system.iterActor variable
+    enhancement: New Extension: OStim: Provides OnStart, OnOrgasm, OnEnd for all OStim threads (not just player thread)
+    enhancement: New OStim function library: adding the following OStim specific functions for SLTScript usage:
+        ostim_getrndactor
+        ostim_waitforkbd
+        ostim_getexcitement
+        ostim_setexcitement
+        ostim_getexcitementmultiplier
+        ostim_setexcitementmultiplier
+        ostim_modifyexcitement
+        ostim_isin
+        ostim_findaction
+        ostim_hasaction
+        ostim_stallclimax
+        ostim_permitclimax
+        ostim_isclimaxstalled
+        ostim_getthreadid
+        ostim_getsceneid
+        ostim_animname
+        ostim_actorcount
+        ostim_isinslot
+        ostim_climax
+    enhancement: new keyword, 'none'; resolves to Form value 'none'
+    change: extensions can (and should) be configured not to appear in the MCM if they are incapable of functioning (different from being disabled)
+    documentation: updated examples to use appropriate syntax for e.g. $system.self, $system.player, $system.partner
+
+129
+    Savegame compatibility: Should be savegame compatible with v128
+    
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log (or whichever folder you have your SKSE logs directed to)
+    
+    bugfix: Timer: timer progress now persists across saves (i.e. if you save 59 minutes into a 60 minute timer and reload that save, you only have 1 minute remaining before it runs)
+        - or as I like to call it, the "Why Didn't You Do This In The First Place" patch
+    bugfix: CumControl.sltscript was still partially built for running during a scene
+    bugfix: nested if/if/endif/endif constructs were erroneously reporting imbalanced endif
+    bugfix: 'Contamination - MME_Lactacid.sltscript' was not using editorid correctly
+    bugfix: SexLab event handler not resetting doRun flag back to true during each actor loop iteration, causing some triggers to fail to run
+    enhancement: Added NiOverride/Racemenu functions:
+        - getoverlay_slot
+        - param_overlay
+        - changeoverlay_transparency
+        - remove_overlay
+        - apply_overlay
+
+128
+    Savegame compatibility: CLEAN SAVE REQUIRED (New game or (not supported) Uninstalling SLTR, Cleaning your save (e.g. Load, click through the warning, Save; use a cleaner), Reinstall SLTR and reapply your customizations, Load)
+    
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log (or whichever folder you have your SKSE logs directed to)
+    
+    bugfix: Keymapping: Use DAK logic was incorrect
+    bugfix: Top of the Hour: was not aligning to hours properly; should be properly aligning and firing now
+    change: Keymapping: keymappings that do not require a modifier will no longer run if a modifier key (L/R Ctrl, Shift, or Alt) is being pressed
+    enhancement: Added the following filters to all Core and SexLab events:
+        Is Weapon/Spell Equipped? : 'Any', 'Equipped In Either Hand', 'Not Equipped In Either Hand', 'Not Equipped In Main/Right Hand' (torches count as weapons for this)
+        Is Armor/Clothing Equipped? : 'Any', 'Equipped In Body Slot (32)', 'Not Equipped In Body Slot (32)'
+        Is Weapon/Spell Drawn? : 'Any', 'Weapon/Spell Is Drawn', 'Weapon/Spell Is Not Drawn'
+    enhancement: Expanded the 'Location:' filter for SexLab events, it now includes:
+            "Any", "Inside", "Outside", "Safe (Home/Jail/Inn)", "City / Town", "Wilderness", "Dungeon", "Player Home", "Jail", "Dungeon", "Cave", "Dwelling", "City", "Town", "Habitation", "Draugr Crypt", "Dragon Priest Lair", "Bandit Camp", "Falmer Hive", "Vampire Lair", "Dwarven Automatons", "Military Fort", "Mine", "Inn", "Hold"
+        As part of this, the LOCATION filter was switched to the DEEPLOCATION filter automatically; SexLab triggers should be auto-updated to the correct filter
+    enhancement: Added the 'chance' filter to Core events 'Keymapping' and 'New Session' for completeness
+    enhancement: New Core trigger: Timer
+        Included Filters:
+            Timer Delay: 1-60 minutes (1 minute increments)
+            Chance
+            Location
+            Is Weapon/Spell Equipped
+            Is Armor/Clothing Equipped
+            Is Weapon/Spell Drawn
+    enhancement: New shipped SLTScripts
+            Contamination - MME_Lactacid.sltscript - Causes the player (specifically) to drink 1-3 MME Lactacids (decreasing odds of higher Lactacid amounts)
+            Contamination - Transformative Elixir - Causes the player (specifically) to drink 1 randomly selected Transformative Elixir (options exist in the script to change the selection criteria)
+            CumControl - Has a 50/50 chance of either enabling or disabling SexLab orgasms on the target
+                - Note that some mods will still force an orgasm; this will prevent "naturally" occurring orgasms
+        Any of them, for example, could be added to "Player Cell Change" (with a very low chance), "Player Location Change" (with a somewhat higher chance), or "Timer" (with the timer delay of your choosing)
+    enhancement: New SLT functions
+        global_getvalue <global variable formID>
+        global_setvalue <global variable formID> <new float value>
+            Used to get/set GLOB (GlobalVariable) records
+            e.g. global_getvalue "_DWill" ; get current Devious Followers willpower
+                 global_setvalue "_DWill" 20.0 ; set current Devious Followers willpower to 20.0
+
+
+127
+    Savegame compatible with v126
+    MAJOR CHANGE: JSON support has ended; please convert any JSON based scripts to SLTScript for future support
+    
+    MAJOR CHANGE: "Player Loading Screen" event has been removed; triggers for this event will no longer run;
+        As part of this, the EVENT_ID values were changed for some events; Core triggers should be auto-updated to the correct EVENT_ID values
+        As part of this, code has been added to remove the sl_triggers_PlayerTrackerActor if it is present
+
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log (or whichever folder you have your SKSE logs directed to)
+    bugfix: removed extraneous logging output from event sinks
+    bugfix: potential problem with script queuing
+    bugfix: util_sendevent erroneously reports imbalanced arguments
+    bugfix: PetCollarGame had incorrect goto labels
+    bugfix: actor_advskill was using int internally instead of float when resolving values, losing precision
+    bugfix: sl_adjustenjoyment was expecting the wrong number of arguments and not functioning as a result
+    enhancement: added Chinese translations (thank you to guliguliradish for donating the translation!)
+    enhancement: added SexLabAroused/OSLAroused functions: sla_get_version, sla_get_arousal, sla_get_exposure, sla_set_exposure,
+        sla_update_exposure, sla_send_exposure_event, sla_get_actor_days_since_last_orgasm, sla_get_actor_hours_since_last_sex
+    change: moved trigger caching earlier in load step
+
+126
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log (or whichever folder you have your SKSE logs directed to)
+    bugfix: plugin should no longer attempt to resolve two forms on each player involved hit event in the event sink; formid resolution has been pushed out to SLTScript evaluation
+        unused eventsinks will no longer be left sending events back to Papyrus code that is not listening for them
+    bugfix: added the Core event entries to the event dropdown for "Player Equipment Change", "Player Combat State Changed", "Player Hit or Is Hit"
+    enhancement: Added $request.core.player_on_hit.attacker, $request.core.player_on_hit.target, $request.core.player_on_hit.source, $request.core.player_on_hit.projectile
+    change: events will now default to 100% chance when created and that attribute is available
+
+125
+    Savegame compatibility: CLEAN SAVE REQUIRED (New game or (not supported) Uninstalling SLTR, Cleaning your save (e.g. Load, click through the warning, Save; use a cleaner), Reinstall SLTR and reapply your customizations, Load)
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log (or whichever folder you have your SKSE logs directed to)
+    bugfix: MCM for container activation not respecting Empty, Corpse, and Common Container settings
+    bugfix: type conversion from Form variables was incorrectly attempting to parse strings
+    enhancement: New Core trigger: Player Location Change
+        filters: Chance, Daytime, Departing Location (inside/outside/wilderness/city/dungeon/etc.), Is Departed Location Cleared, Arriving Location, Is Arrival Location Cleared
+        request vars introduced: $request.core.from_location, $request.core.to_location
+    enhancement: New Core trigger: Player Equipment Change
+        filters: Is Equipping/Unequipping, Is Unique, Has Enchantments, Item Type (Armor, Weapon, Potion, etc.), Armor Slot (if applicable)
+        request vars introduced: $request.core.equipped_item.base_form, $request.core.equipped_item.object_reference, $request.core.equipped_item.is_equipping, $request.core.equipped_item.is_unique, $request.core.equipped_item.has_enchantments, $request.core.equipped_item.type
+    enhancement: New Core trigger: Player Combat State Change
+        filters: Entering/Leaving Combat
+    enhancement: New Core trigger: Player On Hit
+        filters: Hitting/Was Hit, Was Blocked, Was Power Attacking, Was Sneak Attacking, Was Bash Attacking
+        request vars introduced: $request.core.player_on_hit.attacker, $request.core.player_on_hit.target
+    enhancement: $system.forms.gold - new system variable, returns Form object for gold in game (0xf)
+    enhancement: $system.core.is_player.in_combat - return true if player is in combat, false otherwise
+
+124
+    Savegame compatibility: CLEAN SAVE REQUIRED (New game or (not supported) Uninstalling SLTR, Cleaning your save (e.g. Load, click through the warning, Save; use a cleaner), Reinstall SLTR and reapply your customizations, Load)
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log (or whichever folder you have your SKSE logs directed to)
+    bugfix: documentation: util_getrndactor should be grouped under Utility, not SexLab
+    bugfix: 'callarg' should not accept negative indices
+    bugfix: Core should not be so vocal during startup when dynamic mod lookups fail during container list setup; it's the whole point
+    bugfix: coercion from Form to float now works like Form to int, i.e. by returning GetFormID(), but now cast as a float
+    bugfix: $$ should more accurately return default values after a call is made to a function that does not return one
+    bugfix: several '$request' scoped variables were not returning correctly typed values
+    bugfix: in some situations, scopes were being inappropriately allowed to be written to
+    bugfix: improved Actor resolution internally in some function implementations
+    bugfix: jsonutil exists now appropriately returns a bool/false if the file does not exist
+    bugfix: system.is_available.core should return a bool, not a string
+    bugfix: should catch attempts to assign to read-only scopes earlier in command handling
+    bugfix: MannySauce was disappointed about the version number mismatch in the MCM; the disappointment has been addressed
+    bugfix: plugin should now properly disable function libraries for disabled extensions
+    bugfix: empty string literals erroneously reporting as '"'
+    bugfix: plugin should handle hex formatted values for smart comparison
+    change: 'goto' will unwind/reset all pending while/gosub calls in your local stack
+        if you use 'goto' to jump somewhere else in your code, this will now reset things so that encountering another endsub or endwhile will no longer have unexpected consequences
+    change: bool flags in settings.json changed to string: "true"/"false"
+    change: label notation can be used as the target for goto/if as well as the source for set
+        example:
+            [target label]
+            goto [target label]
+            if $var1 > $var2 [target label]
+            set $targetLabel [target label]
+            goto $targetLabel
+    enhancement: target scope extension; you can now "extend" your target scope to target other Actors, in order to get/set their target-scoped variables
+            this allows you to alter target-scope variables for targets other than the target of your script
+            example:
+                ; set a target variable for myself
+                set $target.happiness 10
+                ; or if I want to be pedantic
+                set $target.<system.self>.happiness 10
+                ; and for partner
+                set $target.<system.partner>.happiness 10
+                ; or even this:
+                set $thetarget $system.self
+                set $target.<thetarget>.happiness 10
+                set $thetarget $system.partner
+                set $target.<thetarget>.happiness 10
+    enhancement: true and false are now keywords that return bool true and false
+    enhancement: new operators for set and if: '&&' and '||' for boolean AND and OR respectively
+    enhancement: if <var> <label> ; you can now test a variable for truthiness instead of requiring a comparison
+        example:
+            set $someval true
+            ; or maybe $someval is set from something like actor_dogetter IsSneaking
+            if $someval targetlabel
+            ; you should now be at [targetlabel]
+    enhancement: (IF/ENDIF BLOCK) if-var-endif (when you do not include a label)
+        example:
+            set $someval true
+            ; note, no label is provided
+            if $someval
+                set $anotherval 23
+            endif
+            ; execution will skip to after this line if $someval evaluates to false
+    enhancement: (IF/ENDIF BLOCK) if-var-op-var-endif (when you do not include a label)
+        example:
+            set $var1 12
+            set $var2 12
+            ; note, no label is provided
+            if $var1 > $var2
+                ; code that will be skipped because the values are actually equal
+            endif
+            ; execution will skip to after this line if ($var1 > $var2) evaluates to false
+    enhancement: (IF-ELSE-ENDIF) you can have an 'else' block to go with your if
+        example:
+            if $flag
+                ; code for flag true
+            else
+                ; code for flag false
+            endif
+    enhancement: (WHILE/ENDWHILE BLOCK) while-var-endwhile and while-var-op-var-endwhile
+        example:
+            set $limit 10
+            set $index 0
+            while $index < $limit
+                ; this will loop 10 times
+                inc $index
+            endwhile
+            ; and start executing here as soon as $index >= $limit
+        example:
+            set $flag false
+            while $flag
+                ; this will 
+                set $result resultfrom rnd_int 1 10
+                if $result > 5
+                    set $flag true
+                endif
+            endwhile
+            ; the while loop will be iterated until the random number generator
+            ; generates a number larger than 5
+    Note: as part of the if-block/while-block/beginsub-block implementation, the parser should now attempt nested block skipping
+        Previously, for example, if you had a code sequence that went something like:
+            beginsub something
+            ; code
+            beginsub innersub
+            ; more code
+            endsub 
+            ; more code
+            endsub
+        Reaching "beginsub something" would iterate until it reach the first "endsub", not the second as one might expect
+        That said, embedded sub routines is hardly a common use case. So the same should also now apply for if and while blocks, newly introduced.
+        Meaning you should be able to nest them:
+            set $flag1 false
+            if $flag1
+                ; leading code
+                if $flag2
+                    ; inner code
+                endif
+                ; trailing code
+            endif
+            ; this should cause it to skip leading, inner, and trailing code, as one would expect
+
+123
+    Savegame compatibility: CLEAN SAVE REQUIRED (New game or (not supported) Uninstalling SLTR, Cleaning your save (e.g. Load, click through the warning, Save; use a cleaner), Reinstall SLTR and reapply your customizations, Load)
+    Note: Reminder that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log (or whichever folder you have your SKSE logs directed to)
+    bugfix: fixed SexLab resolution of partner related variables
+    bugfix: fixed sl_triggersCmd.CompleteOperationOnActor(): now correctly marks runOpPending = false before responding to SLTReset
+	bugfix: .esp change; marked the cell change detection actor as IsGhost and SimpleActor
+    bugfix: 'cat' now properly concatenates all parameters
+    bugfix: SLTScripts comment to end of line ';' was being enforced too aggressively i.e. middle of string literals
+    bugfix: some string compares were not case insensitive
+    bugfix: some function library implementations were not calling CmdPrimary.Resolve*() functions before using parameters; this resulted in some values (string literals) remaining wrapped in double quotes
+    bugfix: on initial install, keys were all detected as pressed; the delusion has been cured
+    enhancement: .sltscript file extension (equivalent to .ini)
+    enhancement: Notepad++ syntax highlighting (see extern/lang-support/notepad++)
+    enhancement: VSCode syntax highlighting (see extern/lang-support/vscode)
+    enhancement: added topicinfo_getresponsetext function which returns the dialog text associated with the provided TopicInfo (by FormID or editorID)
+        example:
+            topicinfo_getresponsetext "Skyrim.esm:0x00020954"
+            ; $$ would contain "I used to be an adventurer like you. Then I took an arrow in the knee..."
+    enhancement: added rnd_float function which returns a random float between parameter1 and parameter2, inclusive
+        example:
+            rnd_float 23.0 482.0
+            set $result $$
+    enhancement: New system variables:
+        $system.random.100 - result of rnd_float 0 100.0
+    enhancement: New contextual system variables:
+        $request.* - these will vary depending on the trigger
+            - e.g. Player Opened Container
+                core.activatedContainer - the form/formID of the container that triggered the event
+                core.activatedContainer.is_corpse - 1 if you are looting a corpse; 0 otherwise
+                core.activatedContainer.is_empty - 1 if the container is empty; 0 otherwise
+                core.activatedContainer.count - current count of items in the container; this will update if you modify the contents
+        $system.currentScriptName - the name of the currently executing script
+        $system.initialScriptName - the first script called in the call chain (if the script never "calls" another script, it will always be the same as the current script name)
+        See more on the wiki.
+    enhancement: many debug flags added and exposed via the MCM
+    minor enhancement: slight improvement in accuracy of script related logging output
+    rearchitecture: typing is being supported more explicitly behind the scenes (not necessarily immediately obvious)
+    change: scripts converted to new extension, .sltscript
+
+122
+    Savegame compatibility: CLEAN SAVE REQUIRED (New game or (not supported) Uninstalling SLTR, Cleaning your save (e.g. Load, click through the warning, Save; use a cleaner), Reinstall SLTR and reapply your customizations, Load)
+    enhancement: New Core event trigger "Player Cell Change"
+        new custom modevent: OnSLTRPlayerCellChange(bool isNewGameLaunch, bool isNewSession, Form fkwPlayerLocation, bool playerWasInInterior)
+    enhancement: New Core event trigger "Player Loading Screen"
+        new standard modevent: OnSLTRPlayerLoadingScreen
+    enhancement: New Core event trigger "Player Opened Container" (i.e. opening containers/bodies)
+        new custom modevent: OnSLTRPlayerContainerActivate(Form fcontainerRef, bool isConCorpse, bool isConEmpty, Form fplocKeywd, bool playerWasInInterior)
+        NOTE: Due to implementation constraints, SLTScript will run after the container is closed
+            I don't currently see a pragmatic way to pause the opening of the container window long enough to guarantee running an SLTScript to completion
+    enhancement: Improved script parsing speed
+    enhancement: Improved variable resolution speed
+
+121
+    Savegame compatibility: NEW SAVE REQUIRED
+    enhancement: stability - this version has been worked over considerably to improve the stability of the callstack mechanism and properly support load-resume mechanics
+        this should make it easier to write long-running scripts, even those intended to run for the duration of the game
+    enhancement: variable scopes "system", "target" and "thread" added in addition to the existing "local" and "global" scopes
+        "system" scope - special scope that will now hold previous "special variables" (i.e. $player is now $system.player, $self is now $system.self)
+        "target" scope - per Actor/target (i.e. myvar on the Player is distinct from myvar on Hod)
+        "thread" scope - these variables are available per individual call chain
+    enhancement: string interpolation
+        Previously:
+            msg_notify "Part1 "  $somevar  " part 2 (did you remember your spaces?) " $global.someothervar
+        Now you can:
+            msg_notify $"Part1 {somevar} part 2 (did you remember your spaces?) {global.someothervar}"
+    enhancement: error messages related to scripts should be better tied to actual line numbers (and not opcode offsets)
+    BREAKING CHANGES:
+    change: variable naming syntax is now:
+            $[<optional-scope>.]<varname>
+        where <optional-scope> can be any of "local", "thread", "target", "global", or "system"
+        if not specified, defaults to "local"
+    change: variable names MUST be bare to be resolved
+        Previously:
+            set "$myvar" 5 ; this used to be valid
+            set $myvar 5   ; and both did the same thing
+        Now:
+            set $myvar 5   ; this is valid
+            set "$myvar" 5 ; this will FAIL
+    change: new string-literal syntax for variable interpolation
+        Prefixing a string literal with $ will attempt variable interpolation on any items enclosed in curly braces '{}', treating them like a variable name, including scope
+            $"local: {var}  the same local var, but explicit: {local.var}  completely different var due to scope: {thread.var}"
+    change: numeric values will be assumed to be base 10 unless prefixed with "0x"
+        Previously:
+            23 != 023
+            ; 0x23 wasn't even valid notation
+            023 == 0x23
+        Now:
+            23 == 023 == 00000023 == 0x17 == 0x00000017
+            023 != 0x23
+            017 != 0x17
+        
+
+120
+    Savegame compatibility: tested succesfully with an update from v119
+    bugfix: callstack corruption could occur in some scenarios; fixed
+    bugfix: BUG IN THE REGRESSION TEST! yuck
+    bugfix: parser will no longer assume "!=" is a global variable named "="
+    bugfix: PARTIAL: strings starting with "$" will now work IF THEY HAVE A SPACE IN THEM. quirk of the whole "variables start with $, everything is a string, resolve all the things!" design
+        workaround: if you need a string with no spaces that starts with a "$"... you can can use 'cat $food "$" "therestofthestring"'; ugly, I know, needs some thinking
+    enhancement: added additional equality operator, "==" because I got tired of my brain trying to stop me from not typing it
+    enhancement: you should be able to safely mix "==", "=", and "&=" (as well as, on the opposite side, "!=" and "&!=")
+        if the two values "can be" evaluated as numbers for equality, they will be, otherwise it will perform string equality
+    enhancement: sl_triggers_internal.SafeSmartEquals(string, string) is the native logic wrapper (mostly for speed)
+    enhancement: "set <variable> resultfrom <function.....>"
+        example:
+            set $actorName resultfrom actor_name $player
+        it's what we all do anyway
+
+119
+    Savegame compatibility: tested succesfully with an update from v118
+    enhancement: added the vast majority of bindings for Actor, ObjectReference, and Form under the following functions
+        actor_doaction, objectreference_doaction, form_doaction
+        actor_dogetter, objectreference_dogetter, form_dogetter
+        actor_doconsumer, objectreference_doconsumer, form_doconsumer
+        actor_dofunction, objectreference_dofunction, form_dofunction
+            These are ust wrappers around the Papyrus script functions. Check the UESP CK wiki links I included for API usage
+            These use the typical "sub-function" approach
+            action - functions that take no parameters and return no results
+            getter - functions that take no parameters and return a result
+            consumer - functions that take parameters and return no results
+            function - functions that take parameters and return a result
+            When a function returns a "Form" type, it returns a FormID
+            For function parameters that require a "Form" type, they will accept not only the typical "modname.esp:00234" format but also raw int values returned by these functions
+
+118
+    Savegame compatibility: tested succesfully with an update from v117
+    Savegame compatibility: SCRIPT-BREAKING if using the old "$g" style global variable names
+        Shipped scripts in the 'sl_triggers/commands' subfolder have been updated
+    MAJOR enhancement: variable names, i.e. not just numbers
+        $<any-non-breaking-characters> - local variables
+        !<any-non-breaking-characters> - global variables
+        Yes, this means that any existing scripts you have written that make use of the previous "$g" global variable approach is now actually referencing local variables
+    bugfix: SLT.actor_say not working if self is player
+
+117
+    Savegame compatibility: tested succesfully with an update from v116
+    MAJOR enhancement: running scripts should now resume on loading a save (you can have suuuuuper long-running scripts now; theoretically lifetime)
+    MAJOR enhancement: new Core event: OnNewSession (fires at the start of a new game and each time you load a save; provides a unique sessionId for each session)
+    enhancement: new modevent published ("_slt_event_slt_on_new_session_"), fires at the start of a new session (i.e. at start of new game and after each save load)
+    enhancement: added function in API to retrieve the event name
+    enhancement: actor_getscale/actor_setscale
+    bugfix: Top of the Hour events were not respecting Chance
+    bugfix: sl_triggersAPI.psc.headeronly not valid
+    change: removed the roughly 4 second (technically 3.9 second) additional delay and have sacked the ones responsible for it
+
+116
+    Savegame compatibility: tested succesfully with an update from v115
+    enhancement: added jsonutil and storageutil functions as wrappers around PapyrusUtil scripts of the same name
+    enhancement: minor performance tuning (restructured sequence of certain built-in lookups)
+    enhancement: more documentation, both on the wiki and in .txt file form with the mod
+    enhancement: added osla_* functions as wrappers around OSLAroused_ModInterface
+    enhancement: added slso_bonus_enjoyment function
+
+115
+    Savegame compatibility: tested succesfully with an update from v114 (install 114, new game, verify, save, update to 115, load, verify)
+    bugfix: Core function library (toh_elapsed_time only) was looking for the extension with the wrong formID
+    bugfix: corrected several functions with edge case failures to set $$ appropriately
+    bugfix: several logic bugfixes while going through the function libraries
+    enhancement: completed the addition of argument checking for all operations/functions
+    enhancement: actor_isaffectedby now can match for ALL (see updated documentation)
+    enhancement: several sl_ functions did not take an actor; an actor has been added as an optional param (e.g. sl_animname)
+    enhancement: added protective checks around param index access and object referencing
+    change: added roughly 4 second (technically 3.9 second) additional delay on SLT start before trying to register extensions to improve startup sync
+
+114
+    enhancement: performance improvements centered around speeding up the command library access
+    enhancement: improved error reporting for your scripts (see the console for errors in your scripts; feature developing)
+    bugfix: inc no longer coerces to float; will keep it an int if it finds an int
+    enhancement: improved performance for 'set'/'inc'/'cat' (should never have been part of the command library; moved to built-in functionality; much faster)
+    enhancement: documentation is available again with the .zip (sl_triggers_function_library.txt); now being generated from source, as well as the wiki content (should be essentially identical)
+
+113
+    Savegame safe with v112
+    bugfix: Soft Delete is now actually respected by extensions and soft deleted triggers should no longer fire; the extensions have been reprimanded and a PIP put into place
+    feature: FULLY DELETE is now an option for Soft Deleted triggers (originally the intent was to require manual deletion from the filesystem)
+    feature: added compatibility files for ConsoleUtil Extended for improved console command implementation
+
+112
+    PROBABLY-SAVE-BREAKING: Reuse a save at your own risk. :)
+    bugfixes: yes, plural. just... take a look at the last few commits if you are curious
+        but at this point I have a test script that runs through several of the major components for regression testing and it's working
+        Suffice to say I've reached a happy equilibrium with what I wanted vis-a-vis extensibility and performance
+
+111
+    PROBABLY-SAVE-BREAKING: cleaning up last bits of extension pools (should have done this pre 109); this changes the .esp, so I suspect you will need a new save (I mean, you can try)
+    enhancement: added new ModEvent that SLT listens for
+        sl_triggers_SLTRequestList
+            AFormObject.SendModEvent("sl_triggers_SLTRequestList", "StorageUtilKey", (optional) 1.7 (yes, 1.7))
+            - when received, will populate a StorageUtil string list located at "StorageUtilKey" with the list of scripts
+            - the list will be attached to the Form sender
+            - if you specify 1.7 for the float value, the StorageUtilKey will be assumed to be a global value (i.e. not stored to the Form)
+            - if you put a mod event name into the first element of the list before invoking this event, that mod event will be fired when the list is populated
+    bugfix: the 'TopOfTheHour' layout was set to use the 'Keymapping' layout via a lovely little typo
+    change: shipped script cleanup
+        - recoded all .json shipped scripts as .ini
+        - reformatted some of the .ini files to pretty them up a little
+        - removed a few scripts referencing objects no longer shipped with the .esp
+        - NOTE: IF YOU ARE UPGRADING, YOU WILL HAVE A BUNCH OF DUPLICATE SCRITPS IN YOUR (for legacy purposes, incorrectly named) 'Data\SKSE\Plugins\sl_triggers\commands\' folder,
+            because you already have the old .json versions I removed and will receive new .ini versions. Unless you have a preference for the .json versions, I would
+            recommend you clean out your commands folder prior to updating.
+
+110
+    bugfix: fixed the problem preventing command libraries beyond the base SLT library from working
+    enhancement: added a demo script and some convenience options for other mod authors
+
+109
+    enhancement: dynamic command library lookup
+        this is going to be geared more toward extension authors but essentially this will make it TONS easier to add functions you can call in your scripts
+    bugfix: SexLab events should be working now
+        the code to read the commands was copied from the previous attributes which were int and not string, replacing it with a getstring fixed this issue
+    bugfix: Chance not saving for new SexLab events
+        the chance attribute was not being set due to a bug in the UI handler for sliders, fixed;
+
+108
+    enhancement: added sl_triggersAPI for other mod authors to access SLT features
+        sl_triggersAPI exposes the following endpoints:
+            GetVersion()
+            GetScriptsList()
+            RunScript(string _scriptname, Actor _actor = none) ; defaults to Player
+                if RunScript() is called without an Actor provided
+                    it will first try the Actor currently in your crosshairs if there is one
+                    it will fall back to the Player
+
+    enhancement: added console commands (slt/sl_triggers)
+        slt console command has the following usage:
+			Usage: slt version          ; displays sl_triggers mod version
+			Usage: slt list             ; lists the scripts available to run from SLT
+			Usage: slt run <scriptname> ; where <scriptname> is a valid script for SLT
+                when slt run is called
+                    it will first check if there is an Actor currently selected in the console
+                    it will then check for an Actor in the crosshairs
+                    it will fall back to the Player
+
+107
+    enhancement: new commands for your scripts:
+            dd_unlockslot <slot#> <"force" (optional)> ; slot# i.e. 32 is body ; if "force" is added as a second parameter, it will also unlock quest items
+            dd_unlockall <"force" (optional)> ; works like dd_unlockslot but for all slots
+        Note that after unlocking items may still appear to be equipped in inventory but you should be able to safely select and remove them
+        And a script to demonstrate
+            DD Unlock All.ini
+    enhancement: .ini scripts now support comment to end of line
+        sl_isin $self ; this is a valid comment
+        ; as would be this (all by itself)
+    
+
+106
+    enhancement: flagged as .ESL
+    bugfix: workaround for Papyrus VM string case destruction
+    enhancement: added Devious Followers Redux commands
+            df_setdebt
+            df_resetall
+        additionally, I also added scripts:
+            DF Set Debt to 0.ini
+            DF Reset All.ini
+
+105
+    bugfix: possible resolution issue with global variables in some cases
+    enhancement: new feature, subroutines
+        beginsub <subroutinename>/endsub to demarcate the subroutine
+        gosub <subroutinename> to execute and return
+    enhancement: new feature, "call"
+        call <command file name> <optional $1 argument> <optional $2 argument> ...
+            stops execution of current command file, runs the requested file, then resumes current command file
+            if an extension is not specified .ini is tried first, then .json
+            variable scopes are NOT shared (global variables are, of course, still global)
+                so if you set $1, then call a function, it will not see your $1 value
+                but if you use $g1, it will
+            arguments are passed by value
+        callarg <index> <variable name>
+            Example: callarg 0 $2
+            this will place the first (index 0) argument passed into $2
+            
+
+104
+    multiple bugfixes related to MCM and settings management
+    new file layout under the hood
+
+103
+    bugfix: trigger primes were not dispelling themselves at end of service
+    bugfix: result stacks were not crossing back from extensions to core
+
+102
+    bugfix: fixed problem where available triggers would not reset between launches of the game
+    bugfix: fixed problem with MCM OID handling (might not have noticed it; it could be subtle)
+    enhancement: QoL for your developer; lots of code clean up and trying to fix problems I introduced due to code clean up
+        .. like, a LOT of code cleanup. Refactoring. Removing comments. Adding comments.
+    enhancement: Added localization. sl_triggers doesn't have much to translate, but if you want to donate translations I'll add them
+
+101
+    bugfix: sexlab compat
+    enhancement: sl_orgasm
+
+100
+    beta: the new hotness is all about modularity... I really need to write this up
+
+21
+	bugfix: position is now being handled correctly by the MCM (it was overwriting the "role" attribute)
+
+20
+	bugfix: Chance works again
+
+19
+	enhancement: new operation
+		- sl_isinslot - is the specified actor in the specified slot of a SexLab scene (I accidentally implemented this and kept it)
+			["sl_isinslot", "$self", "1"]
+				$$ == "1" if true; "0" otherwise
+	enhancement: new trigger criteria: is_position (is the actor in the indicated slot; what I was asked for)
+	enhancement: setting events back to "Select an Event" clears out the event, helping keep your settings.json cleaner
+	bugfix: Main no longer skipping most of the checks due to my switch to int conversion and not paying attention to !
+	bugfix: SexLab event handling no longer goes into an infinite loop (present since v16)
+	change: brought in "whatsnew" to consolidate change history
+
+18
+	enhancement: new operations
+		- sl_advance
+			["sl_advance"] (go forward) OR ["sl_advance", "-1"] (go backward)
+		- actor_isaffectedby
+			["actor_isaffectedby", "Skyrim.esm:1030541"] (actor is affected by FortifyHealthFFSelf (i.e. Potion of Health), $$ == "1")
+
+17
+	enhancement: removed SexLab hard dependency; you can now enjoy your sl(shhh)_triggers on your more vanilla Skyrim experiences
+		existing functions should gracefully degrade or give best accurate answer (i.e. gender coming from base actor instead of sexlab if not available)
+	enhancement: MCM Main page now displays SexLab status
+	bugfix: fixed a bug in the MCM trigger cleanup code
+
+16
+	enhancement: added keymapping as an event; you can now bind keymappings to, as usual, up to 3 command files
+		also allows for modifier use
+		also allows for Dynamic Activation Key use per trigger
+	enhancement: events will only be registered for if triggers exist that use them; if you do not hook any SexLab events, they will not be registered
+		registration will update if you update the MCM
+	change: lots of refactoring, technically some performance improvements but I haven't done timings so it's mostly my instinct, some general code cleanup (mostly due to mess of my own making)
+	change: event id values (0 for SLStart...) are now 1 higher (1 for SLStart) to make the MCM behave more nicely; this should get converted automatically
+	change: started adding some non-trigger values into settings.json, currently to track version; this is to help allow for settings updates in the future
+	
+
+15
+	enhancement: improved "top of the hour" updategametime processing
+	enhancement: variables can be any "$<non-negative-int>"
+		["set", "$42", "life, the universe, and everything"]
+		is now valid
+	enhancement: global variables can be any "$g<non-negative-int>"
+		["set", "$g42", "life, the universe, and everything"]
+		is now valid
+	fixed bug: fixed race condition when running multiple commands from one trigger
+	change: renamed operation "actual_hours_since_last_top" to "toh_elapsed_time"
+		"actual_hours_since_last_top" redirects to the new functionality for now
+	
+
+14
+	split "if_race" into "if_race" and "if_player"
+		you will likely need to update any triggers that relied on "if_race" previously
+		existing "if_race" values will not be automatically updated and you will probably see:
+			if you had...			then you will now have until you edit it...
+			Player					Undead
+			Not Player				Partner Humanoid
+			Undead					Partner Creature
+			Partner Humanoid		Partner Undead
+			Partner Creature		??
+			Partner Player			.. crabs??
+			Partner Not Player		.. the void of space??
+			Partner Undead			Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn.
+			
+		"if_race" now offers:
+			Any
+			Humanoid
+			Creature
+			Undead
+			Partner Humanoid
+			Partner Creature
+			Partner Undead
+			
+		"if_player" offers:
+			Any
+			Player
+			Not Player
+			Partner Player
+			Partner Not Player
+
+13
+	added event handling for "top of the hour" (i.e. on the 'o'clock for each in-game hour, with the player as $self)
+	added "global" variables: "$g0" through "$g9"; accessible across scripts, retained across executions
+	added new operations:
+		actor_worninslot
+		actor_wornhaskeyword
+		actual_hours_since_last_top
+
+v12:
+    General:
+        - Form ID for objects can now be in dex or hex notation. If ID starts with 0, it is assumed to be hex, else its dec
+        - Example:
+        -     Hex version:
+        -     ["item_equip", "$self", "skyrim.esm:0166d6", "0", "1"],
+        -     Dec version:
+        -     ["item_equip", "$self", "skyrim.esm:91862", "0", "1"],
+        - I hope I didn't broke something :(
+        
+    Functions: 
+        - actor_race: get actors race name. Vannila(Nord, Bretonr, etc) or SL "RaceKey" (Dogs, Trolls, etc)
+        - math: math fuctions: asint, floor, ceiling, abs
+
+v11: 
+    Functions:
+        - av_set: set actor value
+        - av_getbase: get actor base value
+        - actor_advskill: player only, advance actor skill
+        - "$partner2", "$partner3", "$partner4": to get 2nd, 3rd and 4th "partner"
+        
+        
+v10:
+    General:
+        - increased max number of goto labels to 32
+        
+    Functions:
+        - item_equip: equip item. Like item_equipex. item_equip is "vannila" function, item_equipex is SKSE version
+        - actor_state: get or set/exec a couple of misc functions, "states" about actor
+        - actor_body: a couple of functions related to actors body (weight, head regen, stuff)
+        - weather_state: get what kind of weather is currently active (rain, show, etc...)
+        - util_game: some functions from game.psc. IncrementStat, QueryStat
+        
+v09: 
+    Functions:
+        - sl_animname: returns current SL animation name
+        - util_waitforkbd: wait for user to press a specific key or SL animation ends
+        - json_getvalue: read data from external json file
+        - json_setvalue: write data to external file
+        - json_save: while "save" is done automaticly when user makes skyrim save, this forces .json to be saved now
+        
+    Commands:
+        - Time Control.json: You can control the game speed, and so animation speed with keyboard. (must have ConsoleUtilSSE plugin)
+        
+v08:
+    Functions:
+        - snd_play, snd_setvolume, snd_stop: for playing sound
+        - console: (optional). If you have ConsoleUtilSSE installed (https://www.nexusmods.com/skyrimspecialedition/mods/24858), it executes console commands
+        - mfg_*, facial expressions: (optional) If you have MfgFix (https://www.nexusmods.com/skyrimspecialedition/mods/11669), you can play with facial expressions
+        
+    Commands:
+        - Heart beat(A).json: play "heart beat" sound 
+        - Sound - levelup.json: play "levelup" sound
+        - Time Slow.json: slows global time by 50%. Resets time to normal at the end. Uses console command (must have ConsoleUtilSSE plugin)
+        - MFG Reset.json: When sex ends, reset facial expression (must have MfgFix plugin installed)
+
+v07:
+    Misc:
+        - you can now set up to 80 triggers
+        
+    Functions:
+        - actor_wornhaskeyword: check if anything actor is wearing has specified keyword
+        - actor_lochaskeyword: check if location where actor is has a specific keyword
+        
+        
+v06:
+    Functions:
+        - actor_sendmodevent: Actor version of util_sendmodevent
+        - sl_hastag: check if current animation has a specific tag
+        - util_getgametime: get game time
+        - util_gethour: get day hour
+        
+    Commands:
+        - Eat (sweets).json
+        - It was bad.json
+
+v05: 
+    Variables:
+        - "$partner" : partner in sex
+        
+    Variables operations:
+        - "set" : has now 2 versions. Simple assignment and some math like ["set", "$1", "12", "+", "3"]  
+        - "inc" : short version for "+"
+        - "cat" : short version for string "+"
+        
+    Functions:
+        - actor_isguard: is law
+        - actor_isplayer: is PC
+        - actor_getgender: gender
+        - actor_haskeyword: does it have a specific kewyord
+        - actor_getrelation: get relationship rank btween 2 actors (enemy, friend, ...)
+        - actor_setrelation: set relationship rank btween 2 actors (enemy, friend, ...)
+        - actor_infaction: check if actor is in specific faction
+        - actor_getfactionrank: get faction rank
+        - actor_setfactionrank: set faction rank
+        - actor_removefaction: remove from faction
+        - actor_playanim: play animation
+        - util_sendmodevent: send event (SendModEvent)
+        - util_sendevent: send event using SKSE (ModEvent.psc)

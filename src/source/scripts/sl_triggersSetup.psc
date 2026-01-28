@@ -74,6 +74,7 @@ int 		oidDebug_Extension_Core_TopOfTheHour
 int			oidDebug_Extension_List
 int 		oidDebug_Extension_SexLab
 int 		oidDebug_Extension_OStim
+int 		oidDebug_Extension_AdultGeneral
 int 		oidDebug_Extension_CustomResolveScoped
 int 		oidDebug_Setup
 int			oidResetSLT
@@ -112,6 +113,7 @@ Function CallThisToResetTheOIDValuesHextun()
 	oidDebug_Extension_List					= 0
 	oidDebug_Extension_SexLab				= 0
 	oidDebug_Extension_OStim				= 0
+	oidDebug_Extension_AdultGeneral			= 0
 	oidDebug_Extension_CustomResolveScoped	= 0
 	oidDebug_Setup							= 0
 	oidResetSLT								= 0
@@ -640,6 +642,7 @@ Function ShowHeaderPage()
 	oidDebug_Extension_List					= AddToggleOption("Debug_Extension_List",					SLT.Debug_Extension_List)
 	oidDebug_Extension_SexLab				= AddToggleOption("Debug_Extension_SexLab", 				SLT.Debug_Extension_SexLab)
 	oidDebug_Extension_OStim				= AddToggleOption("Debug_Extension_OStim",	 				SLT.Debug_Extension_OStim)
+	oidDebug_Extension_AdultGeneral			= AddToggleOption("Debug_Extension_AdultGeneral",			SLT.Debug_Extension_AdultGeneral)
 	oidDebug_Extension_CustomResolveScoped	= AddToggleOption("Debug_Extension_CustomResolveScoped",	SLT.Debug_Extension_CustomResolveScoped)
 	oidDebug_Setup							= AddToggleOption("Debug_Setup",							SLT.Debug_Setup)
 	AddEmptyOption()
@@ -937,6 +940,11 @@ Event OnOptionSelect(int option)
 		_strVal = "Debug_Extension_OStim"
 		_boolVal = !SLT.Debug_Extension_OStim
 		SLT.Debug_Extension_OStim = DoSaveAndReset(option, _strVal, _boolVal)
+		return
+	elseIf option == oidDebug_Extension_AdultGeneral
+		_strVal = "Debug_Extension_AdultGeneral"
+		_boolVal = !SLT.Debug_Extension_AdultGeneral
+		SLT.Debug_Extension_AdultGeneral = DoSaveAndReset(option, _strVal, _boolVal)
 		return
 	elseIf option == oidDebug_Extension_CustomResolveScoped
 		_strVal = "Debug_Extension_CustomResolveScoped"

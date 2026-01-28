@@ -1,0 +1,140 @@
+{
+    "comment_section" : [
+        ["# this is an attributes file for an SLT extension"],
+        ["# it will also contain this structure, letting SLT know what attributes to track"],
+        ["# this is a comment because it starts with an octothorpe(#)"],
+        ["# otherwise this file has to be proper json"],
+        ["# it is divided into a 'triggers' block and a 'settings' block"],
+        ["# the blocks are otherwise the same, following the same naming convention"]
+    ],
+    "trigger_attributes" : [
+        ["# this section is just a simple list of attributes"],
+        ["# one per row, yes"],
+        ["event",               "triggerattribute_event"],
+        ["chance",              "triggerattribute_chance"],
+        ["daytime",             "triggerattribute_daytime"],
+        ["deeplocation",        "triggerattribute_deeplocation"],
+        ["is_armed",            "triggerattribute_is_armed"],
+        ["is_clothed",          "triggerattribute_is_clothed"],
+        ["is_weapon_drawn",     "triggerattribute_is_weapon_drawn"],
+        ["do_1",                "triggerattribute_do_1"],
+        ["do_2",                "triggerattribute_do_2"],
+        ["do_3",                "triggerattribute_do_3"],
+        ["do_4",                "triggerattribute_do_4"],
+        ["asf_response",        "triggerattribute_asf_response"],
+        ["asf_consensual",      "triggerattribute_asf_consensual"],
+        ["asf_potential_orgy",  "triggerattribute_asf_potential_orgy"],
+        ["asf_sex",             "triggerattribute_asf_sex"]
+    ],
+    "triggerattribute_event" : [
+        ["# here is where you define aspects of the attribute"],
+        ["type", "int"],
+        ["widget", "menu", "Event: ", "0", "- Select an Event -", "ASF (Autonomous Sex Framework)"],
+        ["info", "Choose which type of event this trigger will use."]
+    ],
+    "triggerattribute_chance" : [
+        ["type", "float", "100.0"],
+        ["widget", "slider", "Chance: ", "0.0", "100.0", "1.0", "{0}"],
+        ["info", "The chance the trigger will run when all prerequisites are met."]
+    ],
+    "triggerattribute_daytime" : [
+        ["type", "int"],
+        ["widget", "menu", "Daytime :", "0", "Any", "Day", "Night"],
+        ["info", "The time of day the scene is taking place in."]
+    ],
+    "triggerattribute_deeplocation": [
+        ["type", "int"],
+        ["widget", "menu", "Location :", "0", "Any", "Inside", "Outside", "Safe (Home/Jail/Inn)", "City / Town", "Wilderness", "Dungeon", "Player Home", "Jail", "Dungeon", "Cave", "Dwelling", "City", "Town", "Habitation", "Draugr Crypt", "Dragon Priest Lair", "Bandit Camp", "Falmer Hive", "Vampire Lair", "Dwarven Automatons", "Military Fort", "Mine", "Inn", "Hold"],
+        ["info", "The location, indoors or outdoors, as well as Safe/City/Wilderness/Dungeon and others, the cell qualifies as."]
+    ],
+    "triggerattribute_is_armed" : [
+        ["type", "int"],
+        ["widget", "menu", "Is Weapon/Spell Equipped? ", "0", "Any", "Equipped In Either Hand", "Not Equipped In Either Hand", "Not Equipped In Main/Right Hand"],
+        ["info", "Whether the player has a weapon or spell equipped."]
+    ],
+    "triggerattribute_is_clothed" : [
+        ["type", "int"],
+        ["widget", "menu", "Is Armor/Clothing Equipped? ", "0", "Any", "Equipped In Body Slot (32)", "Not Equipped In Body Slot (32)", "Not Equipped Or Devious Item Equipped In Body Slot (32)"],
+        ["info", "Whether the player has armor or clothing equipped in the Body slot (32)."]
+    ],
+    "triggerattribute_is_weapon_drawn": [
+        ["type", "int"],
+        ["widget", "menu", "Is Weapon/Spell Drawn? ", "0", "Any", "Weapon/Spell Is Drawn", "Weapon/Spell Is Not Drawn"],
+        ["info", "Whether the player has a weapon or spell drawn and ready for combat."]
+    ],
+    "triggerattribute_do_1" : [
+        ["type", "string"],
+        ["widget", "command", "Script 1: "],
+        ["info", "You can run 1 or more scripts associated with this trigger. This is the first."]
+    ],
+    "triggerattribute_do_2" : [
+        ["type", "string"],
+        ["widget", "command", "Script 2: "],
+        ["info", "You can run 1 or more scripts associated with this trigger. This is the second."]
+    ],
+    "triggerattribute_do_3" : [
+        ["type", "string"],
+        ["widget", "command", "Script 3: "],
+        ["info", "You can run 1 or more scripts associated with this trigger. This is the third."]
+    ],
+    "triggerattribute_do_4" : [
+        ["type", "string"],
+        ["widget", "command", "Script 4: "],
+        ["info", "You can run 1 or more scripts associated with this trigger. This is the fourth."]
+    ],
+    "triggerattribute_asf_response" : [
+        ["type", "int"],
+        ["widget", "menu", "Player Response: ", "0", "Any", "Accept", "Acquiesce", "Decline", "Refuse", "Cancel"],
+        ["info", "To run the script, the player must have chosen the selected response specifically. More specific than 'Player Consents'."]
+    ],
+    "triggerattribute_asf_consensual" : [
+        ["type", "int"],
+        ["widget", "menu", "Player Consents: ", "0", "Any", "Player Consents", "Player Does Not Consent"],
+        ["info", "To run the script, must the player consent, not consent, or does it matter? Consents matches both 'Accept' and 'Acquiesce', for example."]
+    ],
+    "triggerattribute_asf_potential_orgy" : [
+        ["type", "int"],
+        ["widget", "menu", "Potential Orgy: ", "0", "Any", "Is Potential Orgy", "Is Not Potential Orgy"],
+        ["info", "To run the script, should it be a potential orgy, just a couple, or does it matter?"]
+    ],
+    "triggerattribute_asf_sex" : [
+        ["type", "int"],
+        ["widget", "menu", "Sex of ASF Requestor: ", "0", "Any", "Male", "Female"],
+        ["info", "To run the script, must the ASF requestor have the selected sex or does it matter?"]
+    ],
+    "trigger_layoutconditions" : [
+        ["# checked in sequence shown, first match determines layout selection"],
+		["event"],
+        ["1", "triggerlayout_asf"]
+    ],
+    "triggerlayout_asf" : [
+        ["event", "chance"],
+        ["asf_response", "asf_consensual"],
+        ["asf_potential_orgy", "asf_sex"],
+        ["", "daytime"],
+        ["deeplocation", "is_weapon_drawn"],
+        ["is_armed", "is_clothed"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
+    "triggerlayout" : [
+        ["event"]
+    ]
+
+
+    ,
+
+
+
+    "settings_attributes" : [
+        ["cards_per_page",      "settingsattribute_cards_per_page"]
+    ],
+    "settingsattribute_cards_per_page" : [
+        ["type", "int"],
+        ["widget", "menu", "Triggers per Page :", "4", "1", "2", "3", "4", "5"],
+        ["info", "The number of triggers to display per page."]
+    ],
+	"settingslayout" : [
+		["cards_per_page"]
+	]
+}

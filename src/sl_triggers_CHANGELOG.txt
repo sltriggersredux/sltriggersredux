@@ -1,3 +1,11 @@
+0.974
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    enhancement: new "Adult General" triggers; catch all for any adult oriented mod compat triggers that is not SexLab or OStim specific
+    enhancement: ASF (Autonomous Sex Framework) event handling added
+    bugfix: "DD Unlock All" script did not specify a target; set to $system.self
+
 0.973
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

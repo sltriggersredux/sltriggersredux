@@ -194,7 +194,7 @@ Function VersionUpdateTriggerFile(string _triggerFile)
 EndFunction
 
 Function HandleVersionUpdate(int oldVersion, int newVersion)
-	If (SLT.Debug_Extension || SLT.Debug_Setup || SLT.Debug_Extension_Core)
+	If (SLT.Debug_Extension || SLT.Debug_Setup || SLT.Debug_Extension_OStim)
 		SLTDebugMsg("OStim.HandleVersionUpdate: oldVersion(" + SLTRVersion + ") newVersion(" + newVersion + ")")
 	EndIf
 	int i = 0

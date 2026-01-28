@@ -28,9 +28,11 @@ dir_project_caprica :=          dir_project_extern / "caprica"
 dir_project_fomod :=            dir_project / "fomod"
 dir_fomod_fomod :=              dir_project_fomod / "fomod"
 dir_fomod_core :=               dir_project_fomod / "core"
+dir_fomod_adult_general :=      dir_project_fomod / "adult-general"
 dir_fomod_ostim :=              dir_project_fomod / "ostim"
 dir_fomod_sexlab :=             dir_project_fomod / "sexlab"
 dir_fomod_sexlabplusplus :=     dir_project_fomod / "sexlabplusplus"
+dir_fomod_sexlab_dep :=         dir_project_fomod / "sexlab-dep"
 dir_fomod_example_trigger :=    dir_project_fomod / "example-trigger"
 dir_fomod_test_scripts :=       dir_project_fomod / "test-scripts"
 dir_fomod_pet_collar_game :=    dir_project_fomod / "pet-collar-game"
@@ -105,9 +107,11 @@ raw_dir_lang_vscode :=          replace(dir_lang_vscode,                '/', '\'
 raw_dir_project_fomod :=        replace(dir_project_fomod,              '/', '\')
 
 raw_dir_fomod_core :=           replace(dir_fomod_core,                 '/', '\')
+raw_dir_fomod_adult_general :=  replace(dir_fomod_adult_general,        '/', '\')
 raw_dir_fomod_ostim :=          replace(dir_fomod_ostim,                '/', '\')
 raw_dir_fomod_sexlab :=         replace(dir_fomod_sexlab,               '/', '\')
 raw_dir_fomod_sexlabplusplus := replace(dir_fomod_sexlabplusplus,       '/', '\')
+raw_dir_fomod_sexlab_dep :=     replace(dir_fomod_sexlab_dep,           '/', '\')
 raw_dir_fomod_example_trigger := replace(dir_fomod_example_trigger,     '/', '\')
 raw_dir_fomod_test_scripts :=   replace(dir_fomod_test_scripts,         '/', '\')
 raw_dir_fomod_pet_collar_game := replace(dir_fomod_pet_collar_game,     '/', '\')
@@ -188,9 +192,11 @@ str_dir_lib_sexlabplusplus :=   replace("\"" + dir_lib_sexlabplusplus + "\\\"", 
 str_dir_lib_sexlab_dependent := replace("\"" + dir_lib_sexlab_dependent + "\\\"",       '/', '\')
 
 str_dir_fomod_core :=           replace("\"" + dir_fomod_core + "\\\"",                 '/', '\')
+str_dir_fomod_adult_general :=  replace("\"" + dir_fomod_adult_general + "\\\"",        '/', '\')
 str_dir_fomod_ostim :=          replace("\"" + dir_fomod_ostim + "\\\"",                '/', '\')
 str_dir_fomod_sexlab :=         replace("\"" + dir_fomod_sexlab + "\\\"",               '/', '\')
 str_dir_fomod_sexlabplusplus := replace("\"" + dir_fomod_sexlabplusplus + "\\\"",       '/', '\')
+str_dir_fomod_sexlab_dep :=     replace("\"" + dir_fomod_sexlab_dep + "\\\"",           '/', '\')
 str_dir_fomod_example_trigger := replace("\"" + dir_fomod_example_trigger + "\\\"",         '/', '\')
 str_dir_fomod_test_scripts :=   replace("\"" + dir_fomod_test_scripts + "\\\"",         '/', '\')
 str_dir_fomod_pet_collar_game := replace("\"" + dir_fomod_pet_collar_game + "\\\"",     '/', '\')
@@ -241,9 +247,11 @@ generatedocs:
 
 packagefomod:
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_core}}') { Remove-Item -Path '{{raw_dir_fomod_core}}' -Recurse }"
+    powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_adult_general}}') { Remove-Item -Path '{{raw_dir_fomod_adult_general}}' -Recurse }"
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_ostim}}') { Remove-Item -Path '{{raw_dir_fomod_ostim}}' -Recurse }"
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_sexlab}}') { Remove-Item -Path '{{raw_dir_fomod_sexlab}}' -Recurse }"
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_sexlabplusplus}}') { Remove-Item -Path '{{raw_dir_fomod_sexlabplusplus}}' -Recurse }"
+    powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_sexlab_dep}}') { Remove-Item -Path '{{raw_dir_fomod_sexlab_dep}}' -Recurse }"
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_example_trigger}}') { Remove-Item -Path '{{raw_dir_fomod_example_trigger}}' -Recurse }"
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_test_scripts}}') { Remove-Item -Path '{{raw_dir_fomod_test_scripts}}' -Recurse }"
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_pet_collar_game}}') { Remove-Item -Path '{{raw_dir_fomod_pet_collar_game}}' -Recurse }"
@@ -251,17 +259,16 @@ packagefomod:
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_sls_wet_license}}') { Remove-Item -Path '{{raw_dir_fomod_sls_wet_license}}' -Recurse }"
     #Core
     xcopy /e /i /y {{str_dir_project_src}} {{str_dir_fomod_core}}
+    #Adult General
+    xcopy /e /i /y {{str_dir_lib_adult_general}} {{str_dir_fomod_adult_general}}
     #OStim
-    xcopy /e /i /y {{str_dir_lib_adult_general}} {{str_dir_fomod_ostim}}
     xcopy /e /i /y {{str_dir_lib_ostim}} {{str_dir_fomod_ostim}}
     #SexLab
-    xcopy /e /i /y {{str_dir_lib_adult_general}} {{str_dir_fomod_sexlab}}
-    xcopy /e /i /y {{str_dir_lib_sexlab_dependent}} {{str_dir_fomod_sexlab}}
     xcopy /e /i /y {{str_dir_lib_sexlab}} {{str_dir_fomod_sexlab}}
     #SexLab P+
-    xcopy /e /i /y {{str_dir_lib_adult_general}} {{str_dir_fomod_sexlabplusplus}}
-    xcopy /e /i /y {{str_dir_lib_sexlab_dependent}} {{str_dir_fomod_sexlabplusplus}}
     xcopy /e /i /y {{str_dir_lib_sexlabplusplus}} {{str_dir_fomod_sexlabplusplus}}
+    #SexLab Dependent
+    xcopy /e /i /y {{str_dir_lib_sexlab_dependent}} {{str_dir_fomod_sexlab_dep}}
     #Example Trigger
     xcopy /e /i /y {{str_dir_lib_example_trigger}} {{str_dir_fomod_example_trigger}}
     #Test Scripts

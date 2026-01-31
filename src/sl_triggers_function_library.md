@@ -3564,6 +3564,98 @@ Note: This is more beta than normal; it isn't obvious whether in some cases mult
 
 
 
+## UILIB
+
+### uilib_showlist
+
+**Description**
+
+Returns: int: the index into the string list the user selected
+Displays a list popup, with title and string options as provided by arguments, with optional start and default index
+How to use: https://github.com/schlangster/skyui-lib/wiki/How-to
+
+**Parameters**
+
+    string: asTitle: title for the popup; specify "" for a blank title  
+    string[]: asOptions: string list of options to display in the list popup  
+    int: aiStartIndex: start index for the list  
+    int: aiDefaultIndex: default index for the list  
+
+
+**Example**
+
+    string[] $asOptions  
+    listadd $asOptions "apple" "banana" "orange"  
+    ; If the user picks a fruit, $$ will contain the 0-based index (i.e. 0 for "apple", 1 for "banana")  
+    uilib_showlist "Pick a fruit" $asOptions  
+
+
+
+### uilib_shownotification
+
+**Description**
+
+Displays a notification popup, with optional text color
+How to use: https://github.com/schlangster/skyui-lib/wiki/How-to
+
+**Parameters**
+
+    string: asMessage: notification message  
+    string: asColor: (optional: default "#FFFFFF") text color  
+
+
+**Example**
+
+    uilib_shownotification "You won party snacks!"  
+    uilib_shownotification "You lost the party snacks!" "#FF0000"  
+
+
+
+### uilib_shownotificationicon
+
+**Description**
+
+Displays a notification popup, with icon specified by .swf, with optional icon frame and text color
+How to use: https://github.com/schlangster/skyui-lib/wiki/How-to
+
+**Parameters**
+
+    string: asMessage: notification message  
+    string: asIconPath: path to the .swf icon file  
+    int: aiIconFrame: (optional: default 0) the index of the image frame to use for the icon  
+    string: asColor: (optional: default "#FFFFFF") text color  
+
+
+**Example**
+
+    uilib_shownotification "You won party snacks!" "partysnacks.swf"  
+    uilib_shownotification "You lost the party snacks!" "partysnacks.swf" 0 "#FF0000"  
+
+
+
+### uilib_showtextinput
+
+**Description**
+
+Returns: string: the text the user entered
+Displays a text input popup, with optional title and initial string.
+How to use: https://github.com/schlangster/skyui-lib/wiki/How-to
+
+**Parameters**
+
+    string: asTitle: (optional; default "") title for the popup  
+    string: asInitialText: (optional: default "") initial text for the input field  
+
+
+**Example**
+
+    ; display input text popup with no title or starting text, result in $$  
+    uilib_showtextinput  
+    ; display input text popup with title, result in $result  
+    set $result resultfrom uilib_showtextinput "My Title"  
+
+
+
 ## Utility
 
 ### console

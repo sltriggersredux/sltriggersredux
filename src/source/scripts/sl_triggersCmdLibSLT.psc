@@ -5,6 +5,127 @@ import sl_triggersStatics
 ;;;;;;;;;;
 ;; 
 
+; sltname uilib_showtextinput
+; sltgrup UILIB
+; sltdesc Returns: string: the text the user entered
+; sltdesc Displays a text input popup, with optional title and initial string.
+; sltdesc How to use: https://github.com/schlangster/skyui-lib/wiki/How-to
+; sltargs string: asTitle: (optional; default "") title for the popup
+; sltargs string: asInitialText: (optional: default "") initial text for the input field
+; sltsamp ; display input text popup with no title or starting text, result in $$
+; sltsamp uilib_showtextinput
+; sltsamp ; display input text popup with title, result in $result
+; sltsamp set $result resultfrom uilib_showtextinput "My Title"
+Function uilib_showtextinput(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    string asTitle = ""
+    string asInitialText = ""
+    if param.Length > 1
+        asTitle = CmdPrimary.ResolveString(param[1])
+        if param.Length > 2
+            asInitialText = CmdPrimary.ResolveString(param[2])
+        endif
+    endif
+    UILIB_1 uilib = CmdPrimary.SLT.AsUILIB()
+    CmdPrimary.MostRecentStringResult = uilib.ShowTextInput(asTitle, asInitialText)
+
+	CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname uilib_showlist
+; sltgrup UILIB
+; sltdesc Returns: int: the index into the string list the user selected
+; sltdesc Displays a list popup, with title and string options as provided by arguments, with optional start and default index
+; sltdesc How to use: https://github.com/schlangster/skyui-lib/wiki/How-to
+; sltargs string: asTitle: title for the popup; specify "" for a blank title
+; sltargs string[]: asOptions: string list of options to display in the list popup
+; sltargs int: aiStartIndex: start index for the list
+; sltargs int: aiDefaultIndex: default index for the list
+; sltsamp string[] $asOptions
+; sltsamp listadd $asOptions "apple" "banana" "orange"
+; sltsamp ; If the user picks a fruit, $$ will contain the 0-based index (i.e. 0 for "apple", 1 for "banana")
+; sltsamp uilib_showlist "Pick a fruit" $asOptions
+Function uilib_showlist(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    int nextResult = -1
+
+    if ParamLengthGT(CmdPrimary, param.Length, 2)
+        string asTitle = CmdPrimary.ResolveString(param[1])
+        string[] asOptions = CmdPrimary.ResolveListString(param[2])
+        int aiStartIndex = 0
+        int aiDefaultIndex = 0
+        if param.Length > 3
+            aiStartIndex = CmdPrimary.ResolveInt(param[3])
+            if param.Length > 4
+                aiDefaultIndex = CmdPrimary.ResolveInt(param[4])
+            endif
+        endif
+        UILIB_1 uilib = CmdPrimary.SLT.AsUILIB()
+        nextResult = uilib.ShowList(asTitle, asOptions, aiStartIndex, aiDefaultIndex)
+    endif
+
+    CmdPrimary.MostRecentIntResult = nextResult
+
+	CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname uilib_shownotification
+; sltgrup UILIB
+; sltdesc Displays a notification popup, with optional text color
+; sltdesc How to use: https://github.com/schlangster/skyui-lib/wiki/How-to
+; sltargs string: asMessage: notification message
+; sltargs string: asColor: (optional: default "#FFFFFF") text color
+; sltsamp uilib_shownotification "You won party snacks!"
+; sltsamp uilib_shownotification "You lost the party snacks!" "#FF0000"
+Function uilib_shownotification(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    string asColor = "#FFFFFF"
+    if ParamLengthGT(CmdPrimary, param.Length, 1)
+        string asMessage = CmdPrimary.ResolveString(param[1])
+        if param.Length > 2
+            asColor = CmdPrimary.ResolveString(param[2])
+        endif
+        UILIB_1 uilib = CmdPrimary.SLT.AsUILIB()
+        uilib.ShowNotification(asMessage, asColor)
+    endif
+
+	CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname uilib_shownotificationicon
+; sltgrup UILIB
+; sltdesc Displays a notification popup, with icon specified by .swf, with optional icon frame and text color
+; sltdesc How to use: https://github.com/schlangster/skyui-lib/wiki/How-to
+; sltargs string: asMessage: notification message
+; sltargs string: asIconPath: path to the .swf icon file
+; sltargs int: aiIconFrame: (optional: default 0) the index of the image frame to use for the icon
+; sltargs string: asColor: (optional: default "#FFFFFF") text color
+; sltsamp uilib_shownotification "You won party snacks!" "partysnacks.swf"
+; sltsamp uilib_shownotification "You lost the party snacks!" "partysnacks.swf" 0 "#FF0000"
+Function uilib_shownotificationicon(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    Int aiIconFrame = 0
+    string asColor = "#FFFFFF"
+    if ParamLengthGT(CmdPrimary, param.Length, 2)
+        string asMessage = CmdPrimary.ResolveString(param[1])
+        string asIconPath = CmdPrimary.ResolveString(param[2])
+        if param.Length > 3
+            aiIconFrame = CmdPrimary.ResolveInt(param[3])
+            if param.Length > 4
+                asColor = CmdPrimary.ResolveString(param[4])
+            endif
+        endif
+        UILIB_1 uilib = CmdPrimary.SLT.AsUILIB()
+        uilib.ShowNotificationIcon(asMessage, asIconPath, aiIconFrame, asColor)
+    endif
+
+	CmdPrimary.CompleteOperationOnActor()
+endFunction
+
 ; sltname deb_msg
 ; sltgrup Utility
 ; sltdesc Joins all arguments together into a single string and logs to "<Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log"

@@ -52,6 +52,10 @@ GlobalVariable 		Property GameDaysPassed Auto Hidden
 
 bool fbSendNewSessionEvent = false
 
+UILIB_1 Function AsUILIB()
+	return ((self as Form) as UILIB_1)
+EndFunction
+
 Form[]				instensions
 Form[] Function GetExtensions()
 	if Debug_Extension_List || Debug_Setup

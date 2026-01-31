@@ -358,6 +358,8 @@ Function HandleASFEvent(string msg_string, bool is_consenting, bool is_maybe_org
 					doRun = (is_consenting == true)
 				elseif	ival == 2
 					doRun = (is_consenting == false)
+				elseif ival == 3
+					doRun = (is_consenting == false) && "Cancel" != msg_string
 				endif
 
 				If (SLT.Debug_Extension_AdultGeneral && !doRun)

@@ -1,3 +1,12 @@
+0.975
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    enhancement: ASF event: expanded/updated "Player Consents:" to:
+        "Any", "Accept/Acquiesce", "Decline/Refuse/Cancel", "Decline/Refuse"
+    enhancement: added UILIB support
+        new commands: uilib_showtextinput, uilib_showlist, uilib_shownotification, uilib_shownotificationicon
+
 0.974
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

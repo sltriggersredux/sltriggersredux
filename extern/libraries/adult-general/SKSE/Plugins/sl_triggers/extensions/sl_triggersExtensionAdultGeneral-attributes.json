@@ -89,7 +89,7 @@
     ],
     "triggerattribute_asf_consensual" : [
         ["type", "int"],
-        ["widget", "menu", "Player Consents: ", "0", "Any", "Player Consents", "Player Does Not Consent"],
+        ["widget", "menu", "Player Consents: ", "0", "Any", "Accept/Acquiesce", "Decline/Refuse/Cancel", "Decline/Refuse"],
         ["info", "To run the script, must the player consent, not consent, or does it matter? Consents matches both 'Accept' and 'Acquiesce', for example."]
     ],
     "triggerattribute_asf_potential_orgy" : [

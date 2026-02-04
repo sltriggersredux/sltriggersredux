@@ -1053,6 +1053,10 @@ Function CleanupAndRemove()
     endif
     SLT.DecrementRequestCounter(_cmdRequestId)
 
+    if CmdTargetActor && !CmdTargetActor.IsDead() && StorageUtil.StringListCount(CmdTargetActor, DOMAIN_PENDING_SCRIPT_FOR_TARGET_LIST()) > 0
+        CmdTargetActor.SendModEvent(SLT.EVENT_SLT_CHECK_ACTOR)
+    endif
+
     Self.Dispel()
 EndFunction
 

@@ -11,6 +11,9 @@ int		SLT_BOOTSTRAPPING				= 100
 
 int		REGISTRATION_BEACON_COUNT		= 15
 
+; current list of Actors who we suspect may still have queued commands that need flushing
+string  SUKEY_SLTR_ACTORS_QUEUED		= "SLTR_ACTORS_QUEUED"
+
 ; Properties
 Actor               Property PlayerRef				Auto
 sl_triggersSetup	Property SLTMCM					Auto
@@ -51,6 +54,9 @@ int					Property nextInstanceId			Auto Hidden
 GlobalVariable 		Property GameDaysPassed Auto Hidden
 
 bool fbSendNewSessionEvent = false
+
+string Property EVENT_SLT_CHECK_ACTOR = "OnSLTCheckQueuedActorForScript" AutoReadOnly Hidden
+float Property UPDATE_DELAY_DEFAULT       = 27.3 AutoReadOnly Hidden
 
 UILIB_1 Function AsUILIB()
 	return ((self as Form) as UILIB_1)
@@ -421,9 +427,9 @@ Function BootstrapSLTInit(bool bSetupFlags)
 	endif
 
 	SafeRegisterForModEvent_Quest(self, EVENT_SLT_RESET(), "OnSLTReset")
-	SafeRegisterForModEvent_Quest(self, EVENT_SLT_DELAY_START_COMMAND(), "OnSLTDelayStartCommand")
 	SafeRegisterForModEvent_Quest(self, EVENT_SLT_REQUEST_COMMAND(), "OnSLTRequestCommand")
 	SafeRegisterForModEvent_Quest(self, EVENT_SLT_REQUEST_LIST(), "OnSLTRequestList")
+	SafeRegisterForModEvent_Quest(self, EVENT_SLT_CHECK_ACTOR, "OnSLTCheckQueuedActorForScript")
 	
 	SLTUpdateState = SLT_BOOTSTRAPPING
 	_registrationBeaconCount = REGISTRATION_BEACON_COUNT
@@ -457,7 +463,19 @@ Event OnUpdate()
 		endif
 	endif
 
-	QueueUpdateLoop(60)
+	;/
+	If other logic starts getting introduced during this OnUpdate loop, it's going to get wobbly.
+
+	Right now, it counts on this being the only driver of how tight a loop the update loop is.
+	Because this is core and key to the handling, and I haven't yet hit the point where I throw up
+	my hands and move everything over to a separate Quest to handel things, it should be safe to just
+	do it here for now. Just don't get too ambitious.
+	/;
+	if StorageUtil.FormListCount(self, SUKEY_SLTR_ACTORS_QUEUED) > 0
+		PollActorsQueued()
+	endif
+
+	QueueUpdateLoop(UPDATE_DELAY_DEFAULT)
 EndEvent
 
 Event OnSLTRequestList(string _eventName, string _storageUtilStringListKey, float _isGlobal, Form _storageUtilObj)
@@ -498,6 +516,14 @@ Event OnSLTRequestCommand(string _eventName, string _scriptname, float __ignored
 	endif
 
 	StartCommand(_theTarget, _scriptname)
+EndEvent
+
+Event OnSLTCheckQueuedActorForScript(string eventName, string strArg, float numArg, Form sender)
+	Actor akActor = sender as Actor
+	if akActor
+		Utility.Wait(0.15)
+		CheckQueuedActorForScript(akActor)
+	endif
 EndEvent
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -625,28 +651,37 @@ sl_triggersExtension Function GetExtensionByScope(string _scope)
 	return none
 EndFunction
 
-Event OnSLTDelayStartCommand(string eventName, string initialScriptName, float reAttemptCount, Form sender)
-	Utility.Wait(1.0)
-	if !sender
-		return
-	endif
-	Actor target = sender as Actor
-	if !target
-		return ; not ready yet
-	endif
-
-	reAttemptCount += 1.0
-	
-	bool scriptStarted = sl_triggers_internal.StartScript(target, initialScriptName)
-	if !scriptStarted
-		if reAttemptCount > 5
-			SLTWarnMsg("Reattempted script(" + initialScriptName + ") for Actor(" + target + ") attempts(" + reAttemptCount + ") - giving up")
-			return
+Function CheckQueuedActorForScript(Actor akActor)
+	if StorageUtil.StringListCount(akActor, DOMAIN_PENDING_SCRIPT_FOR_TARGET_LIST()) > 0
+		if !sl_triggers_internal.StartScript(akActor, "IGNORED")
+			StorageUtil.FormListAdd(self, SUKEY_SLTR_ACTORS_QUEUED, akActor, false)
 		endif
-		target.SendModEvent(EVENT_SLT_DELAY_START_COMMAND(), initialScriptName, reAttemptCount)
 	endif
-EndEvent
+EndFunction
 
+Function PollActorsQueued()
+	;/
+	* RISK: a request is added between the FormListToArray() and FormListClear() calls
+	  MITIGATION: PollActorsQueued() is a secondary option. If you are already at 30, the
+	    check and spawn on script end should still run so we're probably still good.
+	/;
+	Form[] actor_list = StorageUtil.FormListToArray(self, SUKEY_SLTR_ACTORS_QUEUED)
+	StorageUtil.FormListClear(self, SUKEY_SLTR_ACTORS_QUEUED)
+
+	; jiggle it
+	int actor_index = 0
+	while actor_index < actor_list.Length
+		Actor target_actor = actor_list[actor_index] as Actor
+		if target_actor && !target_actor.IsDead()
+			CheckQueuedActorForScript(target_actor)
+		else
+			; this is awkward
+			SLTWarnMsg("sl_triggersMain.PollActorsQueued: (actor is none or actor.IsDead() is true) in the list of Actors to be checked for pending requests")
+		endif
+
+		actor_index += 1
+	endwhile
+EndFunction
 
 Function StartCommand(Form targetForm, string initialScriptName)
 	if bDebugMsg
@@ -689,6 +724,7 @@ Function EnqueueScriptForTarget(Form targetForm, int requestId, int threadid, st
 		SLTErrMsg("EnqueueScriptForTarget: Invalid arguments")
 		return
 	EndIf
+	StorageUtil.FormListAdd(self, SUKEY_SLTR_ACTORS_QUEUED, targetForm, false)
 	StorageUtil.StringListAdd(targetForm, DOMAIN_PENDING_SCRIPT_FOR_TARGET_LIST(), requestid + "|" + threadid + "|" + initialScriptName)
 EndFunction
 
@@ -736,8 +772,7 @@ Function StartCommandWithThreadId(Form targetForm, string initialScriptName, int
 	endif
 	bool scriptStarted = sl_triggers_internal.StartScript(actualTarget, initialScriptName)
 	if !scriptStarted
-		SLTWarnMsg("Too many SLTR effects on actualTarget(" + actualTarget + "); attempting to delay script execution")
-		actualTarget.SendModEvent(EVENT_SLT_DELAY_START_COMMAND(), initialScriptName, 0.0)
+		SLTWarnMsg("Too many SLTR effects on actualTarget(" + actualTarget + ")")
 	else
 		if bDebugMsg
 			SLTDebugMsg("sl_triggers_internal.StartScript(actualTarget=<" + actualTarget + ">, initialScriptName=<" + initialScriptName + ">) reported success")

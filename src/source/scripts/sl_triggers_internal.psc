@@ -25,4 +25,4 @@ bool Function           IsHitSinkEnabled() global native
 ;bool Function           IsActivateSinkEnabled() global native
 bool Function           IsHarvestedSinkEnabled() global native
 bool Function           IsSoulsTrappedSinkEnabled() global native
-bool Function           StartScript(Actor CmdTargetActor, string initialScriptName) global native
+bool Function           StartScript(Actor CmdTargetActor, string IGNORED) global native

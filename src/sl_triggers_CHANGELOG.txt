@@ -1,3 +1,13 @@
+0.976
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    enhancement: util_scan_cell_npcs: binding for MiscUtil.ScanCellNPCs()
+    update: script queue overrun (i.e. exceeding the 30 script limit causing MGEF application to desync) should be handled more robustly now
+    bugfix: (documentation) MCM info for the "Sex" filter updated to reflect target, not partner, sex
+    update: updated the language support modules for Notepad++ and VSCode; all latest commands should now be present
+    update: (lazy developer) changed the sl_triggers_internal.StartScript() parameter "initialScriptName" to "IGNORED" because it is ignored and can be left blank
+
 0.975
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

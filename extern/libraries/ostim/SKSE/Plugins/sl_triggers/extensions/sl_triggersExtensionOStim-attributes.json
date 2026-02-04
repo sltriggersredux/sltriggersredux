@@ -60,7 +60,7 @@
     "triggerattribute_gender" : [
         ["type", "int"],
         ["widget", "menu", "Sex: ", "0", "Any", "Male", "Female"],
-        ["info", "To run the script on a target, the Actor must have a scene partner of the selected sex."]
+        ["info", "To run the script on a target, the Actor must have the selected sex."]
     ],
     "triggerattribute_tag" : [
         ["type", "int"],

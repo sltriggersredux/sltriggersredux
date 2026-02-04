@@ -1124,6 +1124,42 @@ function util_getrandomactor(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary
 	CmdPrimary.CompleteOperationOnActor()
 endFunction
 
+; sltname util_scan_cell_npcs
+; sltgrup Utility
+; sltdesc Returns: Form[]: a list of scanned Actor objects found nearby
+; sltargs Form: objCenter: (optional: default none) ObjectReference to center the search on; specifying 'none' will target the player (i.e. bareword none, not a string "none")
+; sltargs float: afRadius: (optional: default 0.0, the entire cell) radius to search in; 0.0 will search the entire cell
+; sltargs string: srKeyword: (optional: default "") Keyword to look for (i.e. search only for Actors with the matching keyword)
+; sltargs bool: bIgnoreDead: (optional: default true) ignore dead actors if true, consider them if false
+function util_scan_cell_npcs(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    ObjectReference objCenter = none
+    float afRadius = 0.0
+    Keyword kwScan = none
+    bool bIgnoreDead = true
+
+    if param.Length > 1
+        objCenter = CmdPrimary.ResolveObjRef(param[1])
+        if param.Length > 2
+            afRadius = CmdPrimary.ResolveFloat(param[2])
+            if param.Length > 3
+                string srKeyword = CmdPrimary.ResolveString(param[3])
+                kwScan = Keyword.GetKeyword(srKeyword)
+                if param.Length > 4
+                    bIgnoreDead = CmdPrimary.ResolveBool(param[4])
+                endif
+            endif
+        endif
+    endif
+
+    Actor[] scan_result = MiscUtil.ScanCellNPCs(objCenter, afRadius, kwScan, bIgnoreDead)
+    
+    CmdPrimary.MostRecentListFormResult = ActorArrayToFormArray(scan_result)
+
+	CmdPrimary.CompleteOperationOnActor()
+endFunction
+
 ; sltname perk_addpoints
 ; sltgrup Perks
 ; sltdesc Add specified number of perk points to player

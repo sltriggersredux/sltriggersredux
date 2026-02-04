@@ -3942,6 +3942,22 @@ Returns: Form: a random actor within specified range of self
 
 
 
+### util_scan_cell_npcs
+
+**Description**
+
+Returns: Form[]: a list of scanned Actor objects found nearby
+
+**Parameters**
+
+    Form: objCenter: (optional: default none) ObjectReference to center the search on; specifying 'none' will target the player (i.e. bareword none, not a string "none")  
+    float: afRadius: (optional: default 0.0, the entire cell) radius to search in; 0.0 will search the entire cell  
+    string: srKeyword: (optional: default "") Keyword to look for (i.e. search only for Actors with the matching keyword)  
+    bool: bIgnoreDead: (optional: default true) ignore dead actors if true, consider them if false  
+
+
+
+
 ### util_sendevent
 
 **Description**

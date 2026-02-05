@@ -1,0 +1,41 @@
+; PickNearbyNPCForSex.sltscript
+; Requires: SexLab
+; Scans the cell the player is in and fetches the list of NPCs, displays a notification if no partners are available, displays a list otherwise.
+; Offers a "Cancel" option to opt-out. Otherwise starts a random sex scene with the selected partner and the player.
+set $available_partners resultfrom util_scan_cell_npcs
+string[] $f_names
+listadd $f_names "- Cancel -"
+set $f_count resultfrom listcount $available_partners
+if $f_count == 0
+	uilib_shownotification "No nearby NPCs found."
+	return
+endif
+set $i 0
+while $i < $f_count
+	set $fellow $available_partners[$i]
+	set $fellow_name resultfrom actor_name $available_partners[$i]
+	listadd $f_names $fellow_name
+	inc $i 1
+endwhile
+set $sel_index resultfrom uilib_showlist "Pick a sex partner:" $f_names 0 0
+if $sel_index == 0
+	; Cancel selected
+	uilib_shownotification "You cancelled."
+else
+	set $picked_name $f_names[$sel_index]
+	inc $sel_index -1
+	set $f_level resultfrom actor_dogetter $available_partners[$sel_index] GetLevel
+	uilib_shownotification $"You picked: Name[{picked_name}] Level[{f_level}]"
+	
+	string[] $tagopts
+	listadd $tagopts "- No Tags -" "Vaginal" "Anal" "Oral" "Vaginal,Anal" "Vaginal,Oral" "Anal,Oral"
+	set $tag_index resultfrom uilib_showlist "Pick Tag(s):" $tagopts 0 0
+	set $tags ""
+	if $tag_index > 0
+		set $tags $tagopts[$tag_index]
+	endif
+	Form[] $partners
+	listadd $partners $system.player
+	listadd $partners $available_partners[$sel_index]
+	sl_startsex $partners none $tags false
+endif

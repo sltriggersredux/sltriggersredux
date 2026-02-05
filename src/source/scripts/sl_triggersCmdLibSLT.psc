@@ -1134,7 +1134,7 @@ endFunction
 function util_scan_cell_npcs(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
 	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
 
-    ObjectReference objCenter = none
+    ObjectReference objCenter = CmdPrimary.SLT.PlayerRef
     float afRadius = 0.0
     Keyword kwScan = none
     bool bIgnoreDead = true

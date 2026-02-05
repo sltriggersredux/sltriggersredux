@@ -1,3 +1,10 @@
+0.977
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: util_scan_cell_npcs should now work with none for the first parameter translating to the player by default
+    enhancement: added 2 new sltscripts: PickNFFFollowerForSex.sltscript and PickNearbyNPCForSex.sltscript; both use the UILIB popups to allow for partner and tag selection
+
 0.976
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

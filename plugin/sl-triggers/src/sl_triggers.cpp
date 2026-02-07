@@ -1031,20 +1031,8 @@ std::vector<std::string> SLTNativeFunctions::MCMGetLayoutData(PAPYRUS_NATIVE_DEC
 std::int32_t SLTNativeFunctions::NormalizeScriptfilename(PAPYRUS_NATIVE_DECL, std::string_view scriptfilename) {
     fs::path scrpath = GetScriptfilePath(scriptfilename);
     std::string scrfn = "";
-
-    if (!scrpath.has_extension()) {
-        scrfn = std::string(scriptfilename) + ".sltscript";
-        scrpath = GetScriptfilePath(scrfn);
-        if (!scrpath.empty() && fs::exists(scrpath)) {
-            return 30;
-        }
-
-        scrfn = std::string(scriptfilename) + ".ini";
-        scrpath = GetScriptfilePath(scrfn);
-        if (!scrpath.empty() && fs::exists(scrpath)) {
-            return 20;
-        }
-    } else {
+    
+    if (scrpath.has_extension()) {
         scrfn = scrpath.extension().string();
         if (!scrpath.empty() && !scrfn.empty() && fs::exists(scrpath)) {
             if (scrfn == ".sltscript") {
@@ -1054,6 +1042,18 @@ std::int32_t SLTNativeFunctions::NormalizeScriptfilename(PAPYRUS_NATIVE_DECL, st
                 return 2;
             }
         }
+    }
+    
+    scrfn = std::string(scriptfilename) + ".sltscript";
+    scrpath = GetScriptfilePath(scrfn);
+    if (!scrpath.empty() && fs::exists(scrpath)) {
+        return 30;
+    }
+
+    scrfn = std::string(scriptfilename) + ".ini";
+    scrpath = GetScriptfilePath(scrfn);
+    if (!scrpath.empty() && fs::exists(scrpath)) {
+        return 20;
     }
 
     return 0;

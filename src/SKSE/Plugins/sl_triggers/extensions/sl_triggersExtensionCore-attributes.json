@@ -54,194 +54,194 @@
     "triggerattribute_event" : [
         ["# here is where you define aspects of the attribute"],
         ["type", "int"],
-        ["widget", "menu", "Event: ", "0", "- Select an Event -", "Key Mapping", "Top of the Hour", "New Session", "Player Cell Change (Frequent)", "Player Opened Container", "Player Location Change (Less Frequent)", "Player Equipment Change", "Player Combat State Changed", "Player Hit or Is Hit", "Timer Based", "Harvesting", "Fast Travel Arrival", "Vampirism Transitions", "Werewolf Transitions", "Vampire Feeding", "Player Swim Start/Stop", "Player Enter/Exit Water", "Soul Trapped"],
-        ["info", "Choose which type of event this trigger will use."]
+        ["widget", "menu", "$SLT_LBL_CORE_EVENT", "0", "$SLT_OPT_SELECT_AN_EVENT", "$SLT_OPT_KEY_MAPPING", "$SLT_OPT_TOP_OF_THE_HOUR", "$SLT_OPT_NEW_SESSION", "$SLT_OPT_PLAYER_CELL_CHANGE", "$SLT_OPT_PLAYER_OPENED_CONTAINER", "$SLT_OPT_PLAYER_LOCATION_CHANGE", "$SLT_OPT_PLAYER_EQUIPMENT_CHANGE", "$SLT_OPT_PLAYER_COMBAT_STATE_CHANGED", "$SLT_OPT_PLAYER_HIT_OR_IS_HIT", "$SLT_OPT_TIMER_BASED", "$SLT_OPT_HARVESTING", "$SLT_OPT_FAST_TRAVEL_ARRIVAL", "$SLT_OPT_VAMPIRISM_TRANSITIONS", "$SLT_OPT_WEREWOLF_TRANSITIONS", "$SLT_OPT_VAMPIRE_FEEDING", "$SLT_OPT_PLAYER_SWIM_START_STOP", "$SLT_OPT_PLAYER_ENTER_EXIT_WATER", "$SLT_OPT_SOUL_TRAPPED", "$SLT_OPT_PLAYER_LEVEL_UP"],
+        ["info", "$SLT_INFO_CORE_EVENT"]
     ],
     "triggerattribute_keymapping" : 
     [
         ["type", "int", "-1"],
         ["#", "widget", "keymapping", "label", "default index" ],
-        ["widget", "keymapping", "Key: ", "-1"],
-        ["info", "Choose the key to map to the action."]
+        ["widget", "keymapping", "$SLT_LBL_CORE_KEY", "-1"],
+        ["info", "$SLT_INFO_CORE_KEY"]
     ],
     "triggerattribute_location_leaving" :
     [
         ["type", "string", ""],
         ["widget", "header"],
-        ["info", "Location Leaving: "]
+        ["info", "$SLT_INFO_CORE_LOCATION_LEAVING"]
     ],
     "triggerattribute_timer_delay" :
     [
         ["type", "float", "5.0"],
-        ["widget", "slider", "Timer Delay: ", "1.0", "60.0", "1.0", "{0}"],
-        ["info", "The timer delay between executions of the trigger in real minutes. 0 disables the filter."]
+        ["widget", "slider", "$SLT_LBL_CORE_TIMER_DELAY", "1.0", "60.0", "1.0", "{0}"],
+        ["info", "$SLT_INFO_CORE_TIMER_DELAY"]
     ],
     "triggerattribute_location_entering" :
     [
         ["type", "string", ""],
         ["widget", "header"],
-        ["info", "Location Entering: "]
+        ["info", "$SLT_INFO_CORE_LOCATION_ENTERING"]
     ],
     "triggerattribute_modifierkeymapping" : 
     [
         ["type", "int", "-1"],
-        ["widget", "keymapping", "Modifier Key: ", "-1"],
-        ["info", "(Optional) If specified, will be required to be pressed to trigger the action."]
+        ["widget", "keymapping", "$SLT_LBL_CORE_MODIFIER_KEY", "-1"],
+        ["info", "$SLT_INFO_CORE_MODIFIER_KEY"]
     ],
     "triggerattribute_usedak" : [
         ["type", "int"],
-        ["widget", "toggle", "Use DAK? ", "0"],
-        ["info", "(Optional) If enabled, will use the Dynamic Activation Key instead of the Modifier key (if selected)"]
+        ["widget", "toggle", "$SLT_LBL_CORE_USE_DAK", "0"],
+        ["info", "$SLT_INFO_CORE_USE_DAK"]
     ],
     "triggerattribute_cleared" : [
         ["type", "int"],
-        ["widget", "menu", "Cleared: ", "0", "Any", "Cleared", "Not Cleared"],
-        ["info", "Whether the location is considered Cleared or not."]
+        ["widget", "menu", "$SLT_LBL_CORE_CLEARED", "0", "$SLT_OPT_ANY", "$SLT_OPT_CLEARED", "$SLT_OPT_NOT_CLEARED"],
+        ["info", "$SLT_INFO_CORE_CLEARED"]
     ],
     "triggerattribute_equipping" : [
         ["type", "int"],
-        ["widget", "menu", "Equipping/Unequipping: ", "0", "Any", "Equipping Item", "Unequipping Item"],
-        ["info", "Whether the equipment is being put on or taken off."]
+        ["widget", "menu", "$SLT_LBL_CORE_EQUIPPING_UNEQUIPPING", "0", "$SLT_OPT_ANY", "$SLT_OPT_EQUIPPING_ITEM", "$SLT_OPT_UNEQUIPPING_ITEM"],
+        ["info", "$SLT_INFO_CORE_EQUIPPING_UNEQUIPPING"]
     ],
     "triggerattribute_is_armed" : [
         ["type", "int"],
-        ["widget", "menu", "Is Weapon/Spell Equipped? ", "0", "Any", "Equipped In Either Hand", "Not Equipped In Either Hand", "Not Equipped In Main/Right Hand"],
-        ["info", "Whether the player has a weapon or spell equipped."]
+        ["widget", "menu", "$SLT_LBL_CORE_IS_WEAPON_SPELL_EQUIPPED", "0", "$SLT_OPT_ANY", "$SLT_OPT_EQUIPPED_IN_EITHER_HAND", "$SLT_OPT_NOT_EQUIPPED_IN_EITHER_HAND", "$SLT_OPT_NOT_EQUIPPED_IN_MAIN_HAND"],
+        ["info", "$SLT_INFO_CORE_IS_WEAPON_SPELL_EQUIPPED"]
     ],
     "triggerattribute_is_clothed" : [
         ["type", "int"],
-        ["widget", "menu", "Is Armor/Clothing Equipped? ", "0", "Any", "Equipped In Body Slot (32)", "Not Equipped In Body Slot (32)", "Not Equipped Or Devious Item Equipped In Body Slot (32)"],
-        ["info", "Whether the player has armor or clothing equipped in the Body slot (32)."]
+        ["widget", "menu", "$SLT_LBL_CORE_IS_ARMOR_CLOTHING_EQUIPPED", "0", "$SLT_OPT_ANY", "$SLT_OPT_EQUIPPED_IN_BODY_SLOT", "$SLT_OPT_NOT_EQUIPPED_IN_BODY_SLOT", "$SLT_OPT_NOT_EQUIPPED_OR_DEVIOUS"],
+        ["info", "$SLT_INFO_CORE_IS_ARMOR_CLOTHING_EQUIPPED"]
     ],
     "triggerattribute_is_weapon_drawn": [
         ["type", "int"],
-        ["widget", "menu", "Is Weapon/Spell Drawn? ", "0", "Any", "Weapon/Spell Is Drawn", "Weapon/Spell Is Not Drawn"],
-        ["info", "Whether the player has a weapon or spell drawn and ready for combat."]
+        ["widget", "menu", "$SLT_LBL_CORE_IS_WEAPON_SPELL_DRAWN", "0", "$SLT_OPT_ANY", "$SLT_OPT_WEAPON_SPELL_IS_DRAWN", "$SLT_OPT_WEAPON_SPELL_IS_NOT_DRAWN"],
+        ["info", "$SLT_INFO_CORE_IS_WEAPON_SPELL_DRAWN"]
     ],
     "triggerattribute_has_enchantments" : [
         ["type", "int"],
-        ["widget", "menu", "Has Enchants: ", "0", "Any", "Must Have Enchantments", "Cannot Have Enchantments"],
-        ["info", "Whether the equipment can have enchantments or not."]
+        ["widget", "menu", "$SLT_LBL_CORE_HAS_ENCHANTS", "0", "$SLT_OPT_ANY", "$SLT_OPT_MUST_HAVE_ENCHANTMENTS", "$SLT_OPT_CANNOT_HAVE_ENCHANTMENTS"],
+        ["info", "$SLT_INFO_CORE_HAS_ENCHANTS"]
     ],
     "triggerattribute_item_is_unique" : [
         ["type", "int"],
-        ["widget", "menu", "Unique/World Items: ", "0", "Any", "Standard Items Only", "Unique/World Items Only"],
-        ["info", "Whether the equipment is unique (specifically, do the equip/unequip events provide an ObjectReference or just the base Form?)."]
+        ["widget", "menu", "$SLT_LBL_CORE_UNIQUE_WORLD_ITEMS", "0", "$SLT_OPT_ANY", "$SLT_OPT_STANDARD_ITEMS_ONLY", "$SLT_OPT_UNIQUE_WORLD_ITEMS_ONLY"],
+        ["info", "$SLT_INFO_CORE_UNIQUE_WORLD_ITEMS"]
     ],
     "triggerattribute_equipped_item_type" : [
         ["type", "int"],
-        ["widget", "menu", "Type of Item: ", "0", "Any", "Armor Item", "Weapon Item", "Spell Item", "Potion/Food Item", "Ammo Item"],
-        ["info", "The type of 'equipment' that was equipped/unequipped. Technically could include things like Potions, for example."]
+        ["widget", "menu", "$SLT_LBL_CORE_TYPE_OF_ITEM", "0", "$SLT_OPT_ANY", "$SLT_OPT_ARMOR_ITEM", "$SLT_OPT_WEAPON_ITEM", "$SLT_OPT_SPELL_ITEM", "$SLT_OPT_POTION_FOOD_ITEM", "$SLT_OPT_AMMO_ITEM"],
+        ["info", "$SLT_INFO_CORE_TYPE_OF_ITEM"]
     ],
     "triggerattribute_armor_slot" : [
         ["type", "int"],
-        ["widget", "menu", "Armor Slot (implies Armor): ", "0", "Any", "Body/Head/Hands/Feet", "Ring/Amulet/Circlet", "30 - Head", "31 - Hair", "32 - Body", "33 - Hands", "34 - Forearms", "35 - Amulet", "36 - Ring", "37 - Feet", "38 - Calves", "39 - Shield", "40 - Tail", "41 - LongHair", "42 - Circlet", "43 - Ears", "44 - Unnamed", "45 - Unnamed", "46 - Unnamed", "47 - Unnamed", "48 - Unnamed", "49 - Unnamed", "50 - DecapitateHead", "51 - Decapitate", "52 - Unnamed", "53 - Unnamed", "54 - Unnamed", "55 - Unnamed", "56 - Unnamed", "57 - Unnamed", "58 - Unnamed", "59 - Unnamed", "60 - Unnamed", "61 - FX01"],
-        ["info", "The armor slot of the equipment (implies Armor was equipped; filter will fail otherwise)."]
+        ["widget", "menu", "$SLT_LBL_CORE_ARMOR_SLOT", "0", "$SLT_OPT_ANY", "$SLT_OPT_BODY_HEAD_HANDS_FEET", "$SLT_OPT_RING_AMULET_CIRCLET", "$SLT_OPT_30_HEAD", "$SLT_OPT_31_HAIR", "$SLT_OPT_32_BODY", "$SLT_OPT_33_HANDS", "$SLT_OPT_34_FOREARM", "$SLT_OPT_35_AMULET", "$SLT_OPT_36_RING", "$SLT_OPT_37_FEET", "$SLT_OPT_38_CALVES", "$SLT_OPT_39_SHIELD", "$SLT_OPT_40_TAIL", "$SLT_OPT_41_LONG_HAIR", "$SLT_OPT_42_CIRCLET", "$SLT_OPT_43_EARS", "$SLT_OPT_44_UNNAMED", "$SLT_OPT_45_UNNAMED", "$SLT_OPT_46_UNNAMED", "$SLT_OPT_47_UNNAMED", "$SLT_OPT_48_UNNAMED", "$SLT_OPT_49_UNNAMED", "$SLT_OPT_50_DECAPITATE_HEAD", "$SLT_OPT_51_DECAPITATE", "$SLT_OPT_52_UNNAMED", "$SLT_OPT_53_UNNAMED", "$SLT_OPT_54_UNNAMED", "$SLT_OPT_55_UNNAMED", "$SLT_OPT_56_UNNAMED", "$SLT_OPT_57_UNNAMED", "$SLT_OPT_58_UNNAMED", "$SLT_OPT_59_UNNAMED", "$SLT_OPT_60_UNNAMED", "$SLT_OPT_61_FX01"],
+        ["info", "$SLT_INFO_CORE_ARMOR_SLOT"]
     ],
     "triggerattribute_daytime" : [
         ["type", "int"],
-        ["widget", "menu", "Daytime :", "0", "Any", "Day", "Night"],
-        ["info", "The time of day the cell change is taking place in."]
+        ["widget", "menu", "$SLT_LBL_CORE_DAYTIME", "0", "$SLT_OPT_ANY", "$SLT_OPT_DAY", "$SLT_OPT_NIGHT"],
+        ["info", "$SLT_INFO_CORE_DAYTIME"]
     ],
     "triggerattribute_chance" : [
         ["type", "float", "100.0"],
-        ["widget", "slider", "Chance: ", "0.0", "100.0", "1.0", "{0}"],
-        ["info", "The chance the trigger will run when all prerequisites are met."]
+        ["widget", "slider", "$SLT_LBL_CORE_CHANCE", "0.0", "100.0", "1.0", "{0}"],
+        ["info", "$SLT_INFO_CORE_CHANCE"]
     ],
     "triggerattribute_comconmat" : [
         ["type", "int"],
-        ["widget", "menu", "Common Containers :", "0", "Any", "Ignore Common Containers", "Only Common Containers"],
-        ["info", "How to handle containers based on their status as 'common' i.e. 'Barrel', 'Sack' and such. Definable in 'sl-triggers/containers.json'."]
+        ["widget", "menu", "$SLT_LBL_CORE_COMMON_CONTAINERS", "0", "$SLT_OPT_ANY", "$SLT_OPT_IGNORE_COMMON_CONTAINERS", "$SLT_OPT_ONLY_COMMON_CONTAINERS"],
+        ["info", "$SLT_INFO_CORE_COMMON_CONTAINERS"]
     ],
     "triggerattribute_deeplocation": [
         ["type", "int"],
-        ["widget", "menu", "Location :", "0", "Any", "Inside", "Outside", "Safe (Home/Jail/Inn)", "City / Town", "Wilderness", "Dungeon", "Player Home", "Jail", "Dungeon", "Cave", "Dwelling", "City", "Town", "Habitation", "Draugr Crypt", "Dragon Priest Lair", "Bandit Camp", "Falmer Hive", "Vampire Lair", "Dwarven Automatons", "Military Fort", "Mine", "Inn", "Hold"],
-        ["info", "The location, indoors or outdoors, as well as Safe/City/Wilderness/Dungeon and others, the cell qualifies as."]
+        ["widget", "menu", "$SLT_LBL_CORE_LOCATION", "0", "$SLT_OPT_ANY", "$SLT_OPT_INSIDE", "$SLT_OPT_OUTSIDE", "$SLT_OPT_SAFE_HOME_JAIL_INN", "$SLT_OPT_CITY_TOWN", "$SLT_OPT_WILDERNESS", "$SLT_OPT_DUNGEON", "$SLT_OPT_PLAYER_HOME", "$SLT_OPT_JAIL", "$SLT_OPT_DUNGEON_KEYWORD", "$SLT_OPT_CAVE", "$SLT_OPT_DWELLING", "$SLT_OPT_CITY", "$SLT_OPT_TOWN", "$SLT_OPT_HABITATION", "$SLT_OPT_DRAUGR_CRYPT", "$SLT_OPT_DRAGON_PRIEST_LAIR", "$SLT_OPT_BANDIT_CAMP", "$SLT_OPT_FALMER_HIVE", "$SLT_OPT_VAMPIRE_LAIR", "$SLT_OPT_DWEMER_RUINS", "$SLT_OPT_MILITARY_FORT", "$SLT_OPT_MINE", "$SLT_OPT_INN", "$SLT_OPT_HOLD"],
+        ["info", "$SLT_INFO_CORE_LOCATION"]
     ],
     "triggerattribute_container_corpse": [
         ["type", "int"],
-        ["widget", "menu", "Corpses :", "0", "Any", "Ignore Corpses", "Only Corpses"],
-        ["info", "Whether the container is a corpse."]
+        ["widget", "menu", "$SLT_LBL_CORE_CORPSES", "0", "$SLT_OPT_ANY", "$SLT_OPT_IGNORE_CORPSES", "$SLT_OPT_ONLY_CORPSES"],
+        ["info", "$SLT_INFO_CORE_CORPSES"]
     ],
     "triggerattribute_container_empty": [
         ["type", "int"],
-        ["widget", "menu", "Empty Containers :", "0", "Any", "Ignore Empty Containers", "Only Empty Containers"],
-        ["info", "Whether the container has any contents."]
+        ["widget", "menu", "$SLT_LBL_CORE_EMPTY_CONTAINERS", "0", "$SLT_OPT_ANY", "$SLT_OPT_IGNORE_EMPTY_CONTAINERS", "$SLT_OPT_ONLY_EMPTY_CONTAINERS"],
+        ["info", "$SLT_INFO_CORE_EMPTY_CONTAINERS"]
     ],
     "triggerattribute_combat_state" : [
         ["type", "int"],
-        ["widget", "menu", "Combat State :", "0", "Any", "Entering Combat", "Leaving Combat"],
-        ["info", "Whether the player is entering or leaving combat."]
+        ["widget", "menu", "$SLT_LBL_CORE_COMBAT_STATE", "0", "$SLT_OPT_ANY", "$SLT_OPT_ENTERING_COMBAT", "$SLT_OPT_LEAVING_COMBAT"],
+        ["info", "$SLT_INFO_CORE_COMBAT_STATE"]
     ],
     "triggerattribute_player_attacking" : [
         ["type", "int"],
-        ["widget", "menu", "Player Attacking :", "0", "Any", "Player Attacking", "Player Being Attacked"],
-        ["info", "Whether the player is the one attacking or being attacked."]
+        ["widget", "menu", "$SLT_LBL_CORE_PLAYER_ATTACKING", "0", "$SLT_OPT_ANY", "$SLT_OPT_PLAYER_ATTACKING", "$SLT_OPT_PLAYER_BEING_ATTACKED"],
+        ["info", "$SLT_INFO_CORE_PLAYER_ATTACKING"]
     ],
     "triggerattribute_was_power_attack" : [
         ["type", "int"],
-        ["widget", "menu", "Power Attacking :", "0", "Any", "Is Power Attacking", "Is Not Power Attacking"],
-        ["info", "Whether the attack was a power attack."]
+        ["widget", "menu", "$SLT_LBL_CORE_POWER_ATTACKING", "0", "$SLT_OPT_ANY", "$SLT_OPT_IS_POWER_ATTACKING", "$SLT_OPT_IS_NOT_POWER_ATTACKING"],
+        ["info", "$SLT_INFO_CORE_POWER_ATTACKING"]
     ],
     "triggerattribute_was_sneak_attack" : [
         ["type", "int"],
-        ["widget", "menu", "Sneak Attacking :", "0", "Any", "Is Sneak Attacking", "Is Not Sneak Attacking"],
-        ["info", "Whether the attack was a sneak attack."]
+        ["widget", "menu", "$SLT_LBL_CORE_SNEAK_ATTACKING", "0", "$SLT_OPT_ANY", "$SLT_OPT_IS_SNEAK_ATTACKING", "$SLT_OPT_IS_NOT_SNEAK_ATTACKING"],
+        ["info", "$SLT_INFO_CORE_SNEAK_ATTACKING"]
     ],
     "triggerattribute_was_bash_attack" : [
         ["type", "int"],
-        ["widget", "menu", "Bash Attacking :", "0", "Any", "Is Bash Attacking", "Is Not Bash Attacking"],
-        ["info", "Whether the attack was a bash attack."]
+        ["widget", "menu", "$SLT_LBL_CORE_BASH_ATTACKING", "0", "$SLT_OPT_ANY", "$SLT_OPT_IS_BASH_ATTACKING", "$SLT_OPT_IS_NOT_BASH_ATTACKING"],
+        ["info", "$SLT_INFO_CORE_BASH_ATTACKING"]
     ],
     "triggerattribute_was_blocked" : [
         ["type", "int"],
-        ["widget", "menu", "Attack Blocked :", "0", "Any", "Was Attack Blocked", "Was Attack Left Unblocked"],
-        ["info", "Whether the attack was blocked."]
+        ["widget", "menu", "$SLT_LBL_CORE_ATTACK_BLOCKED", "0", "$SLT_OPT_ANY", "$SLT_OPT_WAS_ATTACK_BLOCKED", "$SLT_OPT_WAS_ATTACK_LEFT_UNBLOCKED"],
+        ["info", "$SLT_INFO_CORE_ATTACK_BLOCKED"]
     ],
     "triggerattribute_vampirism" : [
         ["type", "int"],
-        ["widget", "menu", "Vampirism Transition: ", "0", "Any", "Cured", "Contracted", "Enter Vampire Lord Form", "Leave Vampire Lord Form"],
-        ["info", "Which phase of vampirism you wish to react to."]
+        ["widget", "menu", "$SLT_LBL_CORE_VAMPIRISM_TRANSITION", "0", "$SLT_OPT_ANY", "$SLT_OPT_CURED", "$SLT_OPT_CONTRACTED", "$SLT_OPT_ENTER_VAMPIRE_LORD_FORM", "$SLT_OPT_LEAVE_VAMPIRE_LORD_FORM"],
+        ["info", "$SLT_INFO_CORE_VAMPIRISM_TRANSITION"]
     ],
     "triggerattribute_lycanthropy" : [
         ["type", "int"],
-        ["widget", "menu", "Lycanthropy Transition: ", "0", "Any", "Cured", "Contracted", "Enter Werewolf Form", "Leave Werewolf Form"],
-        ["info", "Which phase of lycanthropy you wish to react to."]
+        ["widget", "menu", "$SLT_LBL_CORE_LYCANTHROPY_TRANSITION", "0", "$SLT_OPT_ANY", "$SLT_OPT_CURED", "$SLT_OPT_CONTRACTED", "$SLT_OPT_ENTER_WEREWOLF_FORM", "$SLT_OPT_LEAVE_WEREWOLF_FORM"],
+        ["info", "$SLT_INFO_CORE_LYCANTHROPY_TRANSITION"]
     ],
     "triggerattribute_swimming" : [
         ["type", "int"],
-        ["widget", "menu", "Swimming Start/Stop: ", "0", "Either", "Start", "Stop"],
-        ["info", "Trigger when the player's swimming state transitions: Start, Stop, or Either."]
+        ["widget", "menu", "$SLT_LBL_CORE_SWIMMING_START_STOP", "0", "$SLT_OPT_EITHER", "$SLT_OPT_START", "$SLT_OPT_STOP"],
+        ["info", "$SLT_INFO_CORE_SWIMMING_START_STOP"]
     ],
     "triggerattribute_in_water" : [
         ["type", "int"],
-        ["widget", "menu", "Entering/Leaving Water: ", "0", "Either", "Entering", "Leaving"],
-        ["info", "Trigger when the player is Entering Water, Leaving Water, or Either."]
+        ["widget", "menu", "$SLT_LBL_CORE_ENTERING_LEAVING_WATER", "0", "$SLT_OPT_EITHER", "$SLT_OPT_ENTERING", "$SLT_OPT_LEAVING"],
+        ["info", "$SLT_INFO_CORE_ENTERING_LEAVING_WATER"]
     ],
     "triggerattribute_is_player" : [
         ["type", "int"],
-        ["widget", "menu", "Is Player: ", "0", "Either", "Is Player", "Is Not Player"],
-        ["info", "Trigger when the soul collector Is the Player, Is Not the Player, or Either."]
+        ["widget", "menu", "$SLT_LBL_CORE_IS_PLAYER", "0", "Either", "$SLT_OPT_IS_PLAYER", "$SLT_OPT_IS_NOT_PLAYER"],
+        ["info", "$SLT_INFO_CORE_IS_PLAYER"]
     ],
     "triggerattribute_do_1" : [
         ["type", "string"],
-        ["widget", "command", "Script 1: "],
-        ["info", "You can run 1 or more scripts associated with this trigger. This is the first."]
+        ["widget", "command", "$SLT_LBL_CORE_SCRIPT_1"],
+        ["info", "$SLT_INFO_CORE_SCRIPT_1"]
     ],
     "triggerattribute_do_2" : [
         ["type", "string"],
-        ["widget", "command", "Script 2: "],
-        ["info", "You can run 1 or more scripts associated with this trigger. This is the second."]
+        ["widget", "command", "$SLT_LBL_CORE_SCRIPT_2"],
+        ["info", "$SLT_INFO_CORE_SCRIPT_2"]
     ],
     "triggerattribute_do_3" : [
         ["type", "string"],
-        ["widget", "command", "Script 3: "],
-        ["info", "You can run 1 or more scripts associated with this trigger. This is the third."]
+        ["widget", "command", "$SLT_LBL_CORE_SCRIPT_3"],
+        ["info", "$SLT_INFO_CORE_SCRIPT_3"]
     ],
     "triggerattribute_do_4" : [
         ["type", "string"],
-        ["widget", "command", "Script 4: "],
-        ["info", "You can run 1 or more scripts associated with this trigger. This is the fourth."]
+        ["widget", "command", "$SLT_LBL_CORE_SCRIPT_4"],
+        ["info", "$SLT_INFO_CORE_SCRIPT_4"]
     ],
     "trigger_layoutconditions" : [
         ["# checked in sequence shown, first match determines layout selection"],
@@ -263,7 +263,8 @@
         ["15", "triggerlayout_vampire_feeding"],
         ["16", "triggerlayout_swimming"],
         ["17", "triggerlayout_in_water"],
-        ["18", "triggerlayout_soul_trapped"]
+        ["18", "triggerlayout_soul_trapped"],
+        ["19", "triggerlayout_level_up"]
     ],
     "triggerlayout_keymapping" : [
         ["event", "chance"],
@@ -401,6 +402,11 @@
         ["do_1", "do_2"],
         ["do_3", "do_4"]
     ],
+    "triggerlayout_level_up" : [
+        ["event", "chance"],
+        ["do_1", "do_2"],
+        ["do_3", "do_4"]
+    ],
     "triggerlayout" : [
         ["event"]
     ]
@@ -415,8 +421,8 @@
     ],
     "settingsattribute_cards_per_page" : [
         ["type", "int"],
-        ["widget", "menu", "Triggers per Page :", "4", "1", "2", "3", "4", "5"],
-        ["info", "The number of triggers to display per page."]
+        ["widget", "menu", "$SLT_LBL_CORE_TRIGGERS_PER_PAGE", "4", "1", "2", "3", "4", "5"],
+        ["info", "$SLT_INFO_CORE_TRIGGERS_PER_PAGE"]
     ],
 	"settingslayout" : [
 		["cards_per_page"]

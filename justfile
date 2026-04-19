@@ -233,7 +233,7 @@ populateNEF: _prepsrc
 
 generatedocs:
     jcx SltParser "./src/sl_triggers_function_library" "SLTriggers Redux Base Function Library" "./src/source/scripts/sl_triggersCmdLibSLT.psc" "./src/source/scripts/sl_triggersCmdLibCore.psc" "./src/source/scripts/sl_triggersCmdLibRacemenuNIO.psc" "./src/source/scripts/sl_triggersCmdLibNFF.psc" "./src/source/scripts/sl_triggersCmdLibBase.psc"
-    jcx SltParser "./extern/libraries/adult-general/sl_triggers_function_library_adult_general" "Adult General Function Library" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibOSLAroused.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibSLIF.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibTNG.psc"
+    jcx SltParser "./extern/libraries/adult-general/sl_triggers_function_library_adult_general" "Adult General Function Library" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibOSLAroused.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibSLIF.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibTNG.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibPW.psc"
     jcx SltParser "./extern/libraries/ostim/sl_triggers_function_library_ostim" "OStim Function Library" "./extern/libraries/ostim/source/scripts/sl_triggersCmdLibOStim.psc"
     jcx SltParser "./extern/libraries/sexlab/sl_triggers_function_library_sexlab" "SexLab 1.66 Function Library" "./extern/libraries/sexlab/source/scripts/sl_triggersCmdLibSexLab.psc"
     jcx SltParser "./extern/libraries/sexlab-dependent/sl_triggers_function_library_sexlab_dependent" "SexLab Dependent Function Library" "./extern/libraries/sexlab-dependent/source/scripts/sl_triggersCmdLibSexLabDependent.psc"

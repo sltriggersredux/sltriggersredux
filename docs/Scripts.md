@@ -175,25 +175,26 @@ SLTScript supports scoped variables:
 - **Local variables**: `$variableName` | `$local.variableName` - Available only to the currently executing script
 - **Thread variables**: `$thread.variableName` - Available to any script on the current thread/callchain
 - **Target variables**: `$target.variableName` - Available to any script running on the target
-  - **Target scope extension**: `$target<otherActor>.variableName` - Allows access to another target's variables (i.e. not `$system.self`)
+  - **Target scope extension**: `$target.<otherActor>.variableName` - Allows access to another target's variables (i.e. not `$system.self`)
 - **Global variables**: `$global.variableName` - Available to all scripts, persistent across saves
 
 Variable names can include any of the following characters after the scope: `A-Za-z0-9._`.
 
-Note: You can have whitespacen inside a variable statement only if it is inside the target sub-scope, list index, or map key.
+Note: You can have whitespace inside a variable statement only if it is inside the target sub-scope, list index, or map key.
 For example:
 ```sltscript
 ; these are valid
-$target<$otherActor>.varname
-$target< $otherActor >.varname
+$target.<otherActor>.varname
+$target.< otherActor >.varname
 $map{42}
 $map{ 42 }
 $list[0]
 $list[ 0 ]
 
 ; but these are not
-$target <$otherActor>.varname
-$target<$otherActor> .varname
+$target<otherActor>.varname ; missing period between "target" and "<"
+$target. <otherActor>.varname ; extraneous space between "." and "<"
+$target.<$otherActor> .varname ; extraneous space between ">" and "."
 $map {42}
 $list [0]
 ```
@@ -291,6 +292,8 @@ $list [0]
 |`$request.core.vampire_feeding.target`|Form - (Added by SLTR Core) (for Vampire Feeding) the target of the feeding|
 |`$request.core.soul_trapped.trapper`|Form - (Added by SLTR Core) (for Soul Trapped) the trapper who trapped the target|
 |`$request.core.soul_trapped.target`|Form - (Added by SLTR Core) (for Soul Trapped) the target that was trapped|
+|`$request.core.level_up.old_level`|int - (Added by SLTR Core) (for Level Up) the player's level before leveling up (as they may have accrued multiple levels)|
+|`$request.core.level_up.new_level`|int - (Added by SLTR Core) (for Level Up) the player's level after leveling up (as they may have accrued multiple levels)|
 
 ## Basic Operations
 

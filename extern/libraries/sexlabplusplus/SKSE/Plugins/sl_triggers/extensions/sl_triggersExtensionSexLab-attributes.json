@@ -34,103 +34,103 @@
     "triggerattribute_event" : [
         ["# here is where you define aspects of the attribute"],
         ["type", "int"],
-        ["widget", "menu", "Event: ", "0", "- Select an Event -", "Begin", "Orgasm", "End", "Orgasm, Separate", "Stage Start", "Stage End"],
-        ["info", "Choose which type of event this trigger will use."]
+        ["widget", "menu", "$SLT_LBL_CORE_EVENT", "0", "$SLT_OPT_SELECT_AN_EVENT", "$SLT_OPT_BEGIN", "$SLT_OPT_ORGASM", "$SLT_OPT_END", "$SLT_OPT_ORGASM_SEPARATE", "$SLT_OPT_STAGE_START", "$SLT_OPT_STAGE_END"],
+        ["info", "$SLT_INFO_CORE_EVENT"]
     ],
     "triggerattribute_chance" : [
         ["type", "float", "100.0"],
-        ["widget", "slider", "Chance: ", "0.0", "100.0", "1.0", "{0}"],
-        ["info", "The chance the trigger will run when all prerequisites are met."]
+        ["widget", "slider", "$SLT_LBL_CORE_CHANCE", "0.0", "100.0", "1.0", "{0}"],
+        ["info", "$SLT_INFO_CORE_CHANCE"]
     ],
     "triggerattribute_race" : [
         ["type", "int"],
-        ["widget", "menu", "Race: ", "0", "Any", "Humanoid", "Creature", "Undead"],
-        ["info", "To run the script on a target, the Actor must have the selected race type."]
+        ["widget", "menu", "$SLT_LBL_CORE_RACE", "0", "$SLT_OPT_ANY", "$SLT_OPT_HUMANOID", "$SLT_OPT_CREATURE", "$SLT_OPT_UNDEAD"],
+        ["info", "$SLT_INFO_CORE_RACE"]
     ],
     "triggerattribute_role" : [
         ["type", "int"],
-        ["widget", "menu", "Role: ", "0", "Any", "Aggressor", "Victim", "Not part of aggressive scene."],
-        ["info", "To run the script on a target, the Actor must have the selected role."]
+        ["widget", "menu", "$SLT_LBL_ADULT_ROLE", "0", "$SLT_OPT_ANY", "$SLT_OPT_AGGRESSOR", "$SLT_OPT_VICTIM", "$SLT_OPT_NOT_PART_OF_AGGRESSIVE_SCENE"],
+        ["info", "$SLT_INFO_ADULT_ROLE"]
     ],
     "triggerattribute_player" : [
         ["type", "int"],
-        ["widget", "menu", "Player Relationship: ", "0", "Any", "Player", "Not Player", "Partner Player", "Partner Not Player"],
-        ["info", "For a script target, is the target: Player - Actor is Player; Not Player - Actor is not Player; Partner Player - Actor in scene with Player; Partner Not Player - Actor not in scene with Player"]
+        ["widget", "menu", "$SLT_LBL_ADULT_PLAYER_RELATIONSHIP", "0", "$SLT_OPT_ANY", "$SLT_OPT_PLAYER", "$SLT_OPT_NOT_PLAYER", "$SLT_OPT_PARTNER_PLAYER", "$SLT_OPT_PARTNER_NOT_PLAYER"],
+        ["info", "$SLT_INFO_ADULT_PLAYER_RELATIONSHIP"]
     ],
     "triggerattribute_gender" : [
         ["type", "int"],
-        ["widget", "menu", "Sex: ", "0", "Any", "Male", "Female", "Futa", "Creature - Male", "Creature - Female"],
-        ["info", "To run the script on a target, the Actor must have the selected sex."]
+        ["widget", "menu", "$SLT_LBL_CORE_SEX", "0", "$SLT_OPT_ANY", "$SLT_OPT_MALE", "$SLT_OPT_FEMALE", "$SLT_OPT_FUTA", "$SLT_OPT_CREATURE_MALE", "$SLT_OPT_CREATURE_FEMALE"],
+        ["info", "$SLT_INFO_CORE_SEX"]
     ],
     "triggerattribute_tag" : [
         ["type", "int"],
-        ["widget", "menu", "SL Tag :", "0", "Any", "Vaginal", "Anal", "Oral"],
-        ["info", "The SexLab 'tag' for the animation the scene participant is in."]
+        ["widget", "menu", "$SLT_LBL_SEXLAB_TAG", "0", "$SLT_OPT_ANY", "$SLT_OPT_VAGINAL", "$SLT_OPT_ANAL", "$SLT_OPT_ORAL"],
+        ["info", "$SLT_INFO_SEXLAB_TAG"]
     ],
     "triggerattribute_daytime" : [
         ["type", "int"],
-        ["widget", "menu", "Daytime :", "0", "Any", "Day", "Night"],
-        ["info", "The time of day the scene is taking place in."]
+        ["widget", "menu", "$SLT_LBL_CORE_DAYTIME", "0", "$SLT_OPT_ANY", "$SLT_OPT_DAY", "$SLT_OPT_NIGHT"],
+        ["info", "$SLT_INFO_CORE_DAYTIME"]
     ],
     "triggerattribute_position" : [
         ["type", "int"],
-        ["widget", "menu", "Position :", "0", "Any", "1", "2", "3", "4", "5"],
-        ["info", "The SexLab 'position' the scene participant is in (1-5)."]
+        ["widget", "menu", "$SLT_LBL_ADULT_POSITION", "0", "$SLT_OPT_ANY", "1", "2", "3", "4", "5"],
+        ["info", "$SLT_INFO_ADULT_POSITION"]
     ],
     "triggerattribute_do_1" : [
         ["type", "string"],
-        ["widget", "command", "Script 1: "],
-        ["info", "You can run 1 or more scripts associated with this trigger. This is the first."]
+        ["widget", "command", "$SLT_LBL_CORE_SCRIPT_1"],
+        ["info", "$SLT_INFO_CORE_SCRIPT_1"]
     ],
     "triggerattribute_do_2" : [
         ["type", "string"],
-        ["widget", "command", "Script 2: "],
-        ["info", "You can run 1 or more scripts associated with this trigger. This is the second."]
+        ["widget", "command", "$SLT_LBL_CORE_SCRIPT_2"],
+        ["info", "$SLT_INFO_CORE_SCRIPT_2"]
     ],
     "triggerattribute_do_3" : [
         ["type", "string"],
-        ["widget", "command", "Script 3: "],
-        ["info", "You can run 1 or more scripts associated with this trigger. This is the third."]
+        ["widget", "command", "$SLT_LBL_CORE_SCRIPT_3"],
+        ["info", "$SLT_INFO_CORE_SCRIPT_3"]
     ],
     "triggerattribute_do_4" : [
         ["type", "string"],
-        ["widget", "command", "Script 4: "],
-        ["info", "You can run 1 or more scripts associated with this trigger. This is the fourth."]
+        ["widget", "command", "$SLT_LBL_CORE_SCRIPT_4"],
+        ["info", "$SLT_INFO_CORE_SCRIPT_4"]
     ],
     "triggerattribute_is_armed" : [
         ["type", "int"],
-        ["widget", "menu", "Is Weapon/Spell Equipped? ", "0", "Any", "Equipped In Either Hand", "Not Equipped In Either Hand", "Not Equipped In Main/Right Hand"],
-        ["info", "Whether the player has a weapon or spell equipped."]
+        ["widget", "menu", "$SLT_LBL_CORE_IS_WEAPON_SPELL_EQUIPPED", "0", "$SLT_OPT_ANY", "$SLT_OPT_EQUIPPED_IN_EITHER_HAND", "$SLT_OPT_NOT_EQUIPPED_IN_EITHER_HAND", "$SLT_OPT_NOT_EQUIPPED_IN_MAIN_HAND"],
+        ["info", "$SLT_INFO_CORE_IS_WEAPON_SPELL_EQUIPPED"]
     ],
     "triggerattribute_is_clothed" : [
         ["type", "int"],
-        ["widget", "menu", "Is Armor/Clothing Equipped? ", "0", "Any", "Equipped In Body Slot (32)", "Not Equipped In Body Slot (32)", "Not Equipped Or Devious Item Equipped In Body Slot (32)"],
-        ["info", "Whether the player has armor or clothing equipped in the Body slot (32)."]
+        ["widget", "menu", "$SLT_LBL_CORE_IS_ARMOR_CLOTHING_EQUIPPED", "0", "$SLT_OPT_ANY", "$SLT_OPT_EQUIPPED_IN_BODY_SLOT", "$SLT_OPT_NOT_EQUIPPED_IN_BODY_SLOT", "$SLT_OPT_NOT_EQUIPPED_OR_DEVIOUS"],
+        ["info", "$SLT_INFO_CORE_IS_ARMOR_CLOTHING_EQUIPPED"]
     ],
     "triggerattribute_is_weapon_drawn": [
         ["type", "int"],
-        ["widget", "menu", "Is Weapon/Spell Drawn? ", "0", "Any", "Weapon/Spell Is Drawn", "Weapon/Spell Is Not Drawn"],
-        ["info", "Whether the player has a weapon or spell drawn and ready for combat."]
+        ["widget", "menu", "$SLT_LBL_CORE_IS_WEAPON_SPELL_DRAWN", "0", "$SLT_OPT_ANY", "$SLT_OPT_WEAPON_SPELL_IS_DRAWN", "$SLT_OPT_WEAPON_SPELL_IS_NOT_DRAWN"],
+        ["info", "$SLT_INFO_CORE_IS_WEAPON_SPELL_DRAWN"]
     ],
     "triggerattribute_deeplocation": [
         ["type", "int"],
-        ["widget", "menu", "Location :", "0", "Any", "Inside", "Outside", "Safe (Home/Jail/Inn)", "City / Town", "Wilderness", "Dungeon", "Player Home", "Jail", "Dungeon", "Cave", "Dwelling", "City", "Town", "Habitation", "Draugr Crypt", "Dragon Priest Lair", "Bandit Camp", "Falmer Hive", "Vampire Lair", "Dwarven Automatons", "Military Fort", "Mine", "Inn", "Hold"],
-        ["info", "The location, indoors or outdoors, as well as Safe/City/Wilderness/Dungeon and others, the cell qualifies as."]
+        ["widget", "menu", "$SLT_LBL_CORE_LOCATION", "0", "$SLT_OPT_ANY", "$SLT_OPT_INSIDE", "$SLT_OPT_OUTSIDE", "$SLT_OPT_SAFE_HOME_JAIL_INN", "$SLT_OPT_CITY_TOWN", "$SLT_OPT_WILDERNESS", "$SLT_OPT_DUNGEON", "$SLT_OPT_PLAYER_HOME", "$SLT_OPT_JAIL", "$SLT_OPT_DUNGEON_KEYWORD", "$SLT_OPT_CAVE", "$SLT_OPT_DWELLING", "$SLT_OPT_CITY", "$SLT_OPT_TOWN", "$SLT_OPT_HABITATION", "$SLT_OPT_DRAUGR_CRYPT", "$SLT_OPT_DRAGON_PRIEST_LAIR", "$SLT_OPT_BANDIT_CAMP", "$SLT_OPT_FALMER_HIVE", "$SLT_OPT_VAMPIRE_LAIR", "$SLT_OPT_DWEMER_RUINS", "$SLT_OPT_MILITARY_FORT", "$SLT_OPT_MINE", "$SLT_OPT_INN", "$SLT_OPT_HOLD"],
+        ["info", "$SLT_INFO_CORE_LOCATION"]
     ],
     "triggerattribute_partner_race" : [
         ["type", "int"],
-        ["widget", "menu", "Partner Race: ", "0", "Any", "Humanoid", "Creature", "Undead"],
-        ["info", "To run the script on a target, the Actor must have a scene partner of the selected race type."]
+        ["widget", "menu", "$SLT_LBL_ADULT_PARTNER_RACE", "0", "$SLT_OPT_ANY", "$SLT_OPT_HUMANOID", "$SLT_OPT_CREATURE", "$SLT_OPT_UNDEAD"],
+        ["info", "$SLT_INFO_ADULT_PARTNER_RACE"]
     ],
     "triggerattribute_partner_role" : [
         ["type", "int"],
-        ["widget", "menu", "Partner Role: ", "0", "Any", "Aggressor", "Victim", "Not part of aggressive scene"],
-        ["info", "To run the script on a target, the Actor must have a scene partner with the selected role."]
+        ["widget", "menu", "$SLT_LBL_ADULT_PARTNER_ROLE", "0", "$SLT_OPT_ANY", "$SLT_OPT_AGGRESSOR", "$SLT_OPT_VICTIM", "$SLT_OPT_NOT_PART_OF_AGGRESSIVE_SCENE"],
+        ["info", "$SLT_INFO_ADULT_PARTNER_ROLE"]
     ],
     "triggerattribute_partner_gender" : [
         ["type", "int"],
-        ["widget", "menu", "Partner Sex: ", "0", "Any", "Male", "Female", "Futa", "Creature - Male", "Creature - Female"],
-        ["info", "To run the script on a target, the Actor must have a scene partner of the selected sex."]
+        ["widget", "menu", "$SLT_LBL_ADULT_PARTNER_SEX", "0", "$SLT_OPT_ANY", "$SLT_OPT_MALE", "$SLT_OPT_FEMALE", "$SLT_OPT_FUTA", "$SLT_OPT_CREATURE_MALE", "$SLT_OPT_CREATURE_FEMALE"],
+        ["info", "$SLT_INFO_ADULT_PARTNER_SEX"]
     ],
     "triggerlayout" : [
         ["event", "chance"],
@@ -155,8 +155,8 @@
     ],
     "settingsattribute_cards_per_page" : [
         ["type", "int"],
-        ["widget", "menu", "Triggers per Page :", "4", "1", "2", "3", "4", "5"],
-        ["info", "The number of triggers to display per page."]
+        ["widget", "menu", "$SLT_LBL_CORE_TRIGGERS_PER_PAGE", "4", "1", "2", "3", "4", "5"],
+        ["info", "$SLT_INFO_CORE_TRIGGERS_PER_PAGE"]
     ],
 	"settingslayout" : [
 		["cards_per_page"]

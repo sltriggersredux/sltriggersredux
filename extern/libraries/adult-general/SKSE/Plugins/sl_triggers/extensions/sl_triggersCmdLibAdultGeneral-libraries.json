@@ -1,5 +1,6 @@
 {
     "sl_triggersCmdLibOSLAroused" : -1000,
     "sl_triggersCmdLibSLIF" : -1000,
-    "sl_triggersCmdLibTNG" : -1000
+    "sl_triggersCmdLibTNG" : -1000,
+    "sl_triggersCmdLibPW" : -1000
 }

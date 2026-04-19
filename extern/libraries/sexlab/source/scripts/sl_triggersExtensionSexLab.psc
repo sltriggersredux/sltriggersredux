@@ -487,7 +487,7 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 	float chance
 
 	bool playerWasInInterior = PlayerRef.IsInInterior()
-	Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
+	Location pLoc = SLT.PlayerRef.GetCurrentLocation()
 	
 	int z = actorCount
 	bool playerFound
@@ -854,15 +854,15 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 						elseif ival == 2
 							doRun = !playerWasInInterior
 						elseif ival == 3
-							doRun = SLT.IsLocationKeywordSafe(playerLocationKeyword)
+							doRun = SLT.IsLocationSafe(pLoc)
 						elseif ival == 4
-							doRun = SLT.IsLocationKeywordCity(playerLocationKeyword)
+							doRun = SLT.IsLocationInCity(pLoc)
 						elseif ival == 5
-							doRun = SLT.IsLocationKeywordWilderness(playerLocationKeyword)
+							doRun = SLT.IsLocationInWilderness(pLoc)
 						elseif ival == 6
-							doRun = SLT.IsLocationKeywordDungeon(playerLocationKeyword)
+							doRun = SLT.IsLocationInDungeon(pLoc)
 						else
-							doRun = playerLocationKeyword == SLT.LocationKeywords[ival - 7]
+							doRun = pLoc.HasKeyword(SLT.LocationKeywords[ival - 7])
 						endif
 
 						If (SLT.Debug_Extension_SexLab && !doRun)

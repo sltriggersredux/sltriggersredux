@@ -821,30 +821,6 @@ Function GetActorLocationFlags(Actor theActor, bool[] flagset)
 	GetLocationFlags(pLoc, flagset)
 EndFunction
 
-Keyword Function GetPlayerLocationKeyword()
-	Location pLoc = PlayerRef.GetCurrentLocation()
-	int i = 0
-	while pLoc && i < LocationKeywords.length
-		if pLoc.HasKeyword(LocationKeywords[i])
-			return LocationKeywords[i]
-		endif
-		i += 1
-	endwhile
-	return none
-EndFunction
-
-Keyword Function GetActorLocationKeyword(Actor theActor)
-	Location pLoc = theActor.GetCurrentLocation()
-	int i = 0
-	while pLoc && i < LocationKeywords.length
-		if pLoc.HasKeyword(LocationKeywords[i])
-			return LocationKeywords[i]
-		endif
-		i += 1
-	endwhile
-	return none
-EndFunction
-
 bool Function IsFlagsetSafe(bool[] flagset)
 	If (flagset.Length < (LocationKeywords.Length + 1))
 		return false
@@ -871,22 +847,6 @@ bool Function IsFlagsetInDungeon(bool[] flagset)
 		return false
 	EndIf
 	return flagset[9] || flagset[10] || flagset[12] || flagset[13] || flagset[14] || flagset[3] || flagset[16] || flagset[4]
-EndFunction
-
-bool Function IsLocationKeywordSafe(Keyword locKeyword)
-	return locKeyword == LocTypePlayerHome || locKeyword == LocTypeJail || locKeyword == LocTypeInn
-EndFunction
-
-bool Function IsLocationKeywordCity(Keyword locKeyword)
-	return locKeyword == LocTypeCity || locKeyword == LocTypeTown || locKeyword == LocTypeHabitation || locKeyword == LocTypeDwelling
-EndFunction
-
-bool Function IsLocationKeywordWilderness(Keyword locKeyword)
-	return !locKeyword || locKeyword == LocTypeHold || locKeyword == LocTypeBanditCamp || locKeyword == LocTypeMilitaryFort
-EndFunction
-
-bool Function IsLocationKeywordDungeon(Keyword locKeyword)
-	return locKeyword == LocTypeDraugrCrypt || locKeyword == LocTypeDragonPriestLair || locKeyword == LocTypeFalmerHive || locKeyword == LocTypeVampireLair || locKeyword == LocTypeDwarvenAutomatons || locKeyword == LocTypeDungeon || locKeyword == LocTypeMine || locKeyword == LocSetCave
 EndFunction
 
 bool Function IsLocationSafe(Location pLoc)

@@ -1134,7 +1134,7 @@ endFunction
 function util_scan_cell_npcs(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
 	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
 
-    ObjectReference objCenter = CmdPrimary.SLT.PlayerRef
+    ObjectReference objCenter
     float afRadius = 0.0
     Keyword kwScan = none
     bool bIgnoreDead = true
@@ -1153,6 +1153,9 @@ function util_scan_cell_npcs(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary
         endif
     endif
 
+    if !objCenter
+        objCenter = CmdPrimary.SLT.PlayerRef
+    endif
     Actor[] scan_result = MiscUtil.ScanCellNPCs(objCenter, afRadius, kwScan, bIgnoreDead)
     
     CmdPrimary.MostRecentListFormResult = ActorArrayToFormArray(scan_result)
@@ -2411,10 +2414,10 @@ function util_getrealtime(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, s
 	CmdPrimary.CompleteOperationOnActor()
 endFunction
 
-; sltname util_getgametime
+; sltname util_gethour
 ; sltgrup Utility
 ; sltdesc Returns: int: the in-game hour (i.e. 2:30 AM returns 2)
-; sltsamp util_getgametime
+; sltsamp util_gethour
 function util_gethour(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
 	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
 

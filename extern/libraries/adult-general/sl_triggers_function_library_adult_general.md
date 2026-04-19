@@ -150,6 +150,22 @@ Returns: float: the result of OSLAroused_ModInterface.SetArousalMultiplier(Actor
 
 
 
+## Public Whore
+
+### pw_is_whore_anywhere
+
+**Description**
+
+Returns: bool: true if currently the public whore, false otherwise
+
+
+**Example**
+
+    pw_is_whore_anywhere  
+    msg_console "Currently the public whore? " $$  
+
+
+
 ## SLIF (SexLab Inflation Framework)
 
 ### slif_get_gender

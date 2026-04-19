@@ -139,7 +139,7 @@ Event OnConfigInit()
 		SLTDebugMsg("Setup.OnConfigInit")
 	EndIf
 	headerPages = new string[1]
-	headerPages[0] = "SLTriggers Redux"
+	headerPages[0] = sl_triggers.GetTranslatedString("$SLT_MOD_NAME")
 EndEvent
 
 Event OnConfigOpen()
@@ -262,6 +262,7 @@ int Function ShowAttribute(string attrName, int widgetOptions, string triggerKey
 		
 	int widg = GetAttrWidget(_isTriggerAttributes, attrName)
 	string label = GetAttrLabel(_isTriggerAttributes, attrName)
+	label = sl_triggers.GetTranslatedString(label)
 	if widg == WIDG_SLIDER
 		float _defval = GetAttrDefaultFloat(_isTriggerAttributes, attrName)
 		if JsonUtil.HasFloatValue(_dataFile, attrName)
@@ -617,7 +618,7 @@ EndFunction
 Function ShowHeaderPage()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 	int ver = GetVersion()
-	AddHeaderOption("SLTriggers Redux")
+	AddHeaderOption("$SLT_MOD_NAME")
 	AddHeaderOption("(" + sl_triggers.GetTranslatedString("$SLT_LBL_VERSION") + " " + (ver as string) + ")")
 	
 	AddHeaderOption("$SLT_LBL_GLOBAL_SETTINGS")
@@ -719,7 +720,9 @@ Event OnOptionHighlight(int option)
 		endif
 		
 		if HasAttrHighlight(_istk, attrName)
-			SetInfoText(GetAttrHighlight(_istk, attrName))
+			string infoText = GetAttrHighlight(_istk, attrName)
+			infoText = sl_triggers.GetTranslatedString(infoText)
+			SetInfoText(infoText)
 		endif
 	endif
 EndEvent
@@ -1644,6 +1647,11 @@ string[] Function GetAttrMenuSelections(bool _istk, string _attr)
 	if data.Length > 3 && data[0] == "menu"
 		info = PapyrusUtil.SliceStringArray(data, 3)
 	endif
+	int i = 0
+	while i < info.Length
+		info[i] = sl_triggers.GetTranslatedString(info[i])
+		i = i + 1
+	endwhile
 	return info
 EndFunction
 
@@ -1652,7 +1660,12 @@ int Function GetAttrMenuSelectionIndex(bool _istk, string _attr, string _selecti
 	;string[] data = GetExtensionAttributeData(_istk, _attr, "widget")
 	string[] data = sl_triggers_internal.MCMGetAttributeData(_istk, CurrentExtensionKey, _attr, "widget")
 	int info
-	if data.Length > 0
+	
+	if data.Length > 3 && data[0] == "menu"
+		int i = 3
+		while i < data.Length
+			data[i] = sl_triggers.GetTranslatedString(data[i])
+		endwhile
 		info = data.Find(_selection, 3)
 	endif
 	return info

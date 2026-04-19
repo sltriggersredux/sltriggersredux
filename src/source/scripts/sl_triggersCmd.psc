@@ -1306,16 +1306,16 @@ bool Function InternalResolve(string token)
                 CustomResolveBoolResult = !PlayerRef.IsInInterior()
                 return true
             elseif "is_player.in_city" == vname
-                CustomResolveBoolResult = SLT.IsLocationKeywordCity(SLT.GetPlayerLocationKeyword())
+                CustomResolveBoolResult = SLT.IsLocationInCity(SLT.PlayerRef.GetCurrentLocation())
                 return true
             elseif "is_player.in_dungeon" == vname
-                CustomResolveBoolResult = SLT.IsLocationKeywordDungeon(SLT.GetPlayerLocationKeyword())
+                CustomResolveBoolResult = SLT.IsLocationInDungeon(SLT.PlayerRef.GetCurrentLocation())
                 return true
             elseif "is_player.in_safe" == vname
-                CustomResolveBoolResult = SLT.IsLocationKeywordSafe(SLT.GetPlayerLocationKeyword())
+                CustomResolveBoolResult = SLT.IsLocationSafe(SLT.PlayerRef.GetCurrentLocation())
                 return true
             elseif "is_player.in_wilderness" == vname
-                CustomResolveBoolResult = SLT.IsLocationKeywordWilderness(SLT.GetPlayerLocationKeyword())
+                CustomResolveBoolResult = SLT.IsLocationInWilderness(SLT.PlayerRef.GetCurrentLocation())
                 return true
             elseif "is_player.in_combat" == vname
                 CustomResolveBoolResult = PlayerRef.IsInCombat()

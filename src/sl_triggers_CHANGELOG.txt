@@ -1,3 +1,23 @@
+0.979
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: TopOfTheHour not handling sleep/wait correctly; general TOH calculation overhaul
+    bugfix: multiple documentation fixes
+    bugfix: util_scan_cell_npcs now correctly accepts 'none' (or no parameters at all) as the objCenter (first parameter)
+    bugfix: clarified the Location: dropdown; Dungeon was listed twice; first use references multiple Dungeon-like locations, second use is for specific Dungeon keyword
+    bugfix: fixed Location matching
+    enhancement: new Core trigger, Player Level Up
+        request variables:
+            $request.core.level_up.old_level : int - (Added by SLTR Core) (for Level Up) the player's level before leveling up (as they may have accrued multiple levels)
+            $request.core.level_up.new_level : int - (Added by SLTR Core) (for Level Up) the player's level after leveling up (as they may have accrued multiple levels)
+    enhancement: More localization/translation in the MCM
+        I have created and configured the localization tokens and added them for both English and Chinese (as these are the only translation files I currently have)
+        I have *not* translated the Chinese localization for the newly added items (I am not a native speaker and have left them in English until I can get an updated version)
+        Other language translations will just require an updated copy of interface/translations/sl_triggers_ENGLISH.txt (but in the new language of course)
+    enhancement: Public Whore integration
+        pw_is_whore_anywhere - returns true if the player is currently marked as the public whore anywhere, false otherwise
+
 0.978
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

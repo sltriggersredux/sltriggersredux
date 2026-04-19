@@ -20,6 +20,7 @@
         <Import>.\inc\osla</Import>
         <Import>.\inc\slif</Import>
         <Import>.\inc\tng</Import>
+        <Import>.\inc\pw</Import>
     </Imports>
     <Folders>
         <Folder>.\extern\libraries\adult-general\source\scripts</Folder>

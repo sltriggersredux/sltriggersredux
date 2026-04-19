@@ -3878,7 +3878,7 @@ Returns: float: the value of Utility.GetCurrentGameTime() (a float value represe
 
 
 
-### util_getgametime
+### util_gethour
 
 **Description**
 
@@ -3887,7 +3887,7 @@ Returns: int: the in-game hour (i.e. 2:30 AM returns 2)
 
 **Example**
 
-    util_getgametime  
+    util_gethour  
 
 
 
@@ -6675,6 +6675,22 @@ Returns: float: the result of OSLAroused_ModInterface.SetArousalMultiplier(Actor
 **Example**
 
     osla_set_arousal_multiplier $system.self 2.0 "for reasons"  
+
+
+
+## Public Whore
+
+### pw_is_whore_anywhere
+
+**Description**
+
+Returns: bool: true if currently the public whore, false otherwise
+
+
+**Example**
+
+    pw_is_whore_anywhere  
+    msg_console "Currently the public whore? " $$  
 
 
 

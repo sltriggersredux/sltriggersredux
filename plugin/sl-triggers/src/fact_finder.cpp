@@ -95,7 +95,7 @@ private:
             try {
                 PollFactsAndRunEvents();
                 
-                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+                std::this_thread::sleep_for(std::chrono::milliseconds(750));
             }
             catch (const std::exception& e) {
                 logger::error("Exception in FactFinderThreadManager thread: {}", e.what());

@@ -3878,7 +3878,7 @@ Returns: float: the value of Utility.GetCurrentGameTime() (a float value represe
 
 
 
-### util_getgametime
+### util_gethour
 
 **Description**
 
@@ -3887,7 +3887,7 @@ Returns: int: the in-game hour (i.e. 2:30 AM returns 2)
 
 **Example**
 
-    util_getgametime  
+    util_gethour  
 
 
 

@@ -26,6 +26,7 @@ int 	EVENT_ID_VAMPIRE_FEEDING				= 15
 int		EVENT_ID_SWIMMING						= 16
 int		EVENT_ID_IN_WATER						= 17
 int		EVENT_ID_SOUL_TRAPPED					= 18
+int		EVENT_ID_LEVEL_UP						= 19
 
 string ATTR_MOD_VERSION						= "__slt_mod_version__"
 string ATTR_EVENT							= "event"
@@ -79,8 +80,6 @@ float				Property NextTopOfTheHour		Auto Hidden
 ; Variables
 
 
-bool	handlingTopOfTheHour = false ; only because the check is in a sensitive event handler
-
 ; this will contain a deduplicated list of all keycodes of interest, including modifiers
 ; so with 4 keycodes and 2 modifiers (assuming none of the modifiers are themselves also keycodes) this would be 6 in length
 int[]		_keycodes_of_interest
@@ -115,6 +114,7 @@ string[]	triggerKeys_vampire_feeding
 string[]	triggerKeys_swimming
 string[]	triggerKeys_in_water
 string[]	triggerKeys_soul_trapped
+string[]	triggerKeys_level_up
 
 float 		last_time_PlayerCellChangeEvent
 string[]	common_container_names
@@ -319,27 +319,27 @@ bool Function CustomResolveScoped(sl_triggersCmd CmdPrimary, string scope, strin
 			CmdPrimary.CustomResolveBoolResult = CmdPrimary.GetRequestBool(token)
 			return true
 		elseif token == "core.was_player.in_safe_area"
-			Keyword _pkwd = CmdPrimary.GetRequestForm("core.playerLocationKeyword") as Keyword
-			if _pkwd
-				CmdPrimary.CustomResolveBoolResult = SLT.IsLocationKeywordSafe(_pkwd)
+			Location _ploc = CmdPrimary.GetRequestForm("core.player_location") as Location
+			if _ploc
+				CmdPrimary.CustomResolveBoolResult = SLT.IsLocationSafe(_ploc)
 			endif
 			return true
 		elseif token == "core.was_player.in_city"
-			Keyword _pkwd = CmdPrimary.GetRequestForm("core.playerLocationKeyword") as Keyword
-			if _pkwd
-				CmdPrimary.CustomResolveBoolResult = SLT.IsLocationKeywordCity(_pkwd)
+			Location _ploc = CmdPrimary.GetRequestForm("core.player_location") as Location
+			if _ploc
+				CmdPrimary.CustomResolveBoolResult = SLT.IsLocationInCity(_ploc)
 			endif
 			return true
 		elseif token == "core.was_player.in_wilderness"
-			Keyword _pkwd = CmdPrimary.GetRequestForm("core.playerLocationKeyword") as Keyword
-			if _pkwd
-				CmdPrimary.CustomResolveBoolResult = SLT.IsLocationKeywordWilderness(_pkwd)
+			Location _ploc = CmdPrimary.GetRequestForm("core.player_location") as Location
+			if _ploc
+				CmdPrimary.CustomResolveBoolResult = SLT.IsLocationInWilderness(_ploc)
 			endif
 			return true
 		elseif token == "core.was_player.in_dungeon"
-			Keyword _pkwd = CmdPrimary.GetRequestForm("core.playerLocationKeyword") as Keyword
-			if _pkwd
-				CmdPrimary.CustomResolveBoolResult = SLT.IsLocationKeywordDungeon(_pkwd)
+			Location _ploc = CmdPrimary.GetRequestForm("core.player_location") as Location
+			if _ploc
+				CmdPrimary.CustomResolveBoolResult = SLT.IsLocationInDungeon(_ploc)
 			endif
 			return true
 		endif
@@ -354,28 +354,31 @@ Event OnUpdateGameTime()
 	If !IsEnabled
 		Return
 	EndIf
-	
-	if handlingTopOfTheHour
-		float currentTime = SLT.GetTheGameTime()
-		
-		If currentTime >= nextTopOfTheHour
-			tohElapsedTime = currentTime - lastTopOfTheHour
-			lastTopOfTheHour = currentTime
+
+	if triggerKeys_topOfTheHour.Length > 0
+		float currentTimeAsDays = SLT.GameDaysPassed.GetValue()
+
+		if currentTimeAsDays >= NextTopOfTheHour
+			TohElapsedTime = (currentTimeAsDays - LastTopOfTheHour) * 24.0
+			LastTopOfTheHour = currentTimeAsDays
 			
 			If (SLT.Debug_Extension_Core_TopOfTheHour)
-				SLTDebugMsg("Core.OnUpdateGameTime: sending mod event EVENT_TOP_OF_THE_HOUR; currentTime(" + currentTime + ") NextTopOfTheHour(" + NextTopOfTheHour + ")")
+				SLTDebugMsg("Core.OnUpdateGameTime: sending mod event EVENT_TOP_OF_THE_HOUR; currentTimeAsDays(" + currentTimeAsDays + ")")
 			EndIf
-			
-			SendModEvent("TopOfTheHour", "", tohElapsedTime)
-			AlignToNextHour(currentTime)
+
+			SendModEvent("TopOfTheHour", "", TohElapsedTime)
 		else
-			float deltaWait = (NextTopOfTheHour - currentTime) * 24.0 * 1.04
 			If (SLT.Debug_Extension_Core_TopOfTheHour)
-				SLTDebugMsg("Core.OnUpdateGameTime: gametime update ran too early, waiting extra deltaTime(" + deltaWait + ")  should be much less than 1.0; // currentTime(" + currentTime + ") NextTopOfTheHour(" + NextTopOfTheHour + ")")
+				SLTDebugMsg("Core.OnUpdateGameTime: currentTimeAsDays(" + currentTimeAsDays + ") < NextTopOfTheHour(" + NextTopOfTheHour + "); not firing mod TopOfTheHour modevent, but this is likely an error")
 			EndIf
-			RegisterForSingleUpdateGameTime(deltaWait)
+		endif
+
+		AlignToNextHour(currentTimeAsDays) ; sets NextTopOfTheHour
+			
+		If (SLT.Debug_Extension_Core_TopOfTheHour)
+			SLTDebugMsg("Core.OnUpdateGameTime: NextTopOfTheHour(" + NextTopOfTheHour + ")")
 		EndIf
-	EndIf
+	endif
 EndEvent
 
 Event OnSLTNewSession(int _newSessionId)
@@ -495,6 +498,21 @@ Event OnSLTRSoulTrapped(Actor akTrapper, Actor akTarget)
 	HandleSoulTrapped(akTrapper, akTarget)
 EndEvent
 
+int playerLevelAtLevelUpOpen
+Event OnMenuOpen(string menuName)
+	if menuName == "LevelUp Menu"
+		playerLevelAtLevelUpOpen = PlayerRef.GetLevel()
+	endif
+EndEvent
+
+Event OnMenuClose(string menuName)
+	if menuName == "LevelUp Menu"
+		if playerLevelAtLevelUpOpen != PlayerRef.GetLevel()
+			HandleLevelUp(playerLevelAtLevelUpOpen, PlayerRef.GetLevel())
+		endif
+	endif
+EndEvent
+
 int cellPreviousSessionId
 Function Send_SLTR_OnPlayerCellChange()
 	if !PlayerRef || !PlayerRef.Is3DLoaded() || PlayerRef.IsDisabled()
@@ -530,9 +548,7 @@ Function Send_SLTR_OnPlayerCellChange()
 	if triggerKeys_playercellchange.Length > 0
 		; should
 		; optional send actual mod event, otherwise at least pass it off to our handlers
-		Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
-
-		HandleOnPlayerCellChange(isNewGameLaunch, isNewSession, playerLocationKeyword, PlayerRef.IsInInterior())
+		HandleOnPlayerCellChange(isNewGameLaunch, isNewSession, PlayerRef.GetCurrentLocation(), PlayerRef.IsInInterior())
 	endif
 
 	isNewGameLaunch = false
@@ -547,9 +563,8 @@ EndFunction
 Function Send_SLTR_OnPlayerActivateContainer(ObjectReference containerRef, bool container_is_corpse, bool container_is_empty)
 	if triggerKeys_container.Length > 0
 		;SLTDebugMsg("Core.Send_SLTR_OnPlayerActivateContainer containerRef(" + containerRef + ") corpse(" + container_is_corpse + ") empty(" + container_is_empty + ")")
-		Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
 
-		HandlePlayerContainerActivation(containerRef, container_is_corpse, container_is_empty, playerLocationKeyword, PlayerRef.IsInInterior())
+		HandlePlayerContainerActivation(containerRef, container_is_corpse, container_is_empty, SLT.PlayerRef.GetCurrentLocation(), PlayerRef.IsInInterior())
 	endif
 EndFunction
 
@@ -636,6 +651,7 @@ Function RefreshTriggerCache()
 	triggerKeys_swimming				= PapyrusUtil.StringArray(0)
 	triggerKeys_in_water				= PapyrusUtil.StringArray(0)
 	triggerKeys_soul_trapped			= PapyrusUtil.StringArray(0)
+	triggerKeys_level_up				= PapyrusUtil.StringArray(0)
 
 	; paired - and handled differently /
 	;/
@@ -701,6 +717,8 @@ Function RefreshTriggerCache()
 				triggerKeys_in_water =				PapyrusUtil.PushString(triggerKeys_in_water, TriggerKeys[i])
 			elseif eventCode == EVENT_ID_SOUL_TRAPPED
 				triggerKeys_soul_trapped =			PapyrusUtil.PushString(triggerKeys_soul_trapped, TriggerKeys[i])
+			elseif eventCode == EVENT_ID_LEVEL_UP
+				triggerKeys_level_up =				PapyrusUtil.PushString(triggerKeys_level_up, TriggerKeys[i])
 			elseif eventCode == EVENT_ID_TIMER
 				string triggerKey = TriggerKeys[i]
 				float timerDelay = JsonUtil.GetFloatValue(_triggerFile, ATTR_TIMER_DELAY)
@@ -803,35 +821,56 @@ Function RefreshTriggerCache()
 	endif
 EndFunction
 
-; this function attempts to trigger a SingleUpdateGameTime just in time for the 
-; next game-time top of the hour
-; the 1.04 multiplier is to intentionally overshoot a tiny bit to ensure our trigger works
-Function AlignToNextHour(float _curTime)
-	if triggerKeys_topOfTheHour.Length <= 0
-		return
+;/
+AlignToNextHour - attempts to trigger a SingleUpdateGameTime just in time for the 
+next game-time top of the hour.
+
+float _curTimeAsDays - current time in days as a float
+/;
+Function AlignToNextHour(float _curTimeAsDays)
+	if triggerKeys_topOfTheHour.Length > 0
+		; so, lets say it's 1:30PM on day 2
+		; that's 1 day plus 13.5 hours
+		; 1.5625
+		; in total hours that should be 24 + 13.5 = 37.5
+		; or 1.5625 * 24
+		; add 1.0 to get 38.5
+		; truncate to 38
+		; delta should be 0.5
+		float _curTimeAsHours = _curTimeAsDays * 24.0
+		float _nextTimeAsHours = Math.Floor(_curTimeAsHours + 1.0)
+		float _deltaTime = _nextTimeAsHours - _curTimeAsHours
+		If (SLT.Debug_Extension_Core_TopOfTheHour)
+			SLTDebugMsg("Core.AlignToNextHour: Pass 1: _curTimeAsDays(" + _curTimeAsDays + ") _curTimeAsHours(" + _curTimeAsHours + ") _nextTimeAsHours(" + _nextTimeAsHours + ")  _deltaTime(" + _deltaTime + ")")
+		EndIf
+		;/
+		Per https://ck.uesp.net/wiki/RegisterForSingleUpdateGameTime_-_Form
+		Depending heavily on how you use it, using this function could cause your game to freeze under any of the following conditions:
+			afInterval is expressed as X / Y where X and Y are both integers (no decimal points) and evaluate to less than 1.
+			afInterval is less than some number between 0.0244 and 0.0238. (1.0 / 41.0 and 1.0 / 42.0)
+				Registering for a single update at an incredibly short interval does not appear to freeze the game, so long as it is not reregistered with a short interval within the update event.
+		/;
+		; too small a delay, bump to the following top of the hour
+		if _deltaTime < 0.0244
+			_nextTimeAsHours += 1.0
+			_deltaTime = _nextTimeAsHours - _curTimeAsHours
+			If (SLT.Debug_Extension_Core_TopOfTheHour)
+				SLTDebugMsg("Core.AlignToNextHour: Pass 2: _curTimeAsDays(" + _curTimeAsDays + ") _curTimeAsHours(" + _curTimeAsHours + ") _nextTimeAsHours(" + _nextTimeAsHours + ")  _deltaTime(" + _deltaTime + ")")
+			EndIf
+		endif
+		NextTopOfTheHour = _nextTimeAsHours / 24.0
+
+		; applying bonus delay to handle early interval hits
+		; some times you say to wait 0.4183 (or some other highly precise amount of time)
+		; but the event actually fires just a tiny bit of time ahead of schedule
+		; this should push it out a little
+		_deltaTime += 0.025
+
+		If (SLT.Debug_Extension_Core_TopOfTheHour)
+			SLTDebugMsg("Core.AlignToNextHour: RegisterForSingleUpdateGameTime(" + _deltaTime + ") should typically be around 1.0; NextTopOfTheHour(" + NextTopOfTheHour + ")")
+		EndIf
+    	RegisterForSingleUpdateGameTime(_deltaTime)
 	endif
-
-	If (SLT.Debug_Extension_Core_TopOfTheHour)
-		SLTDebugMsg("Core.AlignToNextHour: _curTime(" + _curTime + ")")
-	EndIf
-	
-	; days
-    float currentTime = _curTime
-	; days
-	float daysPassed = Math.Floor(currentTime) as float
-	; hours
-	float currentHours = (currentTime - daysPassed) * 24.0
-	float hoursPassed = Math.Floor(currentHours) as float
-	float hoursNeeded = 1.0 - (currentHours - (Math.Floor(currentHours) as float))
-	
-	NextTopOfTheHour = currentTime + (hoursNeeded / 24.0)
-
-	If (SLT.Debug_Extension_Core_TopOfTheHour)
-		float _waitTime = hoursNeeded
-		SLTDebugMsg("Core.AlignToNextHour: RegisterForSingleUpdateGameTime(" + _waitTime + ") should typically be around 1.0")
-	EndIf
-
-    RegisterForSingleUpdateGameTime(hoursNeeded * 1.04)
 EndFunction
 
 Function UpdateDAKStatus()
@@ -865,11 +904,9 @@ Function RegisterEvents()
 	endif
 
 	UnregisterForModEvent("TopOfTheHour")
-	handlingTopOfTheHour = false
 	if triggerKeys_topOfTheHour.Length > 0
 		SafeRegisterForModEvent_Quest(self, "TopOfTheHour", "OnTopOfTheHour")
-		AlignToNextHour(SLT.GetTheGameTime())
-		handlingTopOfTheHour = true
+		AlignToNextHour(SLT.GameDaysPassed.GetValue())
 	endif
 	
 	UnregisterForAllKeys()
@@ -919,6 +956,11 @@ Function RegisterEvents()
 		sl_triggers_internal.SetSoulsTrappedSinkEnabled(true)
 	else
 		sl_triggers_internal.SetSoulsTrappedSinkEnabled(false)
+	endif
+
+	UnregisterForMenu("LevelUp Menu")
+	if triggerKeys_level_up.Length > 0
+		RegisterForMenu("LevelUp Menu")
 	endif
 
 	UnregisterForModEvent(EVENT_SLTR_ON_PLAYER_EQUIP())
@@ -1000,7 +1042,7 @@ Function HandleTimers()
 	EndIf
 
 	bool playerWasInInterior = PlayerRef.IsInInterior()
-	Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
+	Location pLoc = SLT.PlayerRef.GetCurrentLocation()
 
 	while i < triggerKeys_timer.Length
 		if nowtime > timer_next_run_time[i]
@@ -1101,15 +1143,15 @@ Function HandleTimers()
 					elseif ival == 2
 						doRun = !playerWasInInterior
 					elseif ival == 3
-						doRun = SLT.IsLocationKeywordSafe(playerLocationKeyword)
+						doRun = SLT.IsLocationSafe(pLoc)
 					elseif ival == 4
-						doRun = SLT.IsLocationKeywordCity(playerLocationKeyword)
+						doRun = SLT.IsLocationInCity(pLoc)
 					elseif ival == 5
-						doRun = SLT.IsLocationKeywordWilderness(playerLocationKeyword)
+						doRun = SLT.IsLocationInWilderness(pLoc)
 					elseif ival == 6
-						doRun = SLT.IsLocationKeywordDungeon(playerLocationKeyword)
+						doRun = SLT.IsLocationInDungeon(pLoc)
 					else
-						doRun = playerLocationKeyword == SLT.LocationKeywords[ival - 7]
+						doRun = pLoc.HasKeyword(SLT.LocationKeywords[ival - 7])
 					endif
 				endif
 				
@@ -1537,13 +1579,12 @@ Function HandleOnKeyDown(int keyPressed)
 	endif
 EndFunction
 
-Function HandleOnPlayerCellChange(bool isNewGameLaunch, bool isNewSession, Keyword playerLocationKeyword, bool playerWasInInterior)
+Function HandleOnPlayerCellChange(bool isNewGameLaunch, bool isNewSession, Location player_location, bool playerWasInInterior)
 	if SLT.Debug_Extension_Core
-		SLTDebugMsg("Core.HandleOnPlayerCellChange: isNewGameLaunch(" + isNewGameLaunch + ") / isNewSession(" + isNewSession + ") / playerLocationKeyword(" + playerLocationKeyword + ") / playerWasInInterior(" + playerWasInInterior + ")")
+		SLTDebugMsg("Core.HandleOnPlayerCellChange: isNewGameLaunch(" + isNewGameLaunch + ") / isNewSession(" + isNewSession + ") / player_location(" + player_location + ") / playerWasInInterior(" + playerWasInInterior + ")")
 	endif
 
 	int i = 0
-	int j
 
 	int cmdRequestId
 	int		requestTargetFormId = PlayerRef.GetFormID() ; conveniently so, in this case
@@ -1553,6 +1594,7 @@ Function HandleOnPlayerCellChange(bool isNewGameLaunch, bool isNewSession, Keywo
 	int    ival
 	bool   doRun
 	float  chance
+	
 	while i < triggerKeys_playercellchange.Length
 		triggerKey = triggerKeys_playercellchange[i]
 		_triggerFile = FN_T(triggerKey)
@@ -1641,16 +1683,15 @@ Function HandleOnPlayerCellChange(bool isNewGameLaunch, bool isNewSession, Keywo
 				elseif ival == 2
 					doRun = !playerWasInInterior
 				elseif ival == 3
-					doRun = SLT.IsLocationKeywordSafe(playerLocationKeyword)
+					doRun = SLT.IsLocationSafe(player_location)
 				elseif ival == 4
-					doRun = SLT.IsLocationKeywordCity(playerLocationKeyword)
+					doRun = SLT.IsLocationInCity(player_location)
 				elseif ival == 5
-					doRun = SLT.IsLocationKeywordWilderness(playerLocationKeyword)
+					doRun = SLT.IsLocationInWilderness(player_location)
 				elseif ival == 6
-					doRun = SLT.IsLocationKeywordDungeon(playerLocationKeyword)
+					doRun = SLT.IsLocationInDungeon(player_location)
 				else
-					j = ival - 7
-					doRun = playerLocationKeyword == SLT.LocationKeywords[j]
+					doRun = player_location.HasKeyword(SLT.LocationKeywords[ival - 7])
 				endif
 			endif
 		endIf
@@ -1660,25 +1701,25 @@ Function HandleOnPlayerCellChange(bool isNewGameLaunch, bool isNewSession, Keywo
 
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_1)
 			if command
-				cmdRequestId = GetNextPlayerCellChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, playerLocationKeyword)
+				cmdRequestId = GetNextPlayerCellChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, player_location)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_2)
 			if command
-				cmdRequestId = GetNextPlayerCellChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, playerLocationKeyword)
+				cmdRequestId = GetNextPlayerCellChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, player_location)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_3)
 			if command
-				cmdRequestId = GetNextPlayerCellChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, playerLocationKeyword)
+				cmdRequestId = GetNextPlayerCellChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, player_location)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_4)
 			if command
-				cmdRequestId = GetNextPlayerCellChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, playerLocationKeyword)
+				cmdRequestId = GetNextPlayerCellChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, player_location)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
@@ -1687,18 +1728,18 @@ Function HandleOnPlayerCellChange(bool isNewGameLaunch, bool isNewSession, Keywo
 	endwhile
 EndFunction
 
-int Function GetNextPlayerCellChangeRequestId(int requestTargetFormId, int cmdRequestId, bool playerWasInInterior, Keyword playerLocationKeyword)
+int Function GetNextPlayerCellChangeRequestId(int requestTargetFormId, int cmdRequestId, bool playerWasInInterior, Location player_location)
 	if !cmdRequestId
 		cmdRequestId = SLT.GetNextInstanceId()
 
 		sl_triggersCmd.PrecacheRequestBool(SLT, requestTargetFormId, cmdRequestId, "core.was_player.inside", playerWasInInterior)
 		sl_triggersCmd.PrecacheRequestBool(SLT, requestTargetFormId, cmdRequestId, "core.was_player.outside", !playerWasInInterior)
-		sl_triggersCmd.PrecacheRequestForm(SLT, requestTargetFormId, cmdRequestId, "core.playerLocationKeyword", playerLocationKeyword)
+		sl_triggersCmd.PrecacheRequestForm(SLT, requestTargetFormId, cmdRequestId, "core.player_location", player_location)
 	endif
 	return cmdRequestId
 EndFunction
 
-Function HandlePlayerContainerActivation(ObjectReference containerRef, bool container_is_corpse, bool container_is_empty, Keyword playerLocationKeyword, bool playerWasInInterior)
+Function HandlePlayerContainerActivation(ObjectReference containerRef, bool container_is_corpse, bool container_is_empty, Location player_location, bool playerWasInInterior)
 	int i = 0
 	int j
 
@@ -1838,16 +1879,15 @@ Function HandlePlayerContainerActivation(ObjectReference containerRef, bool cont
 				elseif ival == 2
 					doRun = !playerWasInInterior
 				elseif ival == 3
-					doRun = SLT.IsLocationKeywordSafe(playerLocationKeyword)
+					doRun = SLT.IsLocationSafe(player_location)
 				elseif ival == 4
-					doRun = SLT.IsLocationKeywordCity(playerLocationKeyword)
+					doRun = SLT.IsLocationInCity(player_location)
 				elseif ival == 5
-					doRun = SLT.IsLocationKeywordWilderness(playerLocationKeyword)
+					doRun = SLT.IsLocationInWilderness(player_location)
 				elseif ival == 6
-					doRun = SLT.IsLocationKeywordDungeon(playerLocationKeyword)
+					doRun = SLT.IsLocationInDungeon(player_location)
 				else
-					j = ival - 7
-					doRun = playerLocationKeyword == SLT.LocationKeywords[j]
+					doRun = player_location.HasKeyword(SLT.LocationKeywords[ival - 7])
 				endif
 			endif
 		endif
@@ -1857,25 +1897,25 @@ Function HandlePlayerContainerActivation(ObjectReference containerRef, bool cont
 
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_1)
 			if command
-				cmdRequestId = GetNextPlayerContainerActivationRequestId(requestTargetFormId, cmdRequestId, containerRef, container_is_corpse, container_is_empty, container_is_common, playerWasInInterior, playerLocationKeyword)
+				cmdRequestId = GetNextPlayerContainerActivationRequestId(requestTargetFormId, cmdRequestId, containerRef, container_is_corpse, container_is_empty, container_is_common, playerWasInInterior, player_location)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_2)
 			if command
-				cmdRequestId = GetNextPlayerContainerActivationRequestId(requestTargetFormId, cmdRequestId, containerRef, container_is_corpse, container_is_empty, container_is_common, playerWasInInterior, playerLocationKeyword)
+				cmdRequestId = GetNextPlayerContainerActivationRequestId(requestTargetFormId, cmdRequestId, containerRef, container_is_corpse, container_is_empty, container_is_common, playerWasInInterior, player_location)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_3)
 			if command
-				cmdRequestId = GetNextPlayerContainerActivationRequestId(requestTargetFormId, cmdRequestId, containerRef, container_is_corpse, container_is_empty, container_is_common, playerWasInInterior, playerLocationKeyword)
+				cmdRequestId = GetNextPlayerContainerActivationRequestId(requestTargetFormId, cmdRequestId, containerRef, container_is_corpse, container_is_empty, container_is_common, playerWasInInterior, player_location)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_4)
 			if command
-				cmdRequestId = GetNextPlayerContainerActivationRequestId(requestTargetFormId, cmdRequestId, containerRef, container_is_corpse, container_is_empty, container_is_common, playerWasInInterior, playerLocationKeyword)
+				cmdRequestId = GetNextPlayerContainerActivationRequestId(requestTargetFormId, cmdRequestId, containerRef, container_is_corpse, container_is_empty, container_is_common, playerWasInInterior, player_location)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
@@ -1884,7 +1924,7 @@ Function HandlePlayerContainerActivation(ObjectReference containerRef, bool cont
 	endwhile
 EndFunction
 
-int Function GetNextPlayerContainerActivationRequestId(int requestTargetFormId, int cmdRequestId, Form containerRef, bool container_is_corpse, bool container_is_empty, bool container_is_common, bool playerWasInInterior, Keyword playerLocationKeyword)
+int Function GetNextPlayerContainerActivationRequestId(int requestTargetFormId, int cmdRequestId, Form containerRef, bool container_is_corpse, bool container_is_empty, bool container_is_common, bool playerWasInInterior, Location player_location)
 	if !cmdRequestId
 		cmdRequestId = SLT.GetNextInstanceId()
 
@@ -1895,7 +1935,7 @@ int Function GetNextPlayerContainerActivationRequestId(int requestTargetFormId, 
 
 		sl_triggersCmd.PrecacheRequestBool(SLT, requestTargetFormId, cmdRequestId, "core.was_player.inside", playerWasInInterior)
 		sl_triggersCmd.PrecacheRequestBool(SLT, requestTargetFormId, cmdRequestId, "core.was_player.outside", !playerWasInInterior)
-		sl_triggersCmd.PrecacheRequestForm(SLT, requestTargetFormId, cmdRequestId, "core.playerLocationKeyword", playerLocationKeyword)
+		sl_triggersCmd.PrecacheRequestForm(SLT, requestTargetFormId, cmdRequestId, "core.player_location", player_location)
 	endif
 	return cmdRequestId
 EndFunction
@@ -1919,7 +1959,6 @@ Function HandleLocationChanged(Location akOldLoc, Location akNewLoc)
 	
 	SLT.GetLocationFlags(akOldLoc, flagset_leaving)
 	SLT.GetLocationFlags(akNewLoc, flagset_entering)
-	Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
 
 	bool   	doRun
 	string 	triggerKey
@@ -2098,25 +2137,25 @@ Function HandleLocationChanged(Location akOldLoc, Location akNewLoc)
 			int cmdThreadId
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_1)
 			if command
-				cmdRequestId = GetNextLocationChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, playerLocationKeyword, akOldLoc, akNewLoc)
+				cmdRequestId = GetNextLocationChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, akOldLoc, akNewLoc)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_2)
 			if command
-				cmdRequestId = GetNextLocationChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, playerLocationKeyword, akOldLoc, akNewLoc)
+				cmdRequestId = GetNextLocationChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, akOldLoc, akNewLoc)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_3)
 			if command
-				cmdRequestId = GetNextLocationChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, playerLocationKeyword, akOldLoc, akNewLoc)
+				cmdRequestId = GetNextLocationChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, akOldLoc, akNewLoc)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
 			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_4)
 			if command
-				cmdRequestId = GetNextLocationChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, playerLocationKeyword, akOldLoc, akNewLoc)
+				cmdRequestId = GetNextLocationChangeRequestId(requestTargetFormId, cmdRequestId, playerWasInInterior, akOldLoc, akNewLoc)
 				cmdThreadId = SLT.GetNextInstanceId()
 				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
 			endIf
@@ -2126,7 +2165,7 @@ Function HandleLocationChanged(Location akOldLoc, Location akNewLoc)
 	endwhile
 EndFunction
 
-int Function GetNextLocationChangeRequestId(int requestTargetFormId, int cmdRequestId, bool playerWasInInterior, Keyword playerLocationKeyword, Location akOldLoc, Location akNewLoc)
+int Function GetNextLocationChangeRequestId(int requestTargetFormId, int cmdRequestId, bool playerWasInInterior, Location akOldLoc, Location akNewLoc)
 	if !cmdRequestId
 		cmdRequestId = SLT.GetNextInstanceId()
 
@@ -2134,7 +2173,6 @@ int Function GetNextLocationChangeRequestId(int requestTargetFormId, int cmdRequ
 		sl_triggersCmd.PrecacheRequestBool(SLT, requestTargetFormId, cmdRequestId, "core.was_player.outside", !playerWasInInterior)
 		sl_triggersCmd.PrecacheRequestForm(SLT, requestTargetFormId, cmdRequestId, "core.from_location", akOldLoc)
 		sl_triggersCmd.PrecacheRequestForm(SLT, requestTargetFormId, cmdRequestId, "core.to_location", akNewLoc)
-		sl_triggersCmd.PrecacheRequestForm(SLT, requestTargetFormId, cmdRequestId, "core.playerLocationKeyword", playerLocationKeyword)
 	endif
 	return cmdRequestId
 EndFunction
@@ -2702,14 +2740,13 @@ Function HandleHarvesting(Form harvestedItem)
 	int cmdRequestId
 	int		requestTargetFormId = PlayerRef.GetFormID() ; conveniently so, in this case
 	int i = 0
-	int j
+	Location pLoc = SLT.PlayerRef.GetCurrentLocation()
 
 	bool   	doRun
 	string 	triggerKey
 	string 	_triggerFile
 	string 	command
 	bool  playerWasInInterior = PlayerRef.IsInInterior()
-	Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
 
 	int    	ival
 	bool 	bval
@@ -2763,16 +2800,15 @@ Function HandleHarvesting(Form harvestedItem)
 				elseif ival == 2
 					doRun = !playerWasInInterior
 				elseif ival == 3
-					doRun = SLT.IsLocationKeywordSafe(playerLocationKeyword)
+					doRun = SLT.IsLocationSafe(pLoc)
 				elseif ival == 4
-					doRun = SLT.IsLocationKeywordCity(playerLocationKeyword)
+					doRun = SLT.IsLocationInCity(pLoc)
 				elseif ival == 5
-					doRun = SLT.IsLocationKeywordWilderness(playerLocationKeyword)
+					doRun = SLT.IsLocationInWilderness(pLoc)
 				elseif ival == 6
-					doRun = SLT.IsLocationKeywordDungeon(playerLocationKeyword)
+					doRun = SLT.IsLocationInDungeon(pLoc)
 				else
-					j = ival - 7
-					doRun = playerLocationKeyword == SLT.LocationKeywords[j]
+					doRun = pLoc.HasKeyword(SLT.LocationKeywords[ival - 7])
 				endif
 			endif
 		endIf
@@ -2889,14 +2925,13 @@ Function HandleVampirism(bool isContracted, bool isCured, bool startVampireLord,
 	int cmdRequestId
 	int		requestTargetFormId = PlayerRef.GetFormID() ; conveniently so, in this case
 	int i = 0
-	int j
+	Location pLoc = SLT.PlayerRef.GetCurrentLocation()
 
 	bool   	doRun
 	string 	triggerKey
 	string 	_triggerFile
 	string 	command
 	bool  playerWasInInterior = PlayerRef.IsInInterior()
-	Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
 
 	int    	ival
 	bool 	bval
@@ -2965,16 +3000,15 @@ Function HandleVampirism(bool isContracted, bool isCured, bool startVampireLord,
 				elseif ival == 2
 					doRun = !playerWasInInterior
 				elseif ival == 3
-					doRun = SLT.IsLocationKeywordSafe(playerLocationKeyword)
+					doRun = SLT.IsLocationSafe(pLoc)
 				elseif ival == 4
-					doRun = SLT.IsLocationKeywordCity(playerLocationKeyword)
+					doRun = SLT.IsLocationInCity(pLoc)
 				elseif ival == 5
-					doRun = SLT.IsLocationKeywordWilderness(playerLocationKeyword)
+					doRun = SLT.IsLocationInWilderness(pLoc)
 				elseif ival == 6
-					doRun = SLT.IsLocationKeywordDungeon(playerLocationKeyword)
+					doRun = SLT.IsLocationInDungeon(pLoc)
 				else
-					j = ival - 7
-					doRun = playerLocationKeyword == SLT.LocationKeywords[j]
+					doRun = pLoc.HasKeyword(SLT.LocationKeywords[ival - 7])
 				endif
 			endif
 		endIf
@@ -3035,14 +3069,13 @@ Function HandleLycanthropy(bool isContracted, bool isCured, bool startWerewolf, 
 	int cmdRequestId
 	int		requestTargetFormId = PlayerRef.GetFormID() ; conveniently so, in this case
 	int i = 0
-	int j
+	Location pLoc = SLT.PlayerRef.GetCurrentLocation()
 
 	bool   	doRun
 	string 	triggerKey
 	string 	_triggerFile
 	string 	command
 	bool  playerWasInInterior = PlayerRef.IsInInterior()
-	Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
 
 	int    	ival
 	bool 	bval
@@ -3111,16 +3144,15 @@ Function HandleLycanthropy(bool isContracted, bool isCured, bool startWerewolf, 
 				elseif ival == 2
 					doRun = !playerWasInInterior
 				elseif ival == 3
-					doRun = SLT.IsLocationKeywordSafe(playerLocationKeyword)
+					doRun = SLT.IsLocationSafe(pLoc)
 				elseif ival == 4
-					doRun = SLT.IsLocationKeywordCity(playerLocationKeyword)
+					doRun = SLT.IsLocationInCity(pLoc)
 				elseif ival == 5
-					doRun = SLT.IsLocationKeywordWilderness(playerLocationKeyword)
+					doRun = SLT.IsLocationInWilderness(pLoc)
 				elseif ival == 6
-					doRun = SLT.IsLocationKeywordDungeon(playerLocationKeyword)
+					doRun = SLT.IsLocationInDungeon(pLoc)
 				else
-					j = ival - 7
-					doRun = playerLocationKeyword == SLT.LocationKeywords[j]
+					doRun = pLoc.HasKeyword(SLT.LocationKeywords[ival - 7])
 				endif
 			endif
 		endIf
@@ -3181,14 +3213,13 @@ Function HandleVampireFeeding(Actor akTarget)
 	int cmdRequestId
 	int		requestTargetFormId = PlayerRef.GetFormID() ; conveniently so, in this case
 	int i = 0
-	int j
+	Location pLoc = SLT.PlayerRef.GetCurrentLocation()
 
 	bool   	doRun
 	string 	triggerKey
 	string 	_triggerFile
 	string 	command
 	bool  playerWasInInterior = PlayerRef.IsInInterior()
-	Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
 
 	int    	ival
 	bool 	bval
@@ -3242,16 +3273,15 @@ Function HandleVampireFeeding(Actor akTarget)
 				elseif ival == 2
 					doRun = !playerWasInInterior
 				elseif ival == 3
-					doRun = SLT.IsLocationKeywordSafe(playerLocationKeyword)
+					doRun = SLT.IsLocationSafe(pLoc)
 				elseif ival == 4
-					doRun = SLT.IsLocationKeywordCity(playerLocationKeyword)
+					doRun = SLT.IsLocationInCity(pLoc)
 				elseif ival == 5
-					doRun = SLT.IsLocationKeywordWilderness(playerLocationKeyword)
+					doRun = SLT.IsLocationInWilderness(pLoc)
 				elseif ival == 6
-					doRun = SLT.IsLocationKeywordDungeon(playerLocationKeyword)
+					doRun = SLT.IsLocationInDungeon(pLoc)
 				else
-					j = ival - 7
-					doRun = playerLocationKeyword == SLT.LocationKeywords[j]
+					doRun = pLoc.HasKeyword(SLT.LocationKeywords[ival - 7])
 				endif
 			endif
 		endIf
@@ -3425,14 +3455,13 @@ Function HandleSoulTrapped(Actor akTrapper, Actor akTarget)
 	int cmdRequestId
 	int		requestTargetFormId = PlayerRef.GetFormID() ; conveniently so, in this case
 	int i = 0
-	int j
+	Location pLoc = akTrapper.GetCurrentLocation()
 
 	bool   	doRun
 	string 	triggerKey
 	string 	_triggerFile
 	string 	command
 	bool  	trapperWasInInterior = akTrapper.IsInInterior()
-	Keyword trapperLocationKeyword = SLT.GetActorLocationKeyword(akTrapper)
 
 	int    	ival
 	bool 	bval
@@ -3497,16 +3526,15 @@ Function HandleSoulTrapped(Actor akTrapper, Actor akTarget)
 				elseif ival == 2
 					doRun = !trapperWasInInterior
 				elseif ival == 3
-					doRun = SLT.IsLocationKeywordSafe(trapperLocationKeyword)
+					doRun = SLT.IsLocationSafe(pLoc)
 				elseif ival == 4
-					doRun = SLT.IsLocationKeywordCity(trapperLocationKeyword)
+					doRun = SLT.IsLocationInCity(pLoc)
 				elseif ival == 5
-					doRun = SLT.IsLocationKeywordWilderness(trapperLocationKeyword)
+					doRun = SLT.IsLocationInWilderness(pLoc)
 				elseif ival == 6
-					doRun = SLT.IsLocationKeywordDungeon(trapperLocationKeyword)
+					doRun = SLT.IsLocationInDungeon(pLoc)
 				else
-					j = ival - 7
-					doRun = trapperLocationKeyword == SLT.LocationKeywords[j]
+					doRun = pLoc.HasKeyword(SLT.LocationKeywords[ival - 7])
 				endif
 			endif
 		endIf
@@ -3549,6 +3577,78 @@ int Function GetNextSoulTrappedRequestId(int requestTargetFormId, int cmdRequest
 
 		sl_triggersCmd.PrecacheRequestForm(SLT, requestTargetFormId, cmdRequestId, "core.soul_trapped.trapper", akTrapper)
 		sl_triggersCmd.PrecacheRequestForm(SLT, requestTargetFormId, cmdRequestId, "core.soul_trapped.target", akTarget)
+	endif
+	return cmdRequestId
+EndFunction
+
+Function HandleLevelUp(int oldLevel, int newLevel)
+	If (SLT.Debug_Extension_Core)
+		SLTDebugMsg("Core.HandleLevelUp")
+	EndIf
+
+	if triggerKeys_level_up.Length < 1
+		return
+	endif
+
+	int cmdRequestId
+	int		requestTargetFormId = PlayerRef.GetFormID() ; conveniently so, in this case
+	bool	doRun
+	int 	i = 0
+	string 	triggerKey
+	string 	_triggerFile
+	string 	command
+	float 	chance
+
+	while i < triggerKeys_level_up.Length
+		triggerKey = triggerKeys_level_up[i]
+		_triggerFile = FN_T(triggerKey)
+
+		doRun = !JsonUtil.HasStringValue(_triggerFile, DELETED_ATTRIBUTE())
+
+		if doRun
+			chance = JsonUtil.GetFloatValue(_triggerFile, ATTR_CHANCE, 100.0)
+
+			doRun = chance >= 100.0 || chance >= Utility.RandomFloat(0.0, 100.0)
+		endif
+
+		if doRun
+			int cmdThreadId
+			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_1)
+			if command
+				cmdRequestId = GetNextLevelUpRequestId(requestTargetFormId, cmdRequestId, oldLevel, newLevel)
+				cmdThreadId = SLT.GetNextInstanceId()
+				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
+			endif
+			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_2)
+			if command
+				cmdRequestId = GetNextLevelUpRequestId(requestTargetFormId, cmdRequestId, oldLevel, newLevel)
+				cmdThreadId = SLT.GetNextInstanceId()
+				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
+			endif
+			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_3)
+			if command
+				cmdRequestId = GetNextLevelUpRequestId(requestTargetFormId, cmdRequestId, oldLevel, newLevel)
+				cmdThreadId = SLT.GetNextInstanceId()
+				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
+			endif
+			command = JsonUtil.GetStringValue(_triggerFile, ATTR_DO_4)
+			if command
+				cmdRequestId = GetNextLevelUpRequestId(requestTargetFormId, cmdRequestId, oldLevel, newLevel)
+				cmdThreadId = SLT.GetNextInstanceId()
+				RequestCommandWithThreadId(PlayerRef, command, cmdRequestId, cmdThreadId)
+			endif
+		endif
+
+		i += 1
+	endwhile
+EndFunction
+
+int Function GetNextLevelUpRequestId(int requestTargetFormId, int cmdRequestId, int oldLevel, int newLevel)
+	if !cmdRequestId
+		cmdRequestId = SLT.GetNextInstanceId()
+
+		sl_triggersCmd.PrecacheRequestInt(SLT, requestTargetFormId, cmdRequestId, "core.level_up.old_level", oldLevel)
+		sl_triggersCmd.PrecacheRequestInt(SLT, requestTargetFormId, cmdRequestId, "core.level_up.new_level", newLevel)
 	endif
 	return cmdRequestId
 EndFunction

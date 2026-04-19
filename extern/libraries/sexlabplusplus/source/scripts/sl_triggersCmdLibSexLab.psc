@@ -856,7 +856,7 @@ function sl_get_statistic(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, s
         if theActor
             CmdPrimary.MostRecentFloatResult = SexLabStatistics.GetStatistic(theActor, CmdPrimary.ResolveInt(param[2]))
         else
-            CmdPrimary.SFW("sl_is_forbidden: unable to resolve Actor from (" + param[1] + ")")
+            CmdPrimary.SFW("sl_get_statistic: unable to resolve Actor from (" + param[1] + ")")
         endif
     endif
 

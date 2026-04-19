@@ -199,7 +199,7 @@ Function HandleASFEvent(string msg_string, bool is_consenting, bool is_maybe_org
 	int cmdRequestId
 	int		requestTargetFormId = PlayerRef.GetFormID() ; conveniently so, in this case
 	bool playerWasInInterior = PlayerRef.IsInInterior()
-	Keyword playerLocationKeyword = SLT.GetPlayerLocationKeyword()
+	Location pLoc = SLT.PlayerRef.GetCurrentLocation()
 
 	while i < triggerKeys_ASF.Length
 		triggerKey = triggerKeys_ASF[i]
@@ -263,15 +263,15 @@ Function HandleASFEvent(string msg_string, bool is_consenting, bool is_maybe_org
 				elseif ival == 2
 					doRun = !playerWasInInterior
 				elseif ival == 3
-					doRun = SLT.IsLocationKeywordSafe(playerLocationKeyword)
+					doRun = SLT.IsLocationSafe(pLoc)
 				elseif ival == 4
-					doRun = SLT.IsLocationKeywordCity(playerLocationKeyword)
+					doRun = SLT.IsLocationInCity(pLoc)
 				elseif ival == 5
-					doRun = SLT.IsLocationKeywordWilderness(playerLocationKeyword)
+					doRun = SLT.IsLocationInWilderness(pLoc)
 				elseif ival == 6
-					doRun = SLT.IsLocationKeywordDungeon(playerLocationKeyword)
+					doRun = SLT.IsLocationInDungeon(pLoc)
 				else
-					doRun = playerLocationKeyword == SLT.LocationKeywords[ival - 7]
+					doRun = pLoc.HasKeyword(SLT.LocationKeywords[ival - 7])
 				endif
 
 				If (SLT.Debug_Extension_AdultGeneral && !doRun)

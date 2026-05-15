@@ -2907,6 +2907,14 @@ int Function RunCommandLine(string[] cmdLine, int startidx, int endidx, bool sub
                 endif
             endif
             ;currentLine += 1
+        elseIf command == "cursor_ref"
+            Form cursor_ref = Game.GetCurrentCrosshairRef() as Form
+            if cursor_ref
+                MostRecentFormResult = cursor_ref as Form
+            else
+                SFE("failed to retrieve Game.GetCurrentCrosshairRef()")
+            endif
+            ;currentLine += 1
         elseIf command == "return"
             if subCommand
                 MessageNotValidSubcommand(command)

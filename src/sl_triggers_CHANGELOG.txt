@@ -1,3 +1,9 @@
+0.980
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    enhancement: cursor_ref - new command; returns the ObjectReference from Game.GetCurrentCrosshairRef() (i.e. the object under cursor, including Actors)
+
 0.979
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

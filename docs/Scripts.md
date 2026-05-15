@@ -471,6 +471,14 @@ cat $4 $1 $2 $3
 ; $4 would have the contents of $1, $2, and $3, concatenated with no adjoining spaces
 ```
 
+#### `cursor_ref` - ObjectReference under cursor
+Returns the result from Game.GetCurrentCrosshairRef(), including Actors.
+```sltscript
+set $actor_under_cursor resultfrom cursor_ref
+set $actor_name resultfrom actor_name $actor_under_cursor
+msg_notify $actor_name
+```
+
 #### `typeid` - Returns: int: the Type ID of the variable
 The type ID of a variable is an int value representing the underlying type when the variable was last assigned.
 Attempting to get the type ID of something that is not a variable, basically literals, will return 0.

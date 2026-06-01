@@ -1045,7 +1045,7 @@ function sl_is_aggressive(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, s
 
         sslThreadController thread = (slExtension.SexLabForm as SexLabFramework).GetActorController(theActor)
         if thread
-            CmdPrimary.CustomResolveBoolResult = thread.isaggressive
+            CmdPrimary.MostRecentBoolResult = thread.isaggressive
         else
             CmdPrimary.SFW("sl_is_aggressive: SexLab thread not available for Actor(" + CmdPrimary.CmdTargetActor + ")")
         endif

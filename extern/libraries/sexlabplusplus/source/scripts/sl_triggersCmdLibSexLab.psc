@@ -1017,3 +1017,36 @@ function sl_add_cum(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[
 
     CmdPrimary.CompleteOperationOnActor()
 endFunction
+
+; sltname sl_is_aggressive
+; sltgrup SexLab P+
+; sltdesc Returns: bool: true if scene for targeted Actor is aggressive; false otherwise
+; sltargs Form: actor: the Actor to query about SexLab scene aggression (optional: default: targeted script actor)
+; sltsamp ; to determine SexLab scene aggression for Actor currently targeted by script
+; sltsamp sl_is_aggressive
+; sltsamp ; to determine SexLab scene aggression for specific Actor (in this case, the player, even if script targets non-player)
+; sltsamp sl_is_aggressive $system.player
+function sl_is_aggressive(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    sl_triggersExtensionSexLab slExtension = GetExtension()
+
+    if slExtension.IsEnabled
+        Actor theActor
+        if param.length > 1
+            theActor = CmdPrimary.ResolveActor(param[1])
+        endif
+        if !theActor
+            theActor = CmdPrimary.CmdTargetActor
+        endif
+
+        sslThreadController thread = (slExtension.SexLabForm as SexLabFramework).GetActorController(theActor)
+        if thread
+            CmdPrimary.CustomResolveBoolResult = thread.isaggressive
+        else
+            CmdPrimary.SFW("sl_is_aggressive: SexLab thread not available for Actor(" + CmdPrimary.CmdTargetActor + ")")
+        endif
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction

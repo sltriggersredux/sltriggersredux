@@ -1,3 +1,11 @@
+0.981
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    update: modified how Timer events are handled; internal only; may prevent some cases of duplicate event triggering
+    enhancement: new command: sl_is_aggressive: returns TRUE if current scene is aggressive, false otherwise
+        accepts optional first parameter: Actor: defaults to the target of the script if not provided
+
 0.980
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

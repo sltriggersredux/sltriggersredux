@@ -1,5 +1,6 @@
 set(headers ${headers}
 	src/PCH.h
+	src/DynamicFunctionArguments.h
 	src/bindings.h
 	src/caprunner.h
 	src/core.h

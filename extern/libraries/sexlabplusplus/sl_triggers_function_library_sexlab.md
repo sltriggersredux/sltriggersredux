@@ -419,6 +419,26 @@ Returns: bool: true if the SexLab scene has the specified tag, false otherwise
 
 
 
+### sl_is_aggressive
+
+**Description**
+
+Returns: bool: true if scene for targeted Actor is aggressive; false otherwise
+
+**Parameters**
+
+    Form: actor: the Actor to query about SexLab scene aggression (optional: default: targeted script actor)  
+
+
+**Example**
+
+    ; to determine SexLab scene aggression for Actor currently targeted by script  
+    sl_is_aggressive  
+    ; to determine SexLab scene aggression for specific Actor (in this case, the player, even if script targets non-player)  
+    sl_is_aggressive $system.player  
+
+
+
 ### sl_is_forbidden
 
 **Description**

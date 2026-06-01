@@ -25,6 +25,13 @@ bool OperationRunner::RunOperationOnActor(RE::Actor* targetActor,
 
     auto voidCallback = RE::BSTSmartPointer<RE::BSScript::IStackCallbackFunctor>{};
     
+    /*
+    auto* operationArgs = BSScript::MakeDynamicFunctionArguments();
+    operationArgs->PushArg(static_cast<RE::Actor*>(targetActor));
+    operationArgs->PushArg(static_cast<RE::ActiveEffect*>(cmdPrimary));
+    operationArgs->PushArg(static_cast<std::vector<RE::BSFixedString>>(params));
+    */
+   
     auto* operationArgs = RE::MakeFunctionArguments(
         static_cast<RE::Actor*>(targetActor), 
         static_cast<RE::ActiveEffect*>(cmdPrimary),

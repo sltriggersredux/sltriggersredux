@@ -36,6 +36,7 @@ namespace fs = std::filesystem;
 #include <RE/Skyrim.h>
 #include <SKSE/SKSE.h>
 namespace logger = SKSE::log;
+#include "DynamicFunctionArguments.h"
 
 #include "core.h"
 #include "util.h"

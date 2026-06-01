@@ -17,7 +17,7 @@ Function SLTWarnMsg(string msg) global
 EndFunction
 
 int Function GetModVersion() global
-	return 980
+	return 981
 EndFunction
 
 ;;;;;;;

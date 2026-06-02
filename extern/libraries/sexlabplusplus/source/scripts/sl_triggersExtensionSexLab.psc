@@ -561,17 +561,19 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 					z -= 1
 					if z != actorIdx
 						Actor aPartner = thread.positions[z]
-						if thread.IsAggressor(aPartner)
-							If (SLT.Debug_Extension_SexLab)
-								SLTDebugMsg("SexLab: for self(" + theSelf + "): aggressor(" + aPartner + ")")
-							EndIf
-							otherAggressors += 1
-						endif
-						if thread.IsVictim(aPartner)
-							If (SLT.Debug_Extension_SexLab)
-								SLTDebugMsg("SexLab: for self(" + theSelf + "): victim(" + aPartner + ")")
-							EndIf
-							otherVictims += 1
+						if thread.HasTag("Aggressive")
+							if !thread.IsVictim(aPartner)
+								If (SLT.Debug_Extension_SexLab)
+									SLTDebugMsg("SexLab: for self(" + theSelf + "): aggressor(" + aPartner + ")")
+								EndIf
+								otherAggressors += 1
+							else
+								thread.IsVictim(aPartner)
+								If (SLT.Debug_Extension_SexLab)
+									SLTDebugMsg("SexLab: for self(" + theSelf + "): victim(" + aPartner + ")")
+								EndIf
+								otherVictims += 1
+							endif
 						endif
 						int otherRaceType = ActorRaceType(aPartner)
 						if (otherRaceType == 2 || otherRaceType == 1)
@@ -739,11 +741,11 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 					ival = JsonUtil.GetIntValue(_triggerFile, ATTR_ROLE)
 					if ival != 0 ; 0 is Any
 						if 		ival == 1
-							doRun = thread.IsAggressor(theSelf)
+							doRun = thread.HasTag("Aggressive") && !thread.IsVictim(theSelf)
 						elseIf 	ival == 2
-							doRun = thread.IsVictim(theSelf)
+							doRun = thread.HasTag("Aggressive") && thread.IsVictim(theSelf)
 						elseIf 	ival == 3
-							doRun = !thread.IsAggressive
+							doRun = !thread.HasTag("Aggressive")
 						endIf
 
 						If (SLT.Debug_Extension_SexLab && !doRun)
@@ -760,7 +762,7 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 						elseIf 	ival == 2
 							doRun = otherVictims > 0
 						elseIf 	ival == 3
-							doRun = !thread.IsAggressive
+							doRun = !thread.HasTag("Aggressive")
 						endIf
 
 						If (SLT.Debug_Extension_SexLab && !doRun)

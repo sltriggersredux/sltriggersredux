@@ -4579,23 +4579,43 @@ Returns: bool: true if the SexLab scene has the specified tag, false otherwise
 
 
 
-### sl_is_aggressive
+### sl_is_actor_aggressor
 
 **Description**
 
-Returns: bool: true if scene for targeted Actor is aggressive; false otherwise
+Returns: bool: true if targeted Actor is aggressor in SexLab scene; false otherwise (incl. consensual scenes)
 
 **Parameters**
 
-    Form: actor: the Actor to query about SexLab scene aggression (optional: default: targeted script actor)  
+    Form: actor: the Actor to query about SexLab aggressor status (optional: default: targeted script actor)  
 
 
 **Example**
 
-    ; to determine SexLab scene aggression for Actor currently targeted by script  
-    sl_is_aggressive  
-    ; to determine SexLab scene aggression for specific Actor (in this case, the player, even if script targets non-player)  
-    sl_is_aggressive $system.player  
+    ; to determine SexLab aggressor status for Actor currently targeted by script  
+    sl_is_actor_aggressor  
+    ; to determine SexLab aggressor status for specific Actor (in this case, the player, even if script targets non-player)  
+    sl_is_actor_aggressor $system.player  
+
+
+
+### sl_is_actor_submissive
+
+**Description**
+
+Returns: bool: true if targeted Actor is aggressor in SexLab scene; false otherwise (incl. consensual scenes)
+
+**Parameters**
+
+    Form: actor: the Actor to query about SexLab aggressor status (optional: default: targeted script actor)  
+
+
+**Example**
+
+    ; to determine SexLab aggressor status for Actor currently targeted by script  
+    sl_is_actor_submissive  
+    ; to determine SexLab aggressor status for specific Actor (in this case, the player, even if script targets non-player)  
+    sl_is_actor_submissive $system.player  
 
 
 
@@ -4613,6 +4633,26 @@ Returns: bool: true if the actor is forbidden from SexLab scenes, false otherwis
 **Example**
 
     sl_is_forbidden $system.player  
+
+
+
+### sl_is_scene_aggressive
+
+**Description**
+
+Returns: bool: true if scene for targeted Actor is aggressive; false otherwise
+
+**Parameters**
+
+    Form: actor: the Actor to query about SexLab scene aggression (optional: default: targeted script actor)  
+
+
+**Example**
+
+    ; to determine SexLab scene aggression for Actor currently targeted by script  
+    sl_is_scene_aggressive  
+    ; to determine SexLab scene aggression for specific Actor (in this case, the player, even if script targets non-player)  
+    sl_is_scene_aggressive $system.player  
 
 
 
@@ -5229,23 +5269,43 @@ Returns: bool: true if the SexLab scene has the specified tag, false otherwise
 
 
 
-### sl_is_aggressive
+### sl_is_actor_aggressor
 
 **Description**
 
-Returns: bool: true if scene for targeted Actor is aggressive; false otherwise
+Returns: bool: true if targeted Actor is aggressor in SexLab scene; false otherwise (incl. consensual scenes)
 
 **Parameters**
 
-    Form: actor: the Actor to query about SexLab scene aggression (optional: default: targeted script actor)  
+    Form: actor: the Actor to query about SexLab aggressor status (optional: default: targeted script actor)  
 
 
 **Example**
 
-    ; to determine SexLab scene aggression for Actor currently targeted by script  
-    sl_is_aggressive  
-    ; to determine SexLab scene aggression for specific Actor (in this case, the player, even if script targets non-player)  
-    sl_is_aggressive $system.player  
+    ; to determine SexLab aggressor status for Actor currently targeted by script  
+    sl_is_actor_aggressor  
+    ; to determine SexLab aggressor status for specific Actor (in this case, the player, even if script targets non-player)  
+    sl_is_actor_aggressor $system.player  
+
+
+
+### sl_is_actor_submissive
+
+**Description**
+
+Returns: bool: true if targeted Actor is aggressor in SexLab scene; false otherwise (incl. consensual scenes)
+
+**Parameters**
+
+    Form: actor: the Actor to query about SexLab aggressor status (optional: default: targeted script actor)  
+
+
+**Example**
+
+    ; to determine SexLab aggressor status for Actor currently targeted by script  
+    sl_is_actor_submissive  
+    ; to determine SexLab aggressor status for specific Actor (in this case, the player, even if script targets non-player)  
+    sl_is_actor_submissive $system.player  
 
 
 
@@ -5263,6 +5323,26 @@ Returns: bool: true if the actor is forbidden from SexLab scenes, false otherwis
 **Example**
 
     sl_is_forbidden $system.player  
+
+
+
+### sl_is_scene_aggressive
+
+**Description**
+
+Returns: bool: true if scene for targeted Actor is aggressive; false otherwise
+
+**Parameters**
+
+    Form: actor: the Actor to query about SexLab scene aggression (optional: default: targeted script actor)  
+
+
+**Example**
+
+    ; to determine SexLab scene aggression for Actor currently targeted by script  
+    sl_is_scene_aggressive  
+    ; to determine SexLab scene aggression for specific Actor (in this case, the player, even if script targets non-player)  
+    sl_is_scene_aggressive $system.player  
 
 
 

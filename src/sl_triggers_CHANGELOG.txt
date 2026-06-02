@@ -1,3 +1,27 @@
+0.983
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    enhancement: new commands:
+        sl_is_actor_aggressor: return true if target actor (defaults to $system.self) is an aggressor in current SexLab scene; false otherwise (incl. consensual scenes)
+        sl_is_actor_submissive: return true if target actor (defaults to $system.self) is a submissive in current SexLab scene; false otherwise (incl. consensual scenes)
+        sl_is_scene_aggressive: return true if the scene that target actor (defaults to $system.self) is in is aggressive (has aggressors/submissives); false otherwise
+    deprecated: sl_is_aggressive: still exists but is a wrapper for sl_is_scene_aggressive
+    bugfix: fixed handling for SexLab P+ scene/actor aggressor/victim status
+        Scene aggressive result
+            Old: use either SexLabThread.IsConsent() or SexLabThread.IsAggressive
+            New: use sslThreadController.HasTag("Aggressive")
+        Actor aggressor result
+            Old: use IsAggressor(Actor)
+            New: use !IsVictim(Actor) ; IsAggressor(Actor) was not returning expected values
+        Actor victim result
+            Old: use IsVictim(Actor)
+            New: use IsVictim(Actor) ; i.e. no change
+    update: added "Aggressive" tag to sl_startsex call in the following SLTScripts:
+        SL Aggressive Sex With Player - Anal.sltscript
+        SL Aggressive Sex With Player - Oral.sltscript
+        SL Aggressive Sex With Player - Vaginal.sltscript
+
 0.982
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

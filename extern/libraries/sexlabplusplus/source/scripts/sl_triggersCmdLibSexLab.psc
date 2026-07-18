@@ -1,6 +1,7 @@
 scriptname sl_triggersCmdLibSexLab
 
 import sl_triggersStatics
+import sl_triggersSLPPAdapter
 
 sl_triggersExtensionSexLab Function GetExtension() global
     return GetForm_SLT_ExtensionSexLab() as sl_triggersExtensionSexLab
@@ -340,6 +341,7 @@ function sl_adjustenjoyment(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary,
 	if slExtension.IsEnabled && ParamLengthEQ(CmdPrimary, param.Length, 3)
         Actor _targetActor = CmdPrimary.ResolveActor(param[1])
         if _targetActor
+            ; change this to SexLabThread.AdjustEnjoyment(Actor akActor, int adjustBy) when updating to use 2.17.1+
             sslThreadController tc = (slExtension.SexLabForm as SexLabFramework).GetActorController(_targetActor)
             if tc
                 sslActorAlias talias = tc.ActorAlias(_targetActor)
@@ -475,9 +477,9 @@ function sl_animname(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string
         if param.Length > 1
             _targetActor = CmdPrimary.ResolveActor(param[1])
         endif
-        sslThreadController thread = slExtension.GetThreadForActor(_targetActor)
-        if thread
-            nextResult = thread.Animation.Name
+        SexLabThread slthread = (slExtension.SexLabForm as SexLabFramework).GetThreadByActor(_targetActor)
+        if slthread
+            nextResult = SexLabRegistry.GetSceneName(slthread.GetActiveScene())
         endIf
     endif
 
@@ -1018,15 +1020,15 @@ function sl_add_cum(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[
     CmdPrimary.CompleteOperationOnActor()
 endFunction
 
-; sltname sl_is_scene_aggressive
+; sltname sl_is_thread_aggressive
 ; sltgrup SexLab P+
 ; sltdesc Returns: bool: true if scene for targeted Actor is aggressive; false otherwise
 ; sltargs Form: actor: the Actor to query about SexLab scene aggression (optional: default: targeted script actor)
 ; sltsamp ; to determine SexLab scene aggression for Actor currently targeted by script
-; sltsamp sl_is_scene_aggressive
+; sltsamp sl_is_thread_aggressive
 ; sltsamp ; to determine SexLab scene aggression for specific Actor (in this case, the player, even if script targets non-player)
-; sltsamp sl_is_scene_aggressive $system.player
-function sl_is_scene_aggressive(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+; sltsamp sl_is_thread_aggressive $system.player
+function sl_is_thread_aggressive(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
 	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
 
     sl_triggersExtensionSexLab slExtension = GetExtension()
@@ -1042,18 +1044,13 @@ function sl_is_scene_aggressive(Actor CmdTargetActor, ActiveMagicEffect _CmdPrim
 
         SexLabThread slthread = (slExtension.SexLabForm as SexLabFramework).GetThreadByActor(theActor)
         if slthread
-            CmdPrimary.MostRecentBoolResult = slthread.HasTag("Aggressive")
+            CmdPrimary.MostRecentBoolResult = slpp_is_thread_aggressive(slthread)
         else
-            CmdPrimary.SFW("sl_is_scene_aggressive: SexLab thread not available for Actor(" + CmdPrimary.CmdTargetActor + ")")
+            CmdPrimary.SFW("sl_is_thread_aggressive: SexLab thread not available for Actor(" + CmdPrimary.CmdTargetActor + ")")
         endif
     endif
 
     CmdPrimary.CompleteOperationOnActor()
-endFunction
-
-; deprecated
-function sl_is_aggressive(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
-	sl_is_scene_aggressive(CmdTargetActor, _CmdPrimary, param)
 endFunction
 
 ; sltname sl_is_actor_aggressor
@@ -1078,9 +1075,9 @@ function sl_is_actor_aggressor(Actor CmdTargetActor, ActiveMagicEffect _CmdPrima
             theActor = CmdPrimary.CmdTargetActor
         endif
 
-        sslThreadController tc = (slExtension.SexLabForm as SexLabFramework).GetActorController(theActor)
-        if tc
-            CmdPrimary.MostRecentBoolResult = tc.HasTag("Aggressive") && !tc.IsVictim(theActor)
+        SexLabThread slthread = (slExtension.SexLabForm as SexLabFramework).GetThreadByActor(theActor)
+        if slthread
+            CmdPrimary.MostRecentBoolResult = slpp_is_actor_aggressor(slthread, theActor)
         else
             CmdPrimary.SFW("sl_is_actor_aggressor: SexLab thread not available for Actor(" + CmdPrimary.CmdTargetActor + ")")
         endif
@@ -1111,9 +1108,9 @@ function sl_is_actor_submissive(Actor CmdTargetActor, ActiveMagicEffect _CmdPrim
             theActor = CmdPrimary.CmdTargetActor
         endif
 
-        sslThreadController tc = (slExtension.SexLabForm as SexLabFramework).GetActorController(theActor)
-        if tc
-            CmdPrimary.MostRecentBoolResult = tc.HasTag("Aggressive") && tc.IsVictim(theActor)
+        SexLabThread slthread = (slExtension.SexLabForm as SexLabFramework).GetThreadByActor(theActor)
+        if slthread
+            CmdPrimary.MostRecentBoolResult = slthread.GetSubmissive(theActor)
         else
             CmdPrimary.SFW("sl_is_actor_submissive: SexLab thread not available for Actor(" + CmdPrimary.CmdTargetActor + ")")
         endif

@@ -4636,7 +4636,7 @@ Returns: bool: true if the actor is forbidden from SexLab scenes, false otherwis
 
 
 
-### sl_is_scene_aggressive
+### sl_is_thread_aggressive
 
 **Description**
 
@@ -4650,9 +4650,9 @@ Returns: bool: true if scene for targeted Actor is aggressive; false otherwise
 **Example**
 
     ; to determine SexLab scene aggression for Actor currently targeted by script  
-    sl_is_scene_aggressive  
+    sl_is_thread_aggressive  
     ; to determine SexLab scene aggression for specific Actor (in this case, the player, even if script targets non-player)  
-    sl_is_scene_aggressive $system.player  
+    sl_is_thread_aggressive $system.player  
 
 
 
@@ -5326,7 +5326,7 @@ Returns: bool: true if the actor is forbidden from SexLab scenes, false otherwis
 
 
 
-### sl_is_scene_aggressive
+### sl_is_thread_aggressive
 
 **Description**
 
@@ -5340,9 +5340,9 @@ Returns: bool: true if scene for targeted Actor is aggressive; false otherwise
 **Example**
 
     ; to determine SexLab scene aggression for Actor currently targeted by script  
-    sl_is_scene_aggressive  
+    sl_is_thread_aggressive  
     ; to determine SexLab scene aggression for specific Actor (in this case, the player, even if script targets non-player)  
-    sl_is_scene_aggressive $system.player  
+    sl_is_thread_aggressive $system.player  
 
 
 

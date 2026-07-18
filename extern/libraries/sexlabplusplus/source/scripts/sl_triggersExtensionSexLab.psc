@@ -1,6 +1,7 @@
 scriptname sl_triggersExtensionSexLab extends sl_triggersExtension
 
 import sl_triggersStatics
+import sl_triggersSLPPAdapter
 
 ;SexLabFramework     Property SexLab						Auto Hidden
 Form				Property SexLabForm					Auto Hidden
@@ -474,8 +475,9 @@ EndFunction
 
 
 Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTriggerKeys)
-	sslThreadController thread = (SexLabForm as SexLabFramework).GetController(tid)
-	int actorCount = thread.Positions.Length
+	SexLabThread slThread = (SexLabForm as SexLabFramework).GetThread(tid)
+	Actor[] sl_positions = slThread.GetPositions()
+	int actorCount = sl_positions.Length
 	
 	int i = 0
 	string triggerKey
@@ -493,7 +495,7 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 	bool playerFound
 	while z > 0
 		z -= 1
-		if thread.positions[z] == PlayerRef
+		if sl_positions[z] == PlayerRef
 			playerFound = true
 			z = 0
 		endif
@@ -536,7 +538,7 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 			int otherCreatureMale
 			int otherCreatureFemale
 			while actorIdx < actorCount
-				Actor theSelf = thread.Positions[actorIdx]
+				Actor theSelf = sl_positions[actorIdx]
 				;/
 				Actor theOther = none
 				
@@ -560,20 +562,17 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 				while z > 0
 					z -= 1
 					if z != actorIdx
-						Actor aPartner = thread.positions[z]
-						if thread.HasTag("Aggressive")
-							if !thread.IsVictim(aPartner)
-								If (SLT.Debug_Extension_SexLab)
-									SLTDebugMsg("SexLab: for self(" + theSelf + "): aggressor(" + aPartner + ")")
-								EndIf
-								otherAggressors += 1
-							else
-								thread.IsVictim(aPartner)
+						Actor aPartner = sl_positions[z]
+						if slpp_is_actor_aggressor(slthread, aPartner)
+							If (SLT.Debug_Extension_SexLab)
+								SLTDebugMsg("SexLab: for self(" + theSelf + "): aggressor(" + aPartner + ")")
+							EndIf
+							otherAggressors += 1
+						elseif slthread.GetSubmissive(aPartner)
 								If (SLT.Debug_Extension_SexLab)
 									SLTDebugMsg("SexLab: for self(" + theSelf + "): victim(" + aPartner + ")")
 								EndIf
 								otherVictims += 1
-							endif
 						endif
 						int otherRaceType = ActorRaceType(aPartner)
 						if (otherRaceType == 2 || otherRaceType == 1)
@@ -741,11 +740,11 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 					ival = JsonUtil.GetIntValue(_triggerFile, ATTR_ROLE)
 					if ival != 0 ; 0 is Any
 						if 		ival == 1
-							doRun = thread.HasTag("Aggressive") && !thread.IsVictim(theSelf)
+							doRun = slpp_is_actor_aggressor(slthread, theSelf)
 						elseIf 	ival == 2
-							doRun = thread.HasTag("Aggressive") && thread.IsVictim(theSelf)
+							doRun = slthread.GetSubmissive(theSelf)
 						elseIf 	ival == 3
-							doRun = !thread.HasTag("Aggressive")
+							doRun = !slpp_is_thread_aggressive(slthread)
 						endIf
 
 						If (SLT.Debug_Extension_SexLab && !doRun)
@@ -762,7 +761,7 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 						elseIf 	ival == 2
 							doRun = otherVictims > 0
 						elseIf 	ival == 3
-							doRun = !thread.HasTag("Aggressive")
+							doRun = !slpp_is_thread_aggressive(slthread)
 						endIf
 
 						If (SLT.Debug_Extension_SexLab && !doRun)
@@ -814,11 +813,11 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 					ival = JsonUtil.GetIntValue(_triggerFile, ATTR_TAG)
 					if ival != 0 ; 0 is Any
 						if 		ival == 1
-							doRun = thread.IsVaginal
+							doRun = slthread.IsSceneVaginal()
 						elseIf 	ival == 2
-							doRun = thread.IsAnal
+							doRun = slthread.IsSceneAnal()
 						elseIf 	ival == 3
-							doRun = thread.IsOral
+							doRun = slthread.IsSceneOral()
 						endIf
 
 						If (SLT.Debug_Extension_SexLab && !doRun)
@@ -887,11 +886,11 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 					ival = JsonUtil.GetIntValue(_triggerFile, ATTR_POSITION)
 					if ival != 0 ; 0 is Any
 						int _slposition = 0
-						while doRun && _slposition < thread.Positions.Length
+						while doRun && _slposition < sl_positions.Length
 							if (_slposition + 1) > ival
 								doRun = false
 							else
-								Actor slActor = thread.Positions[_slposition]
+								Actor slActor = sl_positions[_slposition]
 								; the assumption is that ival is 1-based and _slposition is 0-based
 								if slActor == theSelf
 									if (_slposition + 1) != ival

@@ -564,8 +564,7 @@ Function HandleSexLabCheckEvents(int tid, Actor specActor, string[] _eventTrigge
 								SLTDebugMsg("SexLab: for self(" + theSelf + "): aggressor(" + aPartner + ")")
 							EndIf
 							otherAggressors += 1
-						endif
-						if thread.IsVictim(aPartner)
+						elseif thread.IsVictim(aPartner)
 							If (SLT.Debug_Extension_SexLab)
 								SLTDebugMsg("SexLab: for self(" + theSelf + "): victim(" + aPartner + ")")
 							EndIf

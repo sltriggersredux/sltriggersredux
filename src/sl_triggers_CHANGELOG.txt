@@ -1,3 +1,14 @@
+0.984
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    bugfix: SLPP aggressive/aggressor/victim detection fix
+    removed: sl_is_scene_aggressive
+    removed: sl_is_aggressive
+    added: sl_is_thread_aggressive - reports aggressive status of currently running SexLab/SexLabP+ thread (threads vs scenes)
+    update: SexLabP+ sl_animname now uses updated API (instead of relying on deprecated API)
+    update: SexLabP+ removed some uses of deprecated API in favor of updated API
+
 0.983
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

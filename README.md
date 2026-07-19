@@ -253,6 +253,35 @@ You can also "soft delete" a trigger, marking it inactive until either you resto
 
 Effort has been made to avoid scripts from stressing the system more than necessary, but there are still limitations. Each script will be run on an Actor in game (the Player or an NPC) as an ActiveMagicEffect i.e. as from a Spell. Any one Actor can have no more than 30 scripts running on them at one time. Scripts can be long-running if you make them so, so be careful not to let things run away.
 
+## Papyrus Tweaks NG is Your Best Friend
+
+SLTriggers Redux is *extremely* Papyrus intense, so anything you can do to improve scripting performance will have a *dramatic* impact on SLTScript performance.
+
+To that end, I strongly recommend the following to maximize the performance of your SLTScripts.
+
+- Install [Papyrus Tweaks NG](https://www.nexusmods.com/skyrimspecialedition/mods/77779)
+- In SKSE/Plugins/PapyrusTweaks.ini (a reference copy of which is available in the Files tab on Nexusmods) make the following changes:
+- iMaxOpsPerFrame = 2000
+- bSpeedUpNativeCalls = true
+- bIgnoreMemoryLimit = true
+
+For reference, I use several modlists for testing, including Skyrim Modding Essentials (SME), available on Wabbajack. This is a somewhat bare list meant as a springboard for creating your own modlist. While it includes Papyrus Tweaks NG, it only includes the unmodified reference copy of PapyrusTweaks.ini.
+
+I install SLTriggers Redux with the "Test Scripts" enabled. To run them, open your console in game and:
+
+- prid player
+- slt run zz_sltr_regression_test
+
+This will begin a set of SLTScripts which will send output to your sl-triggers.log file. I keep Notepad++ running, use "View | Always On Top", and "View | Monitoring (tail -f)" on sl-triggers.log so that I can see the output in real time and watch for failures, as well as knowing when the scripts have completed.
+
+Using the baseline reference copy of PapyrusTweaks.ini on SME, the full suite of regression test scripts takes roughly 140 seconds to run.
+
+Using just those 3 changes to PapyrusTweaks.ini, the execution time drops to just over 14 seconds.
+
+Not a 10% reduction in execution time but a whopping 90% reduction.
+
+I totally agree that SLTScripts are slow compared to actual compiled Papyrus, but you can get a lot of performance by making these changes.
+
 # Okay, But How Do I Run A Script!
 ## Running Scripts Manually
 You can use the console to list available scripts and run them. From the console, use:

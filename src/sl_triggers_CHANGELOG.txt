@@ -2,6 +2,15 @@
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
         (or whichever folder you have your SKSE logs directed to)
+    enhancement: removed wait loop in core function execution implementation
+    bugfix: (internal) "resultfrom" RHS (right hand side) subcommand detection fixed; should now properly emit an error when invalid RHS subcommands are attempted
+        e.g. set $value resultfrom goto [foo]
+            this should now properly emit an error that "goto [foo]" is invalid for the RHS of "resultfrom"
+
+0.984
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
     bugfix: SLPP aggressive/aggressor/victim detection fix
     removed: sl_is_scene_aggressive
     removed: sl_is_aggressive

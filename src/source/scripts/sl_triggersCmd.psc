@@ -153,6 +153,8 @@ int         Property CmdRequestId Hidden
     EndFunction
 EndProperty
 
+
+bool        Property resultfromRunOpPending = false auto hidden
 bool        Property runOpPending = false auto hidden
 bool        Property isExecuting = false Auto Hidden
 int         Property previousFrameId = 0 Auto Hidden
@@ -176,6 +178,8 @@ int         Property CLRR_INVALID = 0 AutoReadOnly
 int         Property CLRR_ADVANCE = 1 AutoReadOnly
 int         Property CLRR_NOADVANCE = 2 AutoReadOnly
 int         Property CLRR_RETURN  = 3 AutoReadOnly
+int         Property CLRR_RUNOP = 4 AutoReadOnly
+int         Property CLRR_RUNOP_RESULTFROM = 5 AutoReadOnly
 
 string Function CLRR_ToString(int _clrr)
     if CLRR_ADVANCE == _clrr
@@ -186,6 +190,10 @@ string Function CLRR_ToString(int _clrr)
         return "CLRR_RETURN:" + _clrr
     elseif CLRR_INVALID == _clrr
         return "CLRR_INVALID:" + _clrr
+    elseif CLRR_RUNOP == _clrr
+        return "CLRR_RUNOP:" + _clrr
+    elseif CLRR_RUNOP_RESULTFROM == _clrr
+        return "CLRR_RUNOP_RESULTFROM:" + _clrr
     endif
     SFW("Truly unexpected value for CommandLineReturnResult(" + _clrr + "); not even CLRR_INVALID")
     return "CLRR_INVALID2:" + _clrr
@@ -912,7 +920,7 @@ EndFunction
 
 ;/
 Event OnEffectFinish(Actor akTarget, Actor akCaster)
-    CleanupAndRemove()
+    SLTDebugMsg("\n\n!!!!!! sl_triggersCmd.OnEffectFinish\n\n")
 EndEvent
 /;
 
@@ -1020,15 +1028,6 @@ Event OnUpdate()
     endif
     SLT.IncrementRequestCounter(_cmdRequestId)
     RunScript()
-    if SLT.Debug_Cmd
-        SFD("Cmd.OnUpdate: before ending threadid(" + threadid + ") RunningScriptCount is :" + SLT.RunningScriptCount)
-    endif
-    SLT.RunningScriptCount -= 1
-    if SLT.Debug_Cmd
-        SFD("Cmd.OnUpdate: ending threadid(" + threadid + ") RunningScriptCount is :" + SLT.RunningScriptCount)
-    endif
-    
-    CleanupAndRemove()
 EndEvent
 
 Function CleanupAndRemove()
@@ -1060,7 +1059,7 @@ Function CleanupAndRemove()
     Self.Dispel()
 EndFunction
 
-Function RunOperationOnActor(string[] opCmdLine)
+Function RunOperationOnActor(string[] opCmdLine, bool runOpForResultfrom = false)
     if !opCmdLine.Length
         return
     endif
@@ -1072,26 +1071,12 @@ Function RunOperationOnActor(string[] opCmdLine)
 
     runOpReturnedValue = false
     runOpPending = true
+    resultfromRunOpPending = runOpForResultfrom
     bool success = sl_triggers_internal.RunOperationOnActor(CmdTargetActor, self, opCmdLine)
     if !success
         runOpPending = false
         return
     endif
-    float afDelay = 0.0
-
-    while runOpPending && isExecuting
-        if afDelay < 1.0
-            afDelay += 0.01
-        endif
-        
-        if IsResetRequested || !SLT.IsEnabled || SLT.IsResetting
-            SFI("SLTReset requested(" + IsResetRequested + ") / SLT.IsEnabled(" + SLT.IsEnabled + ") / SLT.IsResetting(" + SLT.IsResetting + ")")
-            CleanupAndRemove()
-            Return
-        endif
-
-        Utility.Wait(afDelay)
-    endwhile
 EndFunction
 
 Function CompleteOperationOnActor()
@@ -1106,6 +1091,8 @@ Function CompleteOperationOnActor()
         CleanupAndRemove()
         Return
     endif
+
+    RunScript()
 EndFunction
 
 Int Function ActorRaceType(Actor _actor)
@@ -1894,22 +1881,39 @@ int Function RunCommandLine(string[] cmdLine, int startidx, int endidx, bool sub
                             if SLT.Debug_Cmd_RunScript_Set
                                 SFD("Cmd.RunScript: set>3/w/resultfrom <target> resultfrom <stuff...>")
                             endif
-
-                            __strListVal = PapyrusUtil.SliceStringArray(cmdLine, 3)
                             
                             ; 20250909 - could not use $$ as an argument, this would affect set
                             ;InvalidateMostRecentResult()
-                            RunCommandLine(__strListVal, startidx + 3, endidx)
-                            if SLT.Debug_Cmd_RunScript_Set
-                                InternalResolve("$$")
-                                __outresult = CRToString()
-                                SFD("set: resultfrom: MostRecentResultType(" + SLT.RT_ToString(MostRecentResultType) + ") and outresult is (" + __outresult + ")")
-                                SetVarFromCustomResult(varscopestringlist)
-                                ;SetVarString2(varscopestringlist[0], varscopestringlist[1], __outresult)
+
+                            if resultfromRunOpPending
+                                resultfromRunOpPending = false
+                                if SLT.Debug_Cmd_RunScript_Set
+                                    InternalResolve("$$")
+                                    __outresult = CRToString()
+                                    SFD("set: resultfrom: MostRecentResultType(" + SLT.RT_ToString(MostRecentResultType) + ") and outresult is (" + __outresult + ")")
+                                    SetVarFromCustomResult(varscopestringlist)
+                                    ;SetVarString2(varscopestringlist[0], varscopestringlist[1], __outresult)
+                                else
+                                    InternalResolve("$$")
+                                    SetVarFromCustomResult(varscopestringlist)
+                                    ;SetVarString2(varscopestringlist[0], varscopestringlist[1], Resolve("$$"))
+                                endif
                             else
-                                InternalResolve("$$")
-                                SetVarFromCustomResult(varscopestringlist)
-                                ;SetVarString2(varscopestringlist[0], varscopestringlist[1], Resolve("$$"))
+                                __strListVal = PapyrusUtil.SliceStringArray(cmdLine, 3)
+                                __CLRR = RunCommandLine(__strListVal, startidx + 3, endidx, true)
+                                if __CLRR != CLRR_RUNOP && __CLRR != CLRR_RUNOP_RESULTFROM
+                                    if SLT.Debug_Cmd_RunScript_Set
+                                        InternalResolve("$$")
+                                        __outresult = CRToString()
+                                        SFD("set: resultfrom: MostRecentResultType(" + SLT.RT_ToString(MostRecentResultType) + ") and outresult is (" + __outresult + ")")
+                                        SetVarFromCustomResult(varscopestringlist)
+                                        ;SetVarString2(varscopestringlist[0], varscopestringlist[1], __outresult)
+                                    else
+                                        InternalResolve("$$")
+                                        SetVarFromCustomResult(varscopestringlist)
+                                        ;SetVarString2(varscopestringlist[0], varscopestringlist[1], Resolve("$$"))
+                                    endif
+                                endif
                             endif
                         elseif cmdLine.length == 4 && __operator == "="
                             if SLT.Debug_Cmd_RunScript_Set
@@ -2928,7 +2932,13 @@ int Function RunCommandLine(string[] cmdLine, int startidx, int endidx, bool sub
                 SFD("Cmd.RunScript: RunOperationOnActor(" + debstrjoin(cmdLine) + ")")
             endif
             
-            RunOperationOnActor(cmdLine)
+            RunOperationOnActor(cmdLine, subCommand)
+
+            if subCommand
+                __CLRR = CLRR_RUNOP_RESULTFROM
+            else
+                __CLRR = CLRR_RUNOP
+            endif
 
             ;currentLine += 1
         endif
@@ -2951,7 +2961,7 @@ Function RunScript()
         endif
         if IsResetRequested || !SLT.IsEnabled || SLT.IsResetting
             SFI("SLTReset requested(" + IsResetRequested + ") / SLT.IsEnabled(" + SLT.IsEnabled + ") / SLT.IsResetting(" + SLT.IsResetting + ")")
-            CleanupAndRemove()
+            End_RunScript()
             Return
         endif
 
@@ -2967,7 +2977,7 @@ Function RunScript()
             
             if IsResetRequested || !SLT.IsEnabled || SLT.IsResetting
                 SFI("SLTReset requested(" + IsResetRequested + ") / SLT.IsEnabled(" + SLT.IsEnabled + ") / SLT.IsResetting(" + SLT.IsResetting + ")")
-                CleanupAndRemove()
+                End_RunScript()
                 Return
             endif
             
@@ -2984,6 +2994,7 @@ Function RunScript()
                     if SLT.Debug_Cmd_RunScript
                         SFD("CLRR_RETURN; returning")
                     endif
+                    End_RunScript()
                     return
                 endif
 
@@ -2999,6 +3010,21 @@ Function RunScript()
                         SFD("CLRR_NOADVANCE; thus, not advancing")
                     endif
                 endif
+
+                if CLRR_RUNOP == commandLineRunResult
+                    if SLT.Debug_Cmd_RunScript
+                        SFD("CLRR_RUNOP; calling RunOperationOnActor and advancing to next line")
+                    endif
+                    currentLine += 1
+                    return
+                endif
+
+                if CLRR_RUNOP_RESULTFROM == commandLineRunResult
+                    if SLT.Debug_Cmd_RunScript
+                        SFD("CLRR_RUNOP_RESULTFROM; resultfrom pending response from RunOperationOnActor")
+                    endif
+                    return
+                endif
             else
                 currentLine += 1
             endif
@@ -3013,6 +3039,20 @@ Function RunScript()
         endif
 
     endwhile
+
+    End_RunScript()
+EndFunction
+
+Function End_RunScript()
+    if SLT.Debug_Cmd
+        SFD("Cmd.RunScript: before ending threadid(" + threadid + ") RunningScriptCount is :" + SLT.RunningScriptCount)
+    endif
+    SLT.RunningScriptCount -= 1
+    if SLT.Debug_Cmd
+        SFD("Cmd.RunScript: ending threadid(" + threadid + ") RunningScriptCount is :" + SLT.RunningScriptCount)
+    endif
+    
+    CleanupAndRemove()
 EndFunction
 
 string Function _slt_IsLabel(string[] _tokens = none)

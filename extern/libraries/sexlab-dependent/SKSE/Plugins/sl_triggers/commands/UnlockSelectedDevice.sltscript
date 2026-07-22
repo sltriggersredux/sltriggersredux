@@ -1,0 +1,30 @@
+string[] $labels
+int[] $slots
+
+listadd $labels "- Cancel -" "- All -" 
+listadd $slots 0 1
+
+set $check_slot 30
+while $check_slot < 62
+	set $is_generic_device resultfrom dd_is_generic_device $system.self slot $check_slot
+	if $is_generic_device
+		set $device_name resultfrom dd_get_device_name $system.self slot $check_slot
+		listadd $labels $device_name
+		listadd $slots $check_slot
+	endif
+	
+	inc $check_slot 1
+endwhile
+
+set $sel_index resultfrom uilib_showlist "Select a Slot to Unlock" $labels 0 0
+if $sel_index == 0
+	uilib_shownotification "Unlock cancelled"
+	return
+endif
+
+if $sel_index == 1
+	dd_unlockall $system.self
+	return
+endif
+
+dd_unlock $system.self slot $slots[$sel_index]

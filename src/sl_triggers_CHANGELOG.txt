@@ -2,6 +2,41 @@
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
         (or whichever folder you have your SKSE logs directed to)
+    bugfix: scripts containing an unknown instruction will no longer abort and leave the AME hanging
+        (think mistyping "msg_notify" as "mgs_ntoiyf")
+        Note: if you think this is you, you may want to do an SLT reset, though if you don't, the worst that will happen is that
+            any such hung magic effects will not process anything (no script impact) and will quietly end after racking up 24 hours
+            of real time while taking up 1 of the 30 available script slots on that actor (probably not a big deal for most)
+    enhancement: new Devious Devices functions
+        dd_get_device_name: return the name of the worn device specified by slot OR keyword
+        dd_is_wearing_device: return true if wearing a device (even if blockgeneric or questitem) specified by slot OR keyword
+        dd_is_generic_device: return true if wearing a generic specified by slot OR keyword
+        dd_unlock: unlocks the device specified by slot OR keyword
+        dd_is_lock_jammed: returns true if device specified by slot OR keyword is jammed
+        dd_jam_lock: jams the lock of the device specified by slot OR keyword is jammed
+        dd_unjam_lock: unjams the lock of the device specified by slot OR keyword is jammed
+        dd_is_lock_manipulated: returns true if device specified by slot OR keyword is manipulated
+        dd_set_lock_manipulated: sets device specified by slot OR keyword to be manipulated
+        dd_set_lock_unmanipulated: sets device specified by slot OR keyword to be unmanipulated
+        dd_play_horny_animation: plays the horny animation for the specified actor
+        dd_orgasm: performs a Devious Devices orgasm event
+        dd_masturbate: start a Devious Devices masturbation scene
+        dd_edge_actor: start a Devious Devices edge actor event
+        dd_chastity_belt_struggle: start a Devious Devices chastity belt struggle event
+        dd_trip: start a Devious Devices trip event
+        dd_catch_breath: start a Devious Devices catch breath event
+        dd_has_breasts_exposed: Returns true if breasts are exposed, false otherwise
+        dd_inflate_anal_plug: inflates an anal plug
+        dd_inflate_vaginal_plug: inflates a vaginal plug
+        dd_inflate_random_plug: inflates a random plug
+        dd_deflate_anal_plug: deflates an anal plug
+        dd_deflate_vaginal_plug: deflates a vaginal plug
+        dd_lock: lock an item in actor's inventory onto an actor
+
+0.984
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
     enhancement: removed wait loop in core function execution implementation
     bugfix: (internal) "resultfrom" RHS (right hand side) subcommand detection fixed; should now properly emit an error when invalid RHS subcommands are attempted
         e.g. set $value resultfrom goto [foo]

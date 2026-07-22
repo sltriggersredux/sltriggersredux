@@ -2,6 +2,453 @@
 
 ## Devious Devices
 
+### dd_catch_breath
+
+**Description**
+
+Attempts to start a Devious Devices catch breath event
+
+**Parameters**
+
+    Form: actor: target Actor  
+
+
+**Example**
+
+    dd_catch_breath $system.self  
+
+
+
+### dd_chastity_belt_struggle
+
+**Description**
+
+Attempts to start a Devious Devices chastity belt struggle event
+
+**Parameters**
+
+    Form: actor: target Actor  
+
+
+**Example**
+
+    dd_chastity_belt_struggle $system.self  
+
+
+
+### dd_deflate_anal_plug
+
+**Description**
+
+Deflates an anal plug
+
+**Parameters**
+
+    Form: actor: target Actor  
+    int: amount: value to inflate by (note: the min total inflation value is 0, scale accordingly) (optional: default 1)  
+
+
+**Example**
+
+    dd_deflate_anal_plug $system.self 2  
+
+
+
+### dd_deflate_vaginal_plug
+
+**Description**
+
+Deflates a vaginal plug
+
+**Parameters**
+
+    Form: actor: target Actor  
+    int: amount: value to inflate by (note: the min total inflation value is 0, scale accordingly) (optional: default 1)  
+
+
+**Example**
+
+    dd_deflate_vaginal_plug $system.self 2  
+
+
+
+### dd_edge_actor
+
+**Description**
+
+Attempts to start a Devious Devices edge actor event
+
+**Parameters**
+
+    Form: actor: target Actor  
+
+
+**Example**
+
+    dd_edge_actor $system.self  
+
+
+
+### dd_get_device_name
+
+**Description**
+
+Returns: string: the device name or "" if no device worn
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+
+
+**Example**
+
+    dd_get_device_name $system.self slot 32  
+    dd_get_device_name $system.self keyword zad_DeviousCollar  
+
+
+
+### dd_has_breasts_exposed
+
+**Description**
+
+Returns: bool: true if breasts are exposed, false otherwise
+
+**Parameters**
+
+    Form: actor: target Actor  
+
+
+**Example**
+
+    dd_has_breasts_exposed $system.self  
+
+
+
+### dd_inflate_anal_plug
+
+**Description**
+
+Inflates an anal plug
+
+**Parameters**
+
+    Form: actor: target Actor  
+    int: amount: value to inflate by (note: the max total inflation value is 5, scale accordingly) (optional: default 1)  
+
+
+**Example**
+
+    dd_inflate_anal_plug $system.self 2  
+
+
+
+### dd_inflate_random_plug
+
+**Description**
+
+Inflates a random plug
+
+**Parameters**
+
+    Form: actor: target Actor  
+    int: amount: value to inflate by (note: the max total inflation value is 5, scale accordingly) (optional: default 1)  
+
+
+**Example**
+
+    dd_inflate_random_plug $system.self 2  
+
+
+
+### dd_inflate_vaginal_plug
+
+**Description**
+
+Inflates a vaginal plug
+
+**Parameters**
+
+    Form: actor: target Actor  
+    int: amount: value to inflate by (note: the max total inflation value is 5, scale accordingly) (optional: default 1)  
+
+
+**Example**
+
+    dd_inflate_vaginal_plug $system.self 2  
+
+
+
+### dd_is_generic_device
+
+**Description**
+
+Returns: bool: true if wearing a generic device in the slot, false otherwise
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+
+
+**Example**
+
+    dd_is_generic_device $system.self slot 32  
+    dd_is_generic_device $system.self keyword zad_DeviousCollar  
+
+
+
+### dd_is_lock_jammed
+
+**Description**
+
+Returns: bool: true if the device specified is jammed, false otherwise (including if no such device is being worn)
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+
+
+**Example**
+
+    dd_is_lock_jammed $system.self slot 32  
+    dd_is_lock_jammed $system.self keyword zad_DeviousCollar  
+
+
+
+### dd_is_lock_manipulated
+
+**Description**
+
+Returns: bool: true if the device specified is manipulated, false otherwise (including if no such device is being worn)
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+
+
+**Example**
+
+    dd_is_lock_manipulated $system.self slot 32  
+    dd_is_lock_manipulated $system.self keyword zad_DeviousCollar  
+
+
+
+### dd_is_wearing_device
+
+**Description**
+
+Returns: bool: true if wearing a device in the slot, false otherwise
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+
+
+**Example**
+
+    dd_is_wearing_device $system.self 32  
+
+
+
+### dd_jam_lock
+
+**Description**
+
+Returns: bool: attempts to jam the specified lock, returns true if successful, false otherwise (including if no matching device is worn)
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+
+
+**Example**
+
+    dd_jam_lock $system.self slot 32  
+    dd_jam_lock $system.self keyword zad_DeviousCollar  
+
+
+
+### dd_lock
+
+**Description**
+
+Locks a device onto an actor from their inventory
+
+**Parameters**
+
+    Form: actor: target Actor  
+    Form: armor: target device armor item to attempt to lock onto the target actor  
+    bool: force: if true, will try to equip the given item, even if another (generic) item is already worn (optional: default false)  
+
+
+**Example**
+
+    dd_lock $system.self $catsuit_in_inventory true  
+
+
+
+### dd_masturbate
+
+**Description**
+
+Attempts to start a Devious Devices masturbation scene
+
+**Parameters**
+
+    Form: actor: target Actor  
+    bool: feedback: true to show feedback messages, false otherwise (optional: default true)  
+
+
+**Example**
+
+    dd_masturbate $system.self false  
+
+
+
+### dd_orgasm
+
+**Description**
+
+Attempts to perform a Devious Devices orgasm event
+
+**Parameters**
+
+    Form: actor: target Actor  
+
+
+**Example**
+
+    dd_orgasm $system.self  
+
+
+
+### dd_play_horny_animation
+
+**Description**
+
+Attempts to play the horny animation for the specified actor
+
+**Parameters**
+
+    Form: actor: target Actor  
+
+
+**Example**
+
+    dd_play_horny_animation $system.self  
+
+
+
+### dd_set_lock_manipulated
+
+**Description**
+
+Returns: bool: attempts to set the specified lock as manipulated, returns true if successful, false otherwise (including if no matching device is worn)
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+
+
+**Example**
+
+    dd_set_lock_manipulated $system.self slot 32  
+    dd_set_lock_manipulated $system.self keyword zad_DeviousCollar  
+
+
+
+### dd_set_lock_unmanipulated
+
+**Description**
+
+Returns: bool: attempts to set the specified lock as unmanipulated, returns true if successful, false otherwise (including if no matching device is worn)
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+
+
+**Example**
+
+    dd_set_lock_unmanipulated $system.self slot 32  
+    dd_set_lock_unmanipulated $system.self keyword zad_DeviousCollar  
+
+
+
+### dd_trip
+
+**Description**
+
+Attempts to start a Devious Devices trip event
+
+**Parameters**
+
+    Form: actor: target Actor  
+
+
+**Example**
+
+    dd_trip $system.self  
+
+
+
+### dd_unjam_lock
+
+**Description**
+
+Returns: bool: attempts to unjam the specified lock, returns true if successful, false otherwise (including if no matching device is worn)
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+
+
+**Example**
+
+    dd_unjam_lock $system.self slot 32  
+    dd_unjam_lock $system.self keyword zad_DeviousCollar  
+
+
+
+### dd_unlock
+
+**Description**
+
+Attempts to unlock any device in the specified slot
+
+**Parameters**
+
+    Form: actor: target Actor  
+    string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name  
+    int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt  
+    string: force: "force" to force an unlock, anything else otherwise  
+
+
+**Example**
+
+    dd_unlock $system.self slot 32 force  
+    dd_unlock $system.self keyword dd_DeviousCollar  
+
+Should remove anything in body slot e.g. corset, harness, etc., and forced, so including quest items (be careful!)  
+
+
 ### dd_unlockall
 
 **Description**

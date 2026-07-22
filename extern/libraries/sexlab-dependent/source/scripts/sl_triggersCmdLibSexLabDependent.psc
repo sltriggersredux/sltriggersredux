@@ -81,6 +81,504 @@ function dd_unlockslot_impl(zadLibs ddlib, Actor _targetActor, int slot, bool fo
     endif
 endfunction
 
+; sltname dd_is_wearing_device
+; sltgrup Devious Devices
+; sltdesc Returns: bool: true if wearing a device in the slot, false otherwise
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltsamp dd_is_wearing_device $system.self 32
+function dd_is_wearing_device(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 4)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                Keyword zadkw
+
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    Armor device = _targetActor.GetEquippedArmorInSlot(slot)
+                    zadkw = ddlib.GetDeviceKeyword(zadNativeFunctions.GetInventoryDevice(device))
+                elseif argtype == "keyword"
+                    zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                endif
+
+                if zadkw
+                    result = ddlib.isWearingDeviceType(_targetActor, zadkw)
+                endif
+            else
+                SLTDebugMsg("dd_is_wearing_device: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_is_wearing_device: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_is_wearing_device: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_is_generic_device
+; sltgrup Devious Devices
+; sltdesc Returns: bool: true if wearing a generic device in the slot, false otherwise
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltsamp dd_is_generic_device $system.self slot 32
+; sltsamp dd_is_generic_device $system.self keyword zad_DeviousCollar
+function dd_is_generic_device(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 4)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                Keyword zadkw
+
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    Armor device = _targetActor.GetEquippedArmorInSlot(slot)
+                    zadkw = ddlib.GetDeviceKeyword(zadNativeFunctions.GetInventoryDevice(device))
+                elseif argtype == "keyword"
+                    zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                endif
+                
+                if zadkw && ddlib.isWearingDeviceType(_targetActor, zadkw)
+                    result = ddlib.IsGenericDevice(_targetActor, zadkw)
+                endif
+            else
+                SLTDebugMsg("dd_is_generic_device: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_is_generic_device: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_is_generic_device: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_is_lock_jammed
+; sltgrup Devious Devices
+; sltdesc Returns: bool: true if the device specified is jammed, false otherwise (including if no such device is being worn)
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltsamp dd_is_lock_jammed $system.self slot 32
+; sltsamp dd_is_lock_jammed $system.self keyword zad_DeviousCollar
+function dd_is_lock_jammed(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 4)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                Keyword zadkw
+
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    Armor device = _targetActor.GetEquippedArmorInSlot(slot)
+                    zadkw = ddlib.GetDeviceKeyword(zadNativeFunctions.GetInventoryDevice(device))
+                elseif argtype == "keyword"
+                    zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                endif
+                
+                if zadkw
+                    int jamresult = ddlib.IsLockJammed(_targetActor, zadkw)
+                    result = (jamresult == 1)
+                endif
+            else
+                SLTDebugMsg("dd_is_lock_jammed: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_is_lock_jammed: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_is_lock_jammed: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_jam_lock
+; sltgrup Devious Devices
+; sltdesc Returns: bool: attempts to jam the specified lock, returns true if successful, false otherwise (including if no matching device is worn)
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltsamp dd_jam_lock $system.self slot 32
+; sltsamp dd_jam_lock $system.self keyword zad_DeviousCollar
+function dd_jam_lock(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 4)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                Keyword zadkw
+
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    Armor device = _targetActor.GetEquippedArmorInSlot(slot)
+                    zadkw = ddlib.GetDeviceKeyword(zadNativeFunctions.GetInventoryDevice(device))
+                elseif argtype == "keyword"
+                    zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                endif
+                
+                if zadkw
+                    result = ddlib.JamLock(_targetActor, zadkw)
+                endif
+            else
+                SLTDebugMsg("dd_jam_lock: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_jam_lock: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_jam_lock: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_unjam_lock
+; sltgrup Devious Devices
+; sltdesc Returns: bool: attempts to unjam the specified lock, returns true if successful, false otherwise (including if no matching device is worn)
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltsamp dd_unjam_lock $system.self slot 32
+; sltsamp dd_unjam_lock $system.self keyword zad_DeviousCollar
+function dd_unjam_lock(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 4)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                Keyword zadkw
+
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    Armor device = _targetActor.GetEquippedArmorInSlot(slot)
+                    zadkw = ddlib.GetDeviceKeyword(zadNativeFunctions.GetInventoryDevice(device))
+                elseif argtype == "keyword"
+                    zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                endif
+                
+                if zadkw
+                    result = ddlib.UnJamLock(_targetActor, zadkw)
+                endif
+            else
+                SLTDebugMsg("dd_unjam_lock: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_unjam_lock: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_unjam_lock: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_is_lock_manipulated
+; sltgrup Devious Devices
+; sltdesc Returns: bool: true if the device specified is manipulated, false otherwise (including if no such device is being worn)
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltsamp dd_is_lock_manipulated $system.self slot 32
+; sltsamp dd_is_lock_manipulated $system.self keyword zad_DeviousCollar
+function dd_is_lock_manipulated(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 4)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                Keyword zadkw
+
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    Armor device = _targetActor.GetEquippedArmorInSlot(slot)
+                    zadkw = ddlib.GetDeviceKeyword(zadNativeFunctions.GetInventoryDevice(device))
+                elseif argtype == "keyword"
+                    zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                endif
+                
+                if zadkw
+                    result = ddlib.IsLockManipulated(_targetActor, zadkw)
+                endif
+            else
+                SLTDebugMsg("dd_is_lock_manipulated: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_is_lock_manipulated: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_is_lock_manipulated: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_set_lock_manipulated
+; sltgrup Devious Devices
+; sltdesc Returns: bool: attempts to set the specified lock as manipulated, returns true if successful, false otherwise (including if no matching device is worn)
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltsamp dd_set_lock_manipulated $system.self slot 32
+; sltsamp dd_set_lock_manipulated $system.self keyword zad_DeviousCollar
+function dd_set_lock_manipulated(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 4)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                Keyword zadkw
+
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    Armor device = _targetActor.GetEquippedArmorInSlot(slot)
+                    zadkw = ddlib.GetDeviceKeyword(zadNativeFunctions.GetInventoryDevice(device))
+                elseif argtype == "keyword"
+                    zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                endif
+                
+                if zadkw
+                    result = ddlib.SetLockManipulated(_targetActor, zadkw)
+                endif
+            else
+                SLTDebugMsg("dd_set_lock_manipulated: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_set_lock_manipulated: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_set_lock_manipulated: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_set_lock_unmanipulated
+; sltgrup Devious Devices
+; sltdesc Returns: bool: attempts to set the specified lock as unmanipulated, returns true if successful, false otherwise (including if no matching device is worn)
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltsamp dd_set_lock_unmanipulated $system.self slot 32
+; sltsamp dd_set_lock_unmanipulated $system.self keyword zad_DeviousCollar
+function dd_set_lock_unmanipulated(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 4)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                Keyword zadkw
+
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    Armor device = _targetActor.GetEquippedArmorInSlot(slot)
+                    zadkw = ddlib.GetDeviceKeyword(zadNativeFunctions.GetInventoryDevice(device))
+                elseif argtype == "keyword"
+                    zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                endif
+                
+                if zadkw
+                    result = ddlib.SetLockUnManipulated(_targetActor, zadkw)
+                endif
+            else
+                SLTDebugMsg("dd_set_lock_unmanipulated: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_set_lock_unmanipulated: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_set_lock_unmanipulated: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_get_device_name
+; sltgrup Devious Devices
+; sltdesc Returns: string: the device name or "" if no device worn
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltsamp dd_get_device_name $system.self slot 32
+; sltsamp dd_get_device_name $system.self keyword zad_DeviousCollar
+function dd_get_device_name(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    string result = ""
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 4)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                Armor device
+
+                string infostr
+                
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    device = _targetActor.GetEquippedArmorInSlot(slot)
+                    infostr = " slot(" + slot + ") device(" + device + ")"
+                elseif argtype == "keyword"
+                    Keyword zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                    device = ddlib.GetWornRenderedDeviceByKeyword(_targetActor, zadkw)
+                    infostr = " keyw(" + zadkw + ") device(" + device + ")"
+                endif
+
+                if device
+                    device = zadNativeFunctions.GetInventoryDevice(device)
+                    if device
+                        result = ddlib.GetDeviceName(device)
+                    else
+                        SLTDebugMsg("dd_get_device_name: Unable to get inventory device" + infostr)
+                    endif
+                endif
+            else
+                SLTDebugMsg("dd_get_device_name: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_get_device_name: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_get_device_name: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentStringResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_unlock
+; sltgrup Devious Devices
+; sltdesc Attempts to unlock any device in the specified slot
+; sltargs Form: actor: target Actor
+; sltargs string: "slot" or "keyword": determines if next parameter is interpeted as an int:slot or string:keyword name
+; sltargs int|string: either an int:armorslot: int value armor slot e.g. 32 is body armor OR a string:keyword: zad keyword string: keyword string for associated device type e.g. zad_DeviousCollar, zad_DeviousBelt
+; sltargs string: force: "force" to force an unlock, anything else otherwise
+; sltsamp dd_unlock $system.self slot 32 force
+; sltrslt Should remove anything in body slot e.g. corset, harness, etc., and forced, so including quest items (be careful!)
+; sltsamp dd_unlock $system.self keyword dd_DeviousCollar
+function dd_unlock(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthGT(CmdPrimary, param.Length, 3)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+        
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                string argtype = CmdPrimary.ResolveString(param[2])
+                bool force = false
+                if param.Length > 4
+                    force = (CmdPrimary.ResolveString(param[4]) == "force")
+                endif
+
+                Armor device
+                Keyword zadkw
+                
+                if argtype == "slot"
+                    int slot = CmdPrimary.ResolveInt(param[3])
+                    device = _targetActor.GetEquippedArmorInSlot(slot)
+                    zadkw = ddlib.GetDeviceKeyword(device)
+                elseif argtype == "keyword"
+                    zadkw = Keyword.GetKeyword(CmdPrimary.ResolveString(param[3]))
+                    device = ddlib.GetWornDevice(_targetActor, zadkw)
+                endif
+
+                bool is_generic = ddlib.IsGenericDevice(_targetActor, zadkw)
+                if device && (force || is_generic)
+                    ddlib.UnlockDevice(_targetActor, device)
+                    _targetActor.UnequipItem(device)
+                else
+                    SLTDebugMsg("dd_unlock: NOT UNLOCKING: device(" + device + ") zadkw(" + zadkw + ") force(" + force + ") is_generic(" + is_generic + ")")
+                endif
+            else
+                SLTDebugMsg("dd_unlock: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_unlock: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_unlock: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
 ; sltname dd_unlockslot
 ; sltgrup Devious Devices
 ; sltdesc Attempts to unlock any device in the specified slot
@@ -157,6 +655,443 @@ function dd_unlockall(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, strin
         endif
     else
         SLTDebugMsg("dd_unlockall: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_masturbate
+; sltgrup Devious Devices
+; sltdesc Attempts to start a Devious Devices masturbation scene
+; sltargs Form: actor: target Actor
+; sltargs bool: feedback: true to show feedback messages, false otherwise (optional: default true)
+; sltsamp dd_masturbate $system.self false
+function dd_masturbate(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthGT(CmdPrimary, param.Length, 1)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                bool feedback = true
+                if param.Length > 2
+                    feedback = CmdPrimary.ResolveBool(param[2])
+                endif
+                ddlib.Masturbate(_targetActor, feedback)
+            else
+                SLTDebugMsg("dd_masturbate: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_masturbate: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_masturbate: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_play_horny_animation
+; sltgrup Devious Devices
+; sltdesc Attempts to play the horny animation for the specified actor
+; sltargs Form: actor: target Actor
+; sltsamp dd_play_horny_animation $system.self
+function dd_play_horny_animation(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 2)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                ddlib.PlayHornyAnimation(_targetActor)
+            else
+                SLTDebugMsg("dd_play_horny_animation: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_play_horny_animation: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_play_horny_animation: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_orgasm
+; sltgrup Devious Devices
+; sltdesc Attempts to perform a Devious Devices orgasm event
+; sltargs Form: actor: target Actor
+; sltsamp dd_orgasm $system.self
+function dd_orgasm(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 2)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                ddlib.Orgasm(_targetActor)
+            else
+                SLTDebugMsg("dd_orgasm: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_orgasm: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_orgasm: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_edge_actor
+; sltgrup Devious Devices
+; sltdesc Attempts to start a Devious Devices edge actor event
+; sltargs Form: actor: target Actor
+; sltsamp dd_edge_actor $system.self
+function dd_edge_actor(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 2)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                ddlib.EdgeActor(_targetActor)
+            else
+                SLTDebugMsg("dd_edge_actor: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_edge_actor: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_edge_actor: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_chastity_belt_struggle
+; sltgrup Devious Devices
+; sltdesc Attempts to start a Devious Devices chastity belt struggle event
+; sltargs Form: actor: target Actor
+; sltsamp dd_chastity_belt_struggle $system.self
+function dd_chastity_belt_struggle(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 2)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                ddlib.ChastityBeltStruggle(_targetActor)
+            else
+                SLTDebugMsg("dd_chastity_belt_struggle: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_chastity_belt_struggle: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_chastity_belt_struggle: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_trip
+; sltgrup Devious Devices
+; sltdesc Attempts to start a Devious Devices trip event
+; sltargs Form: actor: target Actor
+; sltsamp dd_trip $system.self
+function dd_trip(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 2)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                ddlib.Trip(_targetActor)
+            else
+                SLTDebugMsg("dd_trip: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_trip: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_trip: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_catch_breath
+; sltgrup Devious Devices
+; sltdesc Attempts to start a Devious Devices catch breath event
+; sltargs Form: actor: target Actor
+; sltsamp dd_catch_breath $system.self
+function dd_catch_breath(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 2)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                ddlib.CatchBreath(_targetActor)
+            else
+                SLTDebugMsg("dd_catch_breath: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_catch_breath: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_catch_breath: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_has_breasts_exposed
+; sltgrup Devious Devices
+; sltdesc Returns: bool: true if breasts are exposed, false otherwise
+; sltargs Form: actor: target Actor
+; sltsamp dd_has_breasts_exposed $system.self
+function dd_has_breasts_exposed(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.Length, 2)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                result = ddlib.HasBreastsExposed(_targetActor)
+            else
+                SLTDebugMsg("dd_has_breasts_exposed: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_has_breasts_exposed: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_has_breasts_exposed: failed parm length")
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_inflate_anal_plug
+; sltgrup Devious Devices
+; sltdesc Inflates an anal plug
+; sltargs Form: actor: target Actor
+; sltargs int: amount: value to inflate by (note: the max total inflation value is 5, scale accordingly) (optional: default 1)
+; sltsamp dd_inflate_anal_plug $system.self 2
+function dd_inflate_anal_plug(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthGT(CmdPrimary, param.Length, 1)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                int amount = 1
+                if param.Length > 2
+                    amount = CmdPrimary.ResolveInt(param[2])
+                endif
+                ddlib.InflateAnalPlug(_targetActor, amount)
+            else
+                SLTDebugMsg("dd_inflate_anal_plug: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_inflate_anal_plug: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_inflate_anal_plug: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_inflate_vaginal_plug
+; sltgrup Devious Devices
+; sltdesc Inflates a vaginal plug
+; sltargs Form: actor: target Actor
+; sltargs int: amount: value to inflate by (note: the max total inflation value is 5, scale accordingly) (optional: default 1)
+; sltsamp dd_inflate_vaginal_plug $system.self 2
+function dd_inflate_vaginal_plug(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthGT(CmdPrimary, param.Length, 1)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                int amount = 1
+                if param.Length > 2
+                    amount = CmdPrimary.ResolveInt(param[2])
+                endif
+                ddlib.InflateVaginalPlug(_targetActor, amount)
+            else
+                SLTDebugMsg("dd_inflate_vaginal_plug: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_inflate_vaginal_plug: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_inflate_vaginal_plug: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_inflate_random_plug
+; sltgrup Devious Devices
+; sltdesc Inflates a random plug
+; sltargs Form: actor: target Actor
+; sltargs int: amount: value to inflate by (note: the max total inflation value is 5, scale accordingly) (optional: default 1)
+; sltsamp dd_inflate_random_plug $system.self 2
+function dd_inflate_random_plug(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthGT(CmdPrimary, param.Length, 1)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                int amount = 1
+                if param.Length > 2
+                    amount = CmdPrimary.ResolveInt(param[2])
+                endif
+                ddlib.InflateRandomPlug(_targetActor, amount)
+            else
+                SLTDebugMsg("dd_inflate_random_plug: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_inflate_random_plug: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_inflate_random_plug: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_deflate_anal_plug
+; sltgrup Devious Devices
+; sltdesc Deflates an anal plug
+; sltargs Form: actor: target Actor
+; sltargs int: amount: value to inflate by (note: the min total inflation value is 0, scale accordingly) (optional: default 1)
+; sltsamp dd_deflate_anal_plug $system.self 2
+function dd_deflate_anal_plug(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthGT(CmdPrimary, param.Length, 1)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                int amount = 1
+                if param.Length > 2
+                    amount = CmdPrimary.ResolveInt(param[2])
+                endif
+                ddlib.DeflateAnalPlug(_targetActor, amount)
+            else
+                SLTDebugMsg("dd_deflate_anal_plug: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_deflate_anal_plug: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_deflate_anal_plug: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_deflate_vaginal_plug
+; sltgrup Devious Devices
+; sltdesc Deflates a vaginal plug
+; sltargs Form: actor: target Actor
+; sltargs int: amount: value to inflate by (note: the min total inflation value is 0, scale accordingly) (optional: default 1)
+; sltsamp dd_deflate_vaginal_plug $system.self 2
+function dd_deflate_vaginal_plug(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthGT(CmdPrimary, param.Length, 1)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            if _targetActor
+                int amount = 1
+                if param.Length > 2
+                    amount = CmdPrimary.ResolveInt(param[2])
+                endif
+                ddlib.DeflateVaginalPlug(_targetActor, amount)
+            else
+                SLTDebugMsg("dd_deflate_vaginal_plug: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_deflate_vaginal_plug: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_deflate_vaginal_plug: failed parm length")
+    endif
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname dd_lock
+; sltgrup Devious Devices
+; sltdesc Locks a device onto an actor from their inventory
+; sltargs Form: actor: target Actor
+; sltargs Form: armor: target device armor item to attempt to lock onto the target actor
+; sltargs bool: force: if true, will try to equip the given item, even if another (generic) item is already worn (optional: default false)
+; sltsamp dd_lock $system.self $catsuit_in_inventory true
+function dd_lock(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    if ParamLengthGT(CmdPrimary, param.Length, 2)
+        zadLibs ddlib = GetForm_DeviousDevices_zadLibs() as zadLibs
+
+        if ddlib
+            Actor _targetActor = CmdPrimary.ResolveActor(param[1])
+            Armor _targetArmor = CmdPrimary.ResolveForm(param[2]) as Armor
+            if _targetActor
+                if _targetArmor
+                    bool force = false
+                    if param.Length > 3
+                        force = CmdPrimary.ResolveBool(param[3])
+                    endif
+                    ddlib.LockDevice(_targetActor, _targetArmor, force)
+                else
+                    SLTDebugMsg("dd_lock: failed to resolve Armor from (" + param[2] + ")")
+                endif
+            else
+                SLTDebugMsg("dd_lock: failed to resolve actor from (" + param[1] + ")")
+            endif
+        else
+            SLTDebugMsg("dd_lock: failed to get zadLibs")
+        endif
+    else
+        SLTDebugMsg("dd_lock: failed parm length")
     endif
 
     CmdPrimary.CompleteOperationOnActor()

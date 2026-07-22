@@ -2934,10 +2934,12 @@ int Function RunCommandLine(string[] cmdLine, int startidx, int endidx, bool sub
             
             RunOperationOnActor(cmdLine, subCommand)
 
-            if subCommand
-                __CLRR = CLRR_RUNOP_RESULTFROM
-            else
-                __CLRR = CLRR_RUNOP
+            if runOpPending
+                if subCommand
+                    __CLRR = CLRR_RUNOP_RESULTFROM
+                else
+                    __CLRR = CLRR_RUNOP
+                endif
             endif
 
             ;currentLine += 1

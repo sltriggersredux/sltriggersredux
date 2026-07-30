@@ -1,0 +1,22 @@
+; select the leash target in the console
+; then use the following console command
+; slt run LeashPlayerHoldsTarget
+
+; will attach a leash where
+; holder -> player
+; leashed -> script target
+; parentBone -> "NPC Spine2 [Spn2]"
+; leashBoneMatch -> "Leash1"
+; minLength -> 200.0
+; maxLength -> 300.0
+; persistent -> true
+
+; Leash_neck -> Leash.esp:0x804
+; Leash_body -> Leash.esp:0x800
+set $leash_item "Leash.esp:0x804"
+
+set $leash_item_count resultfrom objectreference_dofunction $system.self GetItemCount $leash_item
+if $leash_item_count < 1
+	item_equip $system.self $leash_item false false
+endif
+leash_applyleash $system.player $system.self "NPC Spine2 [Spn2]" "Leash1" 200.0 300.0 true

@@ -7095,6 +7095,113 @@ Wait for Num-, Num+, Num/, or Num*, or animation expired, and then do something 
 
 # Adult General Function Library 
 
+## Leash Framework
+
+### leash_applyleash
+
+**Description**
+
+Returns: bool: true when arguments are valid and the leash is accepted
+
+**Parameters**
+
+    Form: holder: Actor holding the leash; The current attachment bone is NPC R Hand [RHnd]  
+    Form: leashed: Actor wearing the leash mesh; An actor can have only one active leash  
+    string: parentBone: Exact node name to find on the leashed actor before searching its descendants  
+    string: leashBoneMatch: Text found anywhere in each ordered leash bone name beneath parentBone; For example, Main_ matches hdtSSEPhysics_AutoRename_Armor_00000004 Main_01 after SMP renames the node  
+    float: minLength: Distance where active leash pulling stops; Must be zero or greater  
+    float: maxLength: Maximum holder-to-collar distance; Must be positive and at least minLength  
+    bool: persistent: When true, the leash is saved and restored until explicitly disconnected  
+
+
+**Example**
+
+    If you are using the leash included with Leash Framework, here are values used by the mod author in their example  
+    This example would add a leash from the player (as holder) to the script target (as leashed)  
+    NOTE: All parameters must be provided; none are optional  
+    leash_applyleash $system.player $system.self "NPC Spine2 [Spn2]" "Leash1" 200.0 500.0 true  
+
+
+
+### leash_disconnectleash
+
+**Description**
+
+Returns: bool: true when the matching leash was disconnected
+
+**Parameters**
+
+    Form: holder: leash holding actor  
+    Form: leashed: leashed actor  
+
+
+
+
+### leash_getleashedactors
+
+**Description**
+
+Returns: Form[]: Actor[]: every actor currently leashed to holder. Returns an empty array when holder has no active leashes
+
+**Parameters**
+
+    Form: holder: leash holder to get leashed actors from  
+
+
+
+
+### leash_getleashholder
+
+**Description**
+
+Returns: Form: Actor: actor holding leashed's active leash, or None when leashed has no active leash
+
+**Parameters**
+
+    Form: leashed: leashed actor to get leash holder from  
+
+
+
+
+### leash_isleashed
+
+**Description**
+
+Returns: bool: true when actor currently has an active leash
+
+**Parameters**
+
+    Form: actor: actor to check leashed status of  
+
+
+
+
+### leash_isleashholder
+
+**Description**
+
+Returns: bool: true when actor currently holds at least one active leash
+
+**Parameters**
+
+    Form: actor: actor to check leash holder status of  
+
+
+
+
+### leash_unleashall
+
+**Description**
+
+Returns: bool: true when at least one leash was disconnected
+
+**Parameters**
+
+    Form: actor: leash holder actor to remove leashes from  
+
+
+
+
 ## OSLAroused
 
 ### osla_get_actor_days_since_last_orgasm

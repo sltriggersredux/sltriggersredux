@@ -1,5 +1,27 @@
 Scriptname sl_TriggersCmd extends ActiveMagicEffect
 
+;/
+Command libraries will reference the following during normal use:
+
+string	    Property MostRecentStringResult Hidden
+bool        Property MostRecentBoolResult Hidden
+int         Property MostRecentIntResult  Hidden
+float        Property MostRecentFloatResult  Hidden
+Form        Property MostRecentFormResult Hidden
+string      Property MostRecentLabelResult Hidden
+Alias       Property MostRecentAliasResult Hidden
+string[]    Property MostRecentListStringResult Hidden
+string[]    Property MostRecentListLabelResult Hidden
+bool[]    Property MostRecentListBoolResult Hidden
+int[]    Property MostRecentListIntResult Hidden
+float[]    Property MostRecentListFloatResult Hidden
+Form[]    Property MostRecentListFormResult Hidden
+Alias[]     Property MostRecentListAliasResult Hidden
+
+Function CompleteOperationOnActor()
+EndFunction
+/;
+
 import sl_triggersStatics
 import StorageUtil
 

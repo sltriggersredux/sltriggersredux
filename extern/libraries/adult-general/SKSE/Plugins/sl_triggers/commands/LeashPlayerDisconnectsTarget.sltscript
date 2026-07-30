@@ -1,0 +1,17 @@
+; select the leash target in the console
+; then use the following console command
+; slt run LeashPlayerDisconnectsTarget
+
+; will disconnect a leash where:
+; holder -> player
+; leashed -> script target
+
+; Leash_neck -> Leash.esp:0x804
+; Leash_body -> Leash.esp:0x800
+set $leash_item "Leash.esp:0x804"
+
+leash_disconnectleash $system.player $system.self
+set $leash_item_count resultfrom objectreference_dofunction $system.self GetItemCount $leash_item
+if $leash_item_count > 0
+    item_remove $system.self $leash_item $leash_item_count false none
+endif

@@ -3,7 +3,7 @@ scriptname sl_triggersAPI
 import sl_triggersStatics
 
 int Function GetVersion() global
-    sl_triggersStatics.GetModVersion()
+    return sl_triggersStatics.GetModVersion()
 EndFunction
 
 string[] Function GetScriptsList() global

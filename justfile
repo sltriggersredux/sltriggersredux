@@ -73,6 +73,8 @@ file_docs_Forms_md :=           dir_docs / "Forms_and_FormIDs.md"
 file_src_slt_forms_md :=        dir_project_src / "sl_triggers_forms_and_formids.md"
 file_docs_Func_lib_Dev_md :=    dir_docs / "Function_Library_Development.md"
 file_src_slt_func_lib_dev_md := dir_project_src / "sl_triggers_function_library_development.md"
+file_docs_Integration_md :=     dir_docs / "Integration.md"
+file_src_integration_md :=      dir_project_src / "sl_triggers_integration.md"
 file_docs_Script_desc_md :=     dir_docs / "Script_Descriptions.md"
 file_src_script_desc_md :=      dir_project_src / "sl_triggers_script_descriptions.md"
 file_docs_Scripts_md :=         dir_docs / "Scripts.md"
@@ -158,6 +160,8 @@ str_file_forms_md :=            replace("\"" + file_docs_Forms_md + "\"",       
 str_file_slt_forms_md :=        replace("\"" + file_src_slt_forms_md + "\"",            '/', '\')
 str_file_func_lib_dev_md :=     replace("\"" + file_docs_Func_lib_Dev_md + "\"",        '/', '\')
 str_file_slt_func_lib_dev_md := replace("\"" + file_src_slt_func_lib_dev_md + "\"",     '/', '\')
+str_file_integration_md :=      replace("\"" + file_docs_Integration_md + "\"",         '/', '\')
+str_file_sltintegration_md :=   replace("\"" + file_src_integration_md + "\"",          '/', '\')
 str_file_script_desc_md :=      replace("\"" + file_docs_Script_desc_md + "\"",         '/', '\')
 str_file_slt_script_desc_md :=  replace("\"" + file_src_script_desc_md + "\"",          '/', '\')
 str_file_Scripts_md :=          replace("\"" + file_docs_Scripts_md + "\"",             '/', '\')
@@ -233,7 +237,7 @@ populateNEF: _prepsrc
 
 generatedocs:
     jcx SltParser "./src/sl_triggers_function_library" "SLTriggers Redux Base Function Library" "./src/source/scripts/sl_triggersCmdLibSLT.psc" "./src/source/scripts/sl_triggersCmdLibCore.psc" "./src/source/scripts/sl_triggersCmdLibRacemenuNIO.psc" "./src/source/scripts/sl_triggersCmdLibNFF.psc" "./src/source/scripts/sl_triggersCmdLibBase.psc"
-    jcx SltParser "./extern/libraries/adult-general/sl_triggers_function_library_adult_general" "Adult General Function Library" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibOSLAroused.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibSLIF.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibTNG.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibPW.psc"
+    jcx SltParser "./extern/libraries/adult-general/sl_triggers_function_library_adult_general" "Adult General Function Library" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibOSLAroused.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibSLIF.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibTNG.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibPW.psc" "./extern/libraries/adult-general/source/scripts/sl_triggersCmdLibLeashFramework.psc"
     jcx SltParser "./extern/libraries/ostim/sl_triggers_function_library_ostim" "OStim Function Library" "./extern/libraries/ostim/source/scripts/sl_triggersCmdLibOStim.psc"
     jcx SltParser "./extern/libraries/sexlab/sl_triggers_function_library_sexlab" "SexLab 1.66 Function Library" "./extern/libraries/sexlab/source/scripts/sl_triggersCmdLibSexLab.psc"
     jcx SltParser "./extern/libraries/sexlab-dependent/sl_triggers_function_library_sexlab_dependent" "SexLab Dependent Function Library" "./extern/libraries/sexlab-dependent/source/scripts/sl_triggersCmdLibSexLabDependent.psc"
@@ -243,6 +247,7 @@ generatedocs:
     copy -Force {{str_file_func_lib_dev_md}} {{str_file_slt_func_lib_dev_md}}
     copy -Force {{str_file_script_desc_md}} {{str_file_slt_script_desc_md}}
     copy -Force {{str_file_Scripts_md}} {{str_file_sltscripts_md}}
+    copy -Force {{str_file_integration_md}} {{str_file_sltintegration_md}}
     Get-Content "./src/sl_triggers_function_library.md" , "./extern/libraries/sexlabplusplus/sl_triggers_function_library_sexlab.md" , "./extern/libraries/sexlab/sl_triggers_function_library_sexlab.md" , "./extern/libraries/sexlab-dependent/sl_triggers_function_library_sexlab_dependent.md" , "./extern/libraries/ostim/sl_triggers_function_library_ostim.md" , "./extern/libraries/adult-general/sl_triggers_function_library_adult_general.md" | Set-Content "./docs/Function_Libraries.md"
     # grep "^### *" ../docs/Function_Libraries.md | cut -c 5- | sort -u | tr '\n' ' ' > cfoo2.txt to get all of the commands for use in lang support
 

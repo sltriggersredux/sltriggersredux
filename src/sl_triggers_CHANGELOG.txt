@@ -1,4 +1,21 @@
-0.984
+0.987
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    update: documentation
+    enhancement: Leash Framework integration
+        leash_applylash
+        leash_disconnectleash
+        leash_unleashall
+        leash_isleashed
+        leash_isleashholder
+        leash_getleashholder
+        leash_getleashedactor
+    new scripts:
+        LeashPlayerDisconnectsTarget
+        LeashPlayerHoldsTarget
+
+0.986
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
         (or whichever folder you have your SKSE logs directed to)
@@ -33,7 +50,7 @@
         dd_deflate_vaginal_plug: deflates a vaginal plug
         dd_lock: lock an item in actor's inventory onto an actor
 
-0.984
+0.985
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
         (or whichever folder you have your SKSE logs directed to)

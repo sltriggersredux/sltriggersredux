@@ -1,6 +1,20 @@
 Scriptname LeashFramework Hidden
 
 ;/
+Active leash factions supplied by Leash.esp:
+- LeashedFaction (form ID 0x000D6A): contains actors that currently have an active leash.
+- LeasherFaction (form ID 0x000D6B): contains actors that currently hold one or more active leashes.
+
+Pull mod events:
+- LeashFramework_OnActorPulled: sent once when normal direct-locomotion pulling starts.
+- LeashFramework_OnActorRagdollPulled: sent once when forced ragdoll pulling starts.
+
+Register with RegisterForModEvent. Both events use the leashed Actor as sender, leave strArg empty,
+and provide the holder-to-collar distance at the transition in numArg. An event can be sent again only
+after that pull mode stops and later starts again; it is not sent every frame while pulling remains active.
+/;
+
+;/
 Connects a leash from a holder's right hand to leash bones on another actor.
 
 holder: Actor holding the leash. The current attachment bone is NPC R Hand [RHnd].
@@ -53,3 +67,29 @@ Actor Function GetLeashHolder(Actor leashed) Global Native
 Returns every actor currently leashed to holder. Returns an empty array when holder has no active leashes.
 /;
 Actor[] Function GetLeashedActors(Actor holder) Global Native
+
+;/
+Returns the minimum length of leashed's active leash, or -1.0 when leashed has no active leash.
+/;
+Float Function GetMinLeashLength(Actor leashed) Global Native
+
+;/
+Returns the maximum length of leashed's active leash, or -1.0 when leashed has no active leash.
+/;
+Float Function GetMaxLeashLength(Actor leashed) Global Native
+
+;/
+Sets the minimum length of leashed's active leash.
+
+newLength must be zero or greater and cannot exceed the current maximum length.
+Returns false when leashed has no active leash or newLength is invalid.
+/;
+Bool Function SetMinLeashLength(Actor leashed, Float newLength) Global Native
+
+;/
+Sets the maximum length of leashed's active leash.
+
+newLength must be positive and cannot be less than the current minimum length.
+Returns false when leashed has no active leash or newLength is invalid.
+/;
+Bool Function SetMaxLeashLength(Actor leashed, Float newLength) Global Native

@@ -1,0 +1,103 @@
+; $global.leash_holder is currently selected holder
+;    for purposes of this script; it doesn't mean they are actually a holder just that
+;    any operation run by this script will use them as the holder
+; $global.leash_wearer is currently selected leashed actor
+;    for purposes of this script; it doesn't mean they are actually leashed by the holder just that
+;    any operation run by this script will use them as the leashed actor
+
+; Leash_neck -> Leash.esp:0x804
+; Leash_body -> Leash.esp:0x800
+set $leash_item "Leash_neck"
+
+set $target_actor $request.core.cursor_ref
+if $target_actor == none
+	set $target_actor $system.player
+endif
+
+set $target_name resultfrom actor_name $target_actor
+set $target_formid resultfrom form_dogetter $target_actor GetFormID
+
+
+[setup]
+if $global.leash_holder != none
+	set $holder_name resultfrom actor_name $global.leash_holder
+	set $holder_formid resultfrom form_dogetter $global.leash_holder GetFormID
+else
+	set $holder_name "None"
+	set $holder_formid "0x0"
+endif
+if $global.leash_wearer != none
+	set $wearer_name resultfrom actor_name $global.leash_wearer
+	set $wearer_formid resultfrom form_dogetter $global.leash_wearer GetFormID
+else
+	set $wearer_name "None"
+	set $wearer_formid "0x0"
+endif
+
+listclear $labels
+string[] $labels 
+listadd $labels $"Set Holder (Currently: {holder_name} - {holder_formid})" $"Set Wearer (Currently: {wearer_name} - {wearer_formid})" "- Execute -" "- Done -" 
+
+
+set $selection resultfrom uilib_showlist $"Leash Actor: {target_name} - {target_formid}" $labels 0 0
+if $selection == 0
+	set $global.leash_holder $target_actor
+	goto [setup]
+elseif $selection == 1
+	set $global.leash_wearer $target_actor
+	goto [setup]
+elseif $selection == 2
+	; no-op, fallthrough
+else
+	return
+endif
+
+listclear $labels
+listadd $labels "- Cancel -" "Apply Leash" "Disconnect Leash" "Unleash All for Holder"
+set $selection resultfrom uilib_showlist "Leash Action" $labels 0 0
+
+goto $selection
+msg_notify "Invalid selection"
+return
+
+; Cancel
+[0]
+return
+
+; Apply Leash
+[1]
+set $leash_item_count resultfrom objectreference_dofunction $global.leash_wearer GetItemCount $leash_item
+if $leash_item_count < 1
+	item_equip $global.leash_wearer $leash_item false false
+endif
+leash_applyleash $global.leash_holder $global.leash_wearer "NPC Spine2 [Spn2]" "Leash1" 200 500 true
+return
+
+; Disconnect Leash
+[2]
+leash_disconnectleash $global.leash_holder $global.leash_wearer
+set $leash_item_count resultfrom objectreference_dofunction $global.leash_wearer GetItemCount $leash_item
+if $leash_item_count > 0
+	item_remove $global.leash_wearer $leash_item $leash_item_count false none
+endif
+return
+
+; Unleash All for Holder
+[3]
+set $leash_wearers resultfrom leash_getleashedactors $global.leash_holder
+set $wearer_count resultfrom listcount $leash_wearers
+if $wearer_count < 1
+	; no wearers, no point in calling unleash all
+	return
+endif
+leash_unleashall $global.leash_holder
+set $i 0
+[unleashing]
+set $leash_item_count resultfrom objectreference_dofunction $leash_wearers[$i] GetItemCount $leash_item
+if $leash_item_count > 0
+	item_remove $leash_wearers[$i] $leash_item $leash_item_count false none
+endif
+inc $i
+if $i < $wearer_count [unleashing]
+
+return

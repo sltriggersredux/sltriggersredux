@@ -3388,6 +3388,22 @@ https://ck.uesp.net/wiki/Quest_Script
 
 
 
+## SLTriggers Redux
+
+### sltr_get_scripts_list
+
+**Description**
+
+Returns: string[]: list of available SLTScripts
+
+
+**Example**
+
+    ; $available_scripts will contain a string[] list of available SLTScripts  
+    set $available_scripts resultfrom sltr_get_scripts_list  
+
+
+
 ## Sound
 
 ### snd_play
@@ -7163,6 +7179,32 @@ Returns: Form: Actor: actor holding leashed's active leash, or None when leashed
 
 
 
+### leash_getmaxleashlength
+
+**Description**
+
+Returns: float: maximum length of leashed's active leash, or -1.0 when leashed has no active leash
+
+**Parameters**
+
+    Form: actor: actor to get max leash length of  
+
+
+
+
+### leash_getminleashlength
+
+**Description**
+
+Returns: float: minimum length of leashed's active leash, or -1.0 when leashed has no active leash
+
+**Parameters**
+
+    Form: actor: actor to get min leash length of  
+
+
+
+
 ### leash_isleashed
 
 **Description**
@@ -7185,6 +7227,34 @@ Returns: bool: true when actor currently holds at least one active leash
 **Parameters**
 
     Form: actor: actor to check leash holder status of  
+
+
+
+
+### leash_setmaxleashlength
+
+**Description**
+
+Returns: bool: false when leashed has no active leash or newLength is invalid
+
+**Parameters**
+
+    Form: actor: actor to set max leash length for  
+    float: newLength: new max length for actor leash  
+
+
+
+
+### leash_setminleashlength
+
+**Description**
+
+Returns: bool: false when leashed has no active leash or newLength is invalid
+
+**Parameters**
+
+    Form: actor: actor to set min leash length for  
+    float: newLength: new min length for actor leash  
 
 
 

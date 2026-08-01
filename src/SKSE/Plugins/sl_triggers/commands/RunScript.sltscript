@@ -1,0 +1,10 @@
+string[] $labels
+listadd $labels "- Cancel -"
+set $scripts_list resultfrom sltr_get_scripts_list
+listjoin $labels $scripts_list
+set $selection resultfrom uilib_showlist "Select the script to run" $labels 0 0
+if $selection == 0
+    return
+endif
+inc $selection -1
+call $scripts_list[$selection]

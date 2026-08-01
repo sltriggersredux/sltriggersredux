@@ -164,7 +164,7 @@ bool Function CustomResolveScoped(sl_triggersCmd CmdPrimary, string scope, strin
 			skip = 3
 		elseif token == "partner4"
 			skip = 4
-		elseif token == "is_available.sexlab"
+		elseif token == "is_available.sexlabpp" || token == "is_available.sexlab"
 			CmdPrimary.CustomResolveBoolResult = (IsEnabled && SexLabForm)
 			return true
 		endif

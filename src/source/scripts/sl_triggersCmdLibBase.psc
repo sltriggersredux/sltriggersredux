@@ -4,6 +4,20 @@ import sl_triggersStatics
 
 
 
+; sltname sltr_get_scripts_list
+; sltgrup SLTriggers Redux
+; sltdesc Returns: string[]: list of available SLTScripts
+; sltsamp ; $available_scripts will contain a string[] list of available SLTScripts
+; sltsamp set $available_scripts resultfrom sltr_get_scripts_list
+function sltr_get_scripts_list(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    CmdPrimary.MostRecentListStringResult = sl_triggers.GetScriptsList()
+
+    CmdPrimary.CompleteOperationOnActor()
+EndFunction
+
+
 
 
 
@@ -224,6 +238,8 @@ function form_doaction(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, stri
             endif
         endif
     endif
+
+	CmdPrimary.CompleteOperationOnActor()
 EndFunction
 
 ; sltname objectreference_doaction
@@ -262,6 +278,8 @@ function objectreference_doaction(Actor CmdTargetActor, ActiveMagicEffect _CmdPr
             endif
         endif
     endif
+
+	CmdPrimary.CompleteOperationOnActor()
 EndFunction
 
 ; sltname quest_doaction
@@ -296,6 +314,8 @@ function quest_doaction(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, str
             endif
         endif
     endif
+
+	CmdPrimary.CompleteOperationOnActor()
 EndFunction
 
 ; sltname actor_doaction

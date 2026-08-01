@@ -1,10 +1,35 @@
+0.988
+    Savegame compatible
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    update: cursor_ref now in lang support
+    enhancement: added $request.core.cursor_ref: provides Form under cursor at time of script launch for any script
+        differs from 'cursor_ref' which provides current Form under cursor
+        useful to know exactly which Actor was being pointed at when the script was first called
+        slightly faster than using cursor_ref but only useful when you want the original actor under crosshairs
+    enhancement: new Leash Framework bindings
+        leash_getminleashlength
+        leash_getmaxleashlength
+        leash_setminleashlength
+        leash_setmaxleashlength
+    enhancement: new commands
+        sltr_get_scripts_list - returns the list of available SLTScripts
+    enhancement: new SLTScripts:
+        RunScript - displays all available SLTScripts and allows you to select one to run
+        LeashManager - uses Actor under crosshair to manage potential holder/wearer for executing leash commands
+    bugfix: form_doaction, objectreference_doaction, quest_doaction will no longer cause script execution to hang
+    enhancement: new system variable: $system.is_available.sexlabpp
+        true if SexLabPP module is installed and functioning
+    update: $system.is_available.sexlab is true if either SexLab OR SexLabPP is installed and functioning
+        use $system.is_available.sexlabpp to determine which version is explicitly installed if necessary
+
 0.987
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
         (or whichever folder you have your SKSE logs directed to)
     update: documentation
     enhancement: Leash Framework integration
-        leash_applylash
+        leash_applyleash
         leash_disconnectleash
         leash_unleashall
         leash_isleashed

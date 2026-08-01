@@ -240,7 +240,8 @@ $list [0]
 |`$system.player.in_water_last_start_gametime`|float - (Added by SLTR Core) gametime when player started previous in water session|
 |`$system.player.swimming_last_duration`|float - (Added by SLTR Core) gametime duration player was last swimming; might be very small for repeated re-entries of deep water|
 |`$system.player.in_water_last_duration`|float - (Added by SLTR Core) gametime duration player was last in water; might be very small for repeated re-entries of shallow water|
-|`$system.is_available.sexlab`|bool - (Added by SLTR SexLab) is the SLTR SexLab extension available and enabled (would be false if you installed on a system without SexLab)|
+|`$system.is_available.sexlab`|bool - (Added by SLTR SexLab and SLTR SexLabPP) is the SLTR SexLab or SexLabPP extension available and enabled (would be false if you installed on a system without SexLab or SexLabPP)|
+|`$system.is_available.sexlabpp`|bool - (Added by SLTR SexLabPP) is the SLTR SexLabPP extension available and enabled (would be false if you installed on a system without SexLabPP)|
 |`$system.partner`|Actor - (Added by SLTR SexLab) the first member of the target Actor's current SexLab scene that is not the target Actor|
 |`$system.partner1`|Actor - (Added by SLTR SexLab) the first member of the target Actor's current SexLab scene that is not the target Actor|
 |`$system.partner2`|Actor - (Added by SLTR SexLab) the second member of the target Actor's current SexLab scene that is not the target Actor|
@@ -257,6 +258,7 @@ $list [0]
 `request` scoped variables are also read-only and typically intended to convey information relevant to the context of the trigger, or the environment at the time the script was requested. Unlike `system` scoped variables that are intrinsic to the system, `request` scoped variables are only going to have relevant information in certain circumstances.
 |Variable|Returns|
 |---|---|
+|`$request.core.cursor_ref`|Form - (Added by SLTR Core) object under crosshairs at time of script activation; faster than using cursor_ref command|
 |`$request.core.activatedContainer`|Form - (Added by SLTR Core) container that was activated as part of a container activation trigger|
 |`$request.core.activatedContainer.is_corpse`|bool - (Added by SLTR Core) true if the activated container was a corpse|
 |`$request.core.activatedContainer.is_empty`|bool - (Added by SLTR Core) true if the activated container was empty|

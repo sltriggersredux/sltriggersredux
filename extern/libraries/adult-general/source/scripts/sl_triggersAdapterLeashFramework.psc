@@ -27,3 +27,19 @@ endfunction
 Actor[] Function leash_GetLeashedActors(Actor holder) Global
     return LeashFramework.GetLeashedActors(holder)
 endfunction
+
+Float Function leash_GetMinLeashLength(Actor leashed) Global
+    return LeashFramework.GetMinLeashLength(leashed)
+endfunction
+
+Float Function leash_GetMaxLeashLength(Actor leashed) Global
+    return LeashFramework.GetMaxLeashLength(leashed)
+endfunction
+
+Bool Function leash_SetMinLeashLength(Actor leashed, Float newLength) Global
+    return LeashFramework.SetMinLeashLength(leashed, newLength)
+endfunction
+
+Bool Function leash_SetMaxLeashLength(Actor leashed, Float newLength) Global
+    return LeashFramework.SetMaxLeashLength(leashed, newLength)
+endfunction

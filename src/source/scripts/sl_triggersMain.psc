@@ -765,6 +765,8 @@ Function StartCommandWithThreadId(Form targetForm, string initialScriptName, int
 		actualTargetForm = actualTarget
 	endif
 
+	sl_triggersCmd.PrecacheRequestForm(self, targetForm.GetFormID(), requestId, "core.cursor_ref", Game.GetCurrentCrosshairRef() as Form)
+
 	EnqueueScriptForTarget(actualTargetForm, requestId, threadid, initialScriptName)
 	
 	if bDebugMsg

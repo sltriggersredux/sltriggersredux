@@ -13,7 +13,7 @@
 
 ; Leash_neck -> Leash.esp:0x804
 ; Leash_body -> Leash.esp:0x800
-set $leash_item "Leash.esp:0x804"
+set $leash_item "Leash_neck"
 
 set $leash_item_count resultfrom objectreference_dofunction $system.self GetItemCount $leash_item
 if $leash_item_count < 1

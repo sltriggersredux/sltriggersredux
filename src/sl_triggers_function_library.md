@@ -3388,6 +3388,22 @@ https://ck.uesp.net/wiki/Quest_Script
 
 
 
+## SLTriggers Redux
+
+### sltr_get_scripts_list
+
+**Description**
+
+Returns: string[]: list of available SLTScripts
+
+
+**Example**
+
+    ; $available_scripts will contain a string[] list of available SLTScripts  
+    set $available_scripts resultfrom sltr_get_scripts_list  
+
+
+
 ## Sound
 
 ### snd_play

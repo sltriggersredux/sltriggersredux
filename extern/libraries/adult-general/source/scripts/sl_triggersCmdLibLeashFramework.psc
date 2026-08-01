@@ -206,3 +206,97 @@ function leash_getleashedactors(Actor CmdTargetActor, ActiveMagicEffect _CmdPrim
 
     CmdPrimary.CompleteOperationOnActor()
 endFunction
+
+; sltname leash_getminleashlength
+; sltgrup Leash Framework
+; sltdesc Returns: float: minimum length of leashed's active leash, or -1.0 when leashed has no active leash
+; sltargs Form: actor: actor to get min leash length of
+function leash_getminleashlength(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    float result = -1
+
+    if ParamLengthEQ(CmdPrimary, param.length, 2)
+        Actor targetActor = CmdPrimary.ResolveActor(param[1])
+        if targetActor
+            result = sl_triggersAdapterLeashFramework.leash_getminleashlength(targetActor)
+        else
+            CmdPrimary.SFW("leash_getminleashlength: could not resolve actor from :" + param[1] + ":")
+        endif
+    endif
+
+    CmdPrimary.MostRecentFloatResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname leash_getmaxleashlength
+; sltgrup Leash Framework
+; sltdesc Returns: float: maximum length of leashed's active leash, or -1.0 when leashed has no active leash
+; sltargs Form: actor: actor to get max leash length of
+function leash_getmaxleashlength(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    float result = -1
+
+    if ParamLengthEQ(CmdPrimary, param.length, 2)
+        Actor targetActor = CmdPrimary.ResolveActor(param[1])
+        if targetActor
+            result = sl_triggersAdapterLeashFramework.leash_getmaxleashlength(targetActor)
+        else
+            CmdPrimary.SFW("leash_getmaxleashlength: could not resolve actor from :" + param[1] + ":")
+        endif
+    endif
+
+    CmdPrimary.MostRecentFloatResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname leash_setminleashlength
+; sltgrup Leash Framework
+; sltdesc Returns: bool: false when leashed has no active leash or newLength is invalid
+; sltargs Form: actor: actor to set min leash length for
+; sltargs float: newLength: new min length for actor leash
+function leash_setminleashlength(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.length, 3)
+        Actor targetActor = CmdPrimary.ResolveActor(param[1])
+        if targetActor
+            result = sl_triggersAdapterLeashFramework.leash_setminleashlength(targetActor, CmdPrimary.ResolveFloat(param[2]))
+        else
+            CmdPrimary.SFW("leash_setminleashlength: could not resolve actor from :" + param[1] + ":")
+        endif
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction
+
+; sltname leash_setmaxleashlength
+; sltgrup Leash Framework
+; sltdesc Returns: bool: false when leashed has no active leash or newLength is invalid
+; sltargs Form: actor: actor to set max leash length for
+; sltargs float: newLength: new max length for actor leash
+function leash_setmaxleashlength(Actor CmdTargetActor, ActiveMagicEffect _CmdPrimary, string[] param) global
+	sl_triggersCmd CmdPrimary = _CmdPrimary as sl_triggersCmd
+
+    bool result = false
+
+    if ParamLengthEQ(CmdPrimary, param.length, 3)
+        Actor targetActor = CmdPrimary.ResolveActor(param[1])
+        if targetActor
+            result = sl_triggersAdapterLeashFramework.leash_setmaxleashlength(targetActor, CmdPrimary.ResolveFloat(param[2]))
+        else
+            CmdPrimary.SFW("leash_setmaxleashlength: could not resolve actor from :" + param[1] + ":")
+        endif
+    endif
+
+    CmdPrimary.MostRecentBoolResult = result
+
+    CmdPrimary.CompleteOperationOnActor()
+endFunction

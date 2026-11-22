@@ -1,16 +1,23 @@
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
-        REPO CharmedBaryon/CommonLibSSE-NG
-        REF b93280e832f263dbef44e44cbe2936622a02f91a
-        SHA512  c98a0dde8fab45d0b5ffc8241bc6437fc1b2855e5577e9b66fe4e237c35c7111c3288f0ef7a637b2a399dd38938221619331e3b49504b76ac0e1a0a2034715a6
-        HEAD_REF main
-	PATCHES no_skse_plugin_version.patch fix-latent-function-getrawtype.patch
+        REPO alandtse/CommonLibSSE-NG
+        REF 48b17e1dea3028850adf63209f6733dbf4dcdcd7
+        SHA512 9592ede31854359a9bb1ff2c9bce81e8e33baad612631035350a1b4e7ed2543dd97838d0d5e50d052158958546b3156421d528a879492e5e99b7c7172427da3a
+        HEAD_REF ng
 )
+
+vcpkg_from_github(
+        OUT_SOURCE_PATH OPENVR_PATH
+        REPO ValveSoftware/openvr
+        REF 60eb187801956ad277f1cae6680e3a410ee0873b
+        SHA512 bb85b4705e7095ac65df9969112b2df8930cee7917cc5f14231c5a0ffeed7a73ffa60727fd32f8786a403656f95a3ec0f80bf3ceabc5b8ede964aefb920bc718
+)
+file(COPY "${OPENVR_PATH}/" DESTINATION "${SOURCE_PATH}/extern/openvr")
 
 vcpkg_configure_cmake(
         SOURCE_PATH "${SOURCE_PATH}"
         PREFER_NINJA
-        OPTIONS -DBUILD_TESTS=off -DSKSE_SUPPORT_XBYAK=on
+        OPTIONS -DBUILD_TESTS=off -DSKSE_SUPPORT_XBYAK=on -DSKSE_SUPPORT_PATCH_SAFETY=off
 )
 
 vcpkg_install_cmake()
@@ -25,6 +32,6 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/CommonLibSSE/CommonLibSSE")
 
 file(
-        INSTALL "${SOURCE_PATH}/LICENSE"
+        INSTALL "${SOURCE_PATH}/COPYING.txt"
         DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
         RENAME copyright)

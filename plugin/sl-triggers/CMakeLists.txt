@@ -51,12 +51,12 @@ endif()
 find_package(CommonLibSSE CONFIG REQUIRED)
 include(cmake/headerlist.cmake)
 include(cmake/sourcelist.cmake)
-add_commonlibsse_plugin(${PROJECT_NAME} SOURCES ${headers} ${sources}) # <--- specifies plugin.cpp
-
-add_custom_command(
-  TARGET ${PROJECT_NAME} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_CURRENT_BINARY_DIR}/__${PROJECT_NAME}Plugin.cpp"
-)
+# add_commonlibsse_plugin() generates SKSEPluginInfo (version/name come from project() above).
+add_commonlibsse_plugin(${PROJECT_NAME}
+    AUTHOR "hextun"
+    EMAIL "246708871+sltriggersredux@users.noreply.github.com"
+    USE_ADDRESS_LIBRARY
+    SOURCES ${headers} ${sources})
 
 find_path(SIMPLEINI_INCLUDE_DIRS "ConvertUTF.c")
 target_include_directories(${PROJECT_NAME} PRIVATE ${SIMPLEINI_INCLUDE_DIRS})

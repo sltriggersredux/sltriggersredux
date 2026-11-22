@@ -1,3 +1,10 @@
+0.989
+    Savegame compatibility unknown
+    Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 
+        (or whichever folder you have your SKSE logs directed to)
+    update: sl-triggers.dll plugin is now updated to latest CommonLibSSE-NG at this time (i.e. for 1.7.104 and earlier)
+        switched from CharmedBaryon version to alandtse version
+
 0.988
     Savegame compatible
     Reminder: Note that logging output is all sent to <My Documents>\My Games\Skyrim Special Edition\SKSE\sl-triggers.log 

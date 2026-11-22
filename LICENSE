@@ -1,4 +1,46 @@
-SLTriggers Redux - MIT License
+SLTriggers Redux - Licensing
+
+SUMMARY
+-------
+- Source code, scripts, and other files in this repository: MIT License (see
+  the sections below).
+- The compiled SKSE plugin (sl-triggers.dll) statically links CommonLibSSE-NG
+  and is therefore distributed under the GNU General Public License, version 3
+  or (at your option) any later version (GPL-3.0-or-later). See the next
+  section.
+
+================================================================================
+COMPILED SKSE PLUGIN - GPL-3.0-or-later (CommonLibSSE-NG)
+================================================================================
+
+The SKSE plugin (sl-triggers.dll) is built against CommonLibSSE-NG
+(https://github.com/alandtse/CommonLibSSE-NG), which is licensed under
+GPL-3.0-or-later with a Modding Exception and a GPL-3.0 Linking Exception
+(see EXCEPTIONS.md in that project). The Modding Exception covers linking with
+Skyrim itself and with SKSE and Windows. It does not extend to plugin code, so
+a plugin that statically links CommonLibSSE-NG forms a combined work with it.
+
+Accordingly, the compiled plugin binary is conveyed under the terms of the GNU
+General Public License, version 3 or later:
+
+    https://www.gnu.org/licenses/gpl-3.0.html
+
+The complete corresponding source code for the plugin, including the portions
+that are otherwise MIT licensed, is available at:
+
+    https://github.com/sltriggersredux/sltriggersredux
+
+This applies only to the compiled plugin binary. The MIT-licensed source files
+in this repository remain available under the MIT License below, and you may
+use them under those terms in works that do not link CommonLibSSE-NG. Papyrus
+scripts, SLT scripts, configuration, FOMOD files, and documentation are
+separate works that do not link CommonLibSSE-NG and remain under the MIT
+License.
+
+CommonLibSSE-NG is Copyright (c) its respective authors and contributors, and
+was originally based on code released under the MIT License
+(CommonLibSSE, (c) Ryan-rsm-McKenzie). Its license texts (COPYING.txt and
+EXCEPTIONS.md) accompany distributions of the plugin binary.
 
 This project contains code from multiple sources with different licensing:
 

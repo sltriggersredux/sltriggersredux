@@ -1,14 +1,4 @@
 
-SKSEPluginInfo(
-    .Version = REL::Version{ 2, 0, 0, 0 },
-    .Name = "sl-triggers"sv,
-    .Author = "hextun"sv,
-    .SupportEmail = "246708871+sltriggersredux@users.noreply.github.com"sv,
-    .StructCompatibility = SKSE::StructCompatibility::Independent,
-    .RuntimeCompatibility = SKSE::VersionIndependence::AddressLibrary,
-    .MinimumSKSEVersion = REL::Version{ 0, 0, 0, 0 }
-)
-
 SKSEPluginLoad(const SKSE::LoadInterface *skse) {
     auto logsFolder = SKSE::log::log_directory();
     if (!logsFolder) SKSE::stl::report_and_fail("SKSE log_directory not provided, logs disabled.");

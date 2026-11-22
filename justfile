@@ -264,6 +264,9 @@ packagefomod:
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_consumption}}') { Remove-Item -Path '{{raw_dir_fomod_consumption}}' -Recurse }"
     powershell.exe -Command "if (Test-Path '{{raw_dir_fomod_sls_wet_license}}') { Remove-Item -Path '{{raw_dir_fomod_sls_wet_license}}' -Recurse }"
     #Core
+    xcopy /y "LICENSE" {{str_dir_fomod_core}}
+    xcopy /y "COPYING.txt" {{str_dir_fomod_core}}
+    xcopy /y "EXCEPTIONS.md" {{str_dir_fomod_core}}
     xcopy /e /i /y {{str_dir_project_src}} {{str_dir_fomod_core}}
     #Adult General
     xcopy /e /i /y {{str_dir_lib_adult_general}} {{str_dir_fomod_adult_general}}

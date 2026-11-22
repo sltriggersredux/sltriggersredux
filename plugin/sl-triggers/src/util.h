@@ -281,19 +281,41 @@ namespace NifUtil
 
 namespace HookUtil {
     struct Hooking {
+        // Confirms the bytes at addrCall are the call instruction we expect to replace
+        // (E8 for a 5-byte call, FF 15 for a 6-byte call) before anything is written.
+        // Protects against a wrong address/offset on a runtime we haven't verified (e.g. VR)
+        // or after a game update, where write_call would otherwise corrupt unrelated code.
+        template <size_t size>
+        [[nodiscard]] static bool IsExpectedCallSite(uintptr_t addrCall, std::string_view name) {
+            static_assert(size == 5 || size == 6, "write_call supports 5 or 6 byte calls only");
+            if (!addrCall) {
+                logger::error("Hook '{}' skipped: target address could not be resolved on this runtime", name);
+                return false;
+            }
+            const auto* p = reinterpret_cast<const std::uint8_t*>(addrCall);
+            const bool ok = (size == 5) ? (p[0] == 0xE8) : (p[0] == 0xFF && p[1] == 0x15);
+            if (!ok) {
+                logger::error("Hook '{}' skipped: unexpected bytes {:02X} {:02X} at 0x{:X} (expected a {}-byte call)",
+                    name, p[0], p[1], addrCall, size);
+            }
+            return ok;
+        }
+
         template <class T, size_t size = 5>
         static void writeCall() {
+            uintptr_t addrCall = T::srcFunc.address() + T::srcFuncOffset;
+            if (!IsExpectedCallSite<size>(addrCall, T::logName)) return;
             SKSE::AllocTrampoline(64);
             auto& trampoline = SKSE::GetTrampoline();
-            uintptr_t addrCall = T::srcFunc.address() + T::srcFuncOffset;
             T::orig = trampoline.write_call<size>(addrCall, T::hook);
         }
 
         template <class T, size_t size = 5>
         static void writeCall(uintptr_t srcFuncAddress, int64_t srcFuncOffset) {
+            uintptr_t addrCall = srcFuncAddress + srcFuncOffset;
+            if (!IsExpectedCallSite<size>(addrCall, T::logName)) return;
             SKSE::AllocTrampoline(64);
             auto& trampoline = SKSE::GetTrampoline();
-            uintptr_t addrCall = srcFuncAddress + srcFuncOffset;
             T::orig = trampoline.write_call<size>(addrCall, T::hook);
         }
     };

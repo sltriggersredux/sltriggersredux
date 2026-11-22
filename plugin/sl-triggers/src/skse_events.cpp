@@ -455,8 +455,8 @@ void SLT::RegistrationClass::QuitGameHook::install() {
 
 std::string SLT::RegistrationClass::QuitGameHook::logName = "QuitGame";
 REL::Relocation<decltype(SLT::RegistrationClass::QuitGameHook::hook)> SLT::RegistrationClass::QuitGameHook::orig;
-REL::RelocationID SLT::RegistrationClass::QuitGameHook::srcFunc = REL::RelocationID{35545, 36544};
-uint64_t SLT::RegistrationClass::QuitGameHook::srcFuncOffset = REL::Relocate(0x35, 0x1AE);
+REL::RelocationID SLT::RegistrationClass::QuitGameHook::srcFunc = REL::RelocationID{35545, 36544, 35545};  // SE, AE, VR (VR ID confirmed present in the VR Address Library)
+uint64_t SLT::RegistrationClass::QuitGameHook::srcFuncOffset = REL::Relocate(0x35, 0x1AE, 0x35);  // SE, AE, VR; VR offset assumed equal to SE (function is same size), guarded by the call-site check in HookUtil
 
 SLT::RegistrationClass& SLT::RegistrationClass::GetSingleton() {
     static SLT::RegistrationClass instance;

@@ -3,6 +3,10 @@
 using namespace SLT;
 using namespace std;
 
+#ifdef GetObject
+#undef GetObject
+#endif
+
 template<class T>
 class SUTypedResolutionCallback : public RE::BSScript::IStackCallbackFunctor {
 private:

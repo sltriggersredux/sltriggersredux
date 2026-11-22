@@ -72,12 +72,13 @@ namespace SLT {
                 return nullptr;
             }
             
-            RE::BSScript::Stack* rawStack = nullptr;
-            if (!vm->GetStackByID(stackId, &rawStack) || !rawStack) {
+            RE::BSTSmartPointer<RE::BSScript::Stack> stack;
+            if (!vm->GetStackByID(stackId, stack) || !stack) {
                 return nullptr;
             }
             
-            return RE::BSTSmartPointer<RE::BSScript::Stack>(rawStack);
+            return stack;
         }
+        
     }
 }

@@ -286,7 +286,7 @@ namespace {
 float GetSubmergedLevel_Impl(RE::Actor* a_actor, float a_zPos, RE::TESObjectCELL* a_cell)
 {
     using func_t = decltype(&GetSubmergedLevel_Impl);
-    REL::Relocation<func_t> func{ REL::RelocationID(36452, 37448) };  // 1.5.97 1405E1510
+    REL::Relocation<func_t> func{ REL::RelocationID(36452, 37448, 36452) };  // SE 1.5.97 1405E1510; VR ID present in the VR Address Library
     return func(a_actor, a_zPos, a_cell);
 }
 }
@@ -676,18 +676,13 @@ void NifUtil::Armature::AttachToNode(RE::NiAVObject* obj, RE::Actor* actor, std:
 //=================================================================================================
 
 bool NifUtil::Collision::ToggleMeshCollision(RE::NiAVObject* root, RE::bhkWorld* world, bool collisionState) {
-    constexpr auto no_collision_flag = static_cast<std::uint32_t>(RE::CFilter::Flag::kNoCollision);
     if (root && world) {
         RE::BSWriteLockGuard locker(world->worldLock);
 
         RE::BSVisit::TraverseScenegraphCollision(root, [&](RE::bhkNiCollisionObject* a_col) -> RE::BSVisit::BSVisitControl {
             if (auto hkpBody = a_col->body ? static_cast<RE::hkpWorldObject*>(a_col->body->referencedObject.get()) : nullptr; hkpBody) {
                 auto& filter = hkpBody->collidable.broadPhaseHandle.collisionFilterInfo;
-                if (!collisionState) {
-                    filter |= no_collision_flag;
-                } else {
-                    filter &= ~no_collision_flag;
-                }
+                filter.SetNoCollision(!collisionState);
             }
             return RE::BSVisit::BSVisitControl::kContinue;
         });
@@ -698,18 +693,13 @@ bool NifUtil::Collision::ToggleMeshCollision(RE::NiAVObject* root, RE::bhkWorld*
 }
 
 bool NifUtil::Collision::RemoveMeshCollision(RE::NiAVObject* root, RE::bhkWorld* world, bool collisionState) {
-    constexpr auto no_collision_flag = static_cast<std::uint32_t>(RE::CFilter::Flag::kNoCollision);
     if (root && world) {
         RE::BSWriteLockGuard locker(world->worldLock);
 
         RE::BSVisit::TraverseScenegraphCollision(root, [&](RE::bhkNiCollisionObject* a_col) -> RE::BSVisit::BSVisitControl {
             if (auto hkpBody = a_col->body ? static_cast<RE::hkpWorldObject*>(a_col->body->referencedObject.get()) : nullptr; hkpBody) {
                 auto& filter = hkpBody->collidable.broadPhaseHandle.collisionFilterInfo;
-                if (!collisionState) {
-                    filter |= no_collision_flag;
-                } else {
-                    filter &= ~no_collision_flag;
-                }
+                filter.SetNoCollision(!collisionState);
             }
             return RE::BSVisit::BSVisitControl::kContinue;
         });
